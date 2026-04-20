@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -6,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Revision">
-<meta name="theme-color" content="#13131f">
+<meta name="theme-color" content="#131515">
 <title>Revision</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,28 +15,28 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#13131f;--s0:#0e0e18;--s1:#1d1d2e;--s2:#252538;--s3:#2e2e45;
-  --text:#e2e8f0;--muted:#7a82a3;--hint:#4a5070;--border:rgba(255,255,255,.07);
-  --sh:6px 6px 12px #0a0a14,-6px -6px 12px #222232;
-  --sh-in:inset 4px 4px 8px #0a0a14,inset -4px -4px 8px #222232;
-  --acc:#265bf6;--acc-l:rgba(38,91,246,.12);--acc-t:#93b4ff;
-  --brk:#10b981;--brk-l:rgba(16,185,129,.12);
-  --log:#f59e0b;--log-l:rgba(245,158,11,.12);
-  --red:#ef4444;--red-l:rgba(239,68,68,.12);
-  --gold:#f5c518;
-  --r:12px;--r-lg:18px;--r-xl:22px;--nav:58px
+  --bg:#131515;--s0:#0f1111;--s1:#1c1f1f;--s2:#242727;--s3:#2e3232;
+  --text:#e8ebe8;--muted:#7a8c82;--hint:#4a5c52;
+  --border:rgba(186,193,184,.1);--ash:#bac1b8;
+  --acc:#1098f7;--acc-l:rgba(16,152,247,.12);--acc-t:#6ecbfb;
+  --brk:#417b5a;--brk-l:rgba(65,123,90,.15);
+  --log:#c9911a;--log-l:rgba(201,145,26,.12);
+  --red:#db4c40;--red-l:rgba(219,76,64,.12);
+  --gold:#c9911a;
+  --r:12px;--r-lg:16px;--r-xl:20px;--nav:58px
 }
 html,body{background:var(--bg);color:var(--text);font-family:'Outfit',-apple-system,sans-serif;height:100dvh;overflow:hidden;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
 .screen{display:none;height:100dvh;flex-direction:column;overflow:hidden}
 .screen.active{display:flex}
-.screen-head{flex-shrink:0;padding:calc(env(safe-area-inset-top,12px)+10px) 18px 0}
-.scroll-area{flex:1;overflow-y:auto;padding:0 18px;-webkit-overflow-scrolling:touch}
+.screen-head{flex-shrink:0;padding:calc(env(safe-area-inset-top,12px)+10px) 24px 0}
+.scroll-area{flex:1;overflow-y:auto;padding:0 24px;-webkit-overflow-scrolling:touch}
 .scroll-area::-webkit-scrollbar{display:none}
-.screen-foot{flex-shrink:0;padding:8px 18px calc(env(safe-area-inset-bottom,8px)+8px)}
-.tab-screen .screen-foot{padding-bottom:calc(env(safe-area-inset-bottom,0px)+var(--nav)+8px)}
+.tab-screen .scroll-area{padding-bottom:calc(env(safe-area-inset-bottom,0px) + var(--nav) + 32px)}
+#home-screen .scroll-area{padding-bottom:calc(env(safe-area-inset-bottom,0px) + var(--nav) + 96px)}
+.screen-foot{flex-shrink:0;padding:10px 24px calc(env(safe-area-inset-bottom,10px)+10px)}
+.tab-screen .screen-foot{padding-bottom:calc(env(safe-area-inset-bottom,0px)+var(--nav)+10px)}
+#home-screen .screen-foot{position:fixed;bottom:0;left:0;right:0;padding:10px 24px calc(env(safe-area-inset-bottom,0px) + var(--nav) + 10px);background:var(--bg);border-top:1px solid var(--border);z-index:50}
 .full-screen .screen-foot{padding-bottom:calc(env(safe-area-inset-bottom,14px)+14px)}
-
-/* Nav */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--s1);border-top:1px solid var(--border);display:flex;height:calc(var(--nav)+env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
 .bottom-nav.hidden{display:none}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:none;background:none;cursor:pointer;padding:6px 4px 4px;font-family:inherit}
@@ -43,107 +44,98 @@ html,body{background:var(--bg);color:var(--text);font-family:'Outfit',-apple-sys
 .nav-icon{font-size:19px;line-height:1}
 .nav-lbl{font-size:10px;font-weight:600;letter-spacing:.3px;color:var(--hint);transition:color .2s}
 .nav-btn.active .nav-lbl{color:var(--acc-t)}
-
-/* Core */
+@media(min-width:640px){
+  .screen,.bottom-nav{max-width:560px;margin-left:auto;margin-right:auto}
+  .bottom-nav{left:50%;right:auto;transform:translateX(-50%);width:560px;border-radius:16px 16px 0 0;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+  .overlay{justify-content:center;align-items:center}
+  .overlay .sheet{max-width:540px;border-radius:20px}
+  .checkin-ov{left:50%;right:auto;transform:translateX(-50%) translateY(100%);width:560px}
+  .checkin-ov.vis{transform:translateX(-50%) translateY(0)}
+  #home-screen .screen-foot{left:50%;right:auto;transform:translateX(-50%);width:560px;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+  .sr-sheet{max-width:560px;margin:0 auto}
+}
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 0 14px}
 .app-name{font-size:22px;font-weight:800;letter-spacing:-1px}
 .hdr-right{display:flex;align-items:center;gap:8px}
-.exam-chip{background:var(--acc-l);border-radius:20px;padding:5px 11px;font-size:12px;font-weight:700;color:var(--acc-t);border:1px solid rgba(38,91,246,.25);white-space:nowrap}
+.exam-chip{background:var(--acc-l);border-radius:20px;padding:5px 11px;font-size:12px;font-weight:700;color:var(--acc-t);border:1px solid rgba(16,152,247,.2);white-space:nowrap}
 .icon-btn{background:var(--s1);border:1px solid var(--border);border-radius:11px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted)}
 .icon-btn:active{opacity:.7}
-.icon-btn.unlocked{color:var(--acc-t);border-color:rgba(38,91,246,.3)}
+.icon-btn.unlocked{color:var(--acc-t);border-color:rgba(16,152,247,.25)}
 .lbl{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--hint);margin:16px 0 8px}
 .pill{display:inline-flex;align-items:center;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600}
 .pill-focus{background:var(--acc-l);color:var(--acc-t)}
 .pill-brk{background:var(--brk-l);color:var(--brk)}
-
-/* Inputs */
-.tinput{width:100%;background:var(--s0);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px;font-size:15px;color:var(--text);outline:none;font-family:inherit;box-shadow:var(--sh-in);transition:border-color .2s}
+.tinput{width:100%;height:45px;padding:12px 14px;border-radius:12px;border:1.5px solid rgba(186,193,184,.15);outline:none;transition:all .3s cubic-bezier(.19,1,.22,1);background:var(--s0);color:var(--text);font-family:inherit;font-size:15px;}
 .tinput::placeholder{color:var(--hint)}
-.tinput:focus{border-color:rgba(38,91,246,.4)}
-.tarea{width:100%;background:var(--s0);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;font-size:14px;color:var(--text);outline:none;resize:none;font-family:inherit;line-height:1.6;min-height:72px;box-shadow:var(--sh-in);transition:border-color .2s}
-.tarea:focus{border-color:rgba(38,91,246,.4)}
+.tinput:hover{border-color:rgba(186,193,184,.28)}
+.tinput:active{transform:scale(.99)}
+.tinput:focus{border:2px solid rgba(16,152,247,.5)}
+.tarea{width:100%;background:var(--s0);border:1.5px solid rgba(186,193,184,.15);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--text);outline:none;resize:none;font-family:inherit;line-height:1.6;min-height:72px;transition:all .3s cubic-bezier(.19,1,.22,1);}
+.tarea:hover{border-color:rgba(186,193,184,.28)}
+.tarea:focus{border:2px solid rgba(16,152,247,.5)}
 .tarea::placeholder{color:var(--hint)}
-
-/* Buttons */
-/* Blob primary button (used for main CTAs) */
-.btn-blob{cursor:pointer;border-radius:16px;border:none;padding:2px;background:radial-gradient(circle 80px at 80% -10%,#3a5aff,#181b1b);position:relative;width:100%;font-family:inherit}
-.btn-blob::after{content:'';position:absolute;width:65%;height:60%;border-radius:120px;top:0;right:0;box-shadow:0 0 20px rgba(38,91,246,.25);z-index:-1}
-.btn-blob .blob-blob{position:absolute;width:70px;height:100%;border-radius:16px;bottom:0;left:0;background:radial-gradient(circle 60px at 0% 100%,#3fe9ff,#0000ff80,transparent);box-shadow:-10px 10px 30px rgba(0,81,255,.15)}
-.btn-blob .inner{padding:15px 25px;border-radius:14px;color:#fff;z-index:3;position:relative;font-size:16px;font-weight:700;background:radial-gradient(circle 80px at 80% -50%,#4a6aff,#0f1111);letter-spacing:.1px}
-.btn-blob .inner::before{content:'';width:100%;height:100%;left:0;top:0;border-radius:14px;background:radial-gradient(circle 60px at 0% 100%,rgba(0,225,255,.1),rgba(0,0,255,.07),transparent);position:absolute}
-
+.switch{display:inline-block;cursor:pointer;flex-shrink:0}
+.switch .checkbox{display:none}
+.switch .slider{width:52px;height:28px;background-color:var(--s3);border-radius:20px;overflow:hidden;display:flex;align-items:center;border:3px solid transparent;transition:.3s;box-shadow:0 0 8px 0 rgba(0,0,0,.3) inset;cursor:pointer;}
+.switch .slider::before{content:'';display:block;width:100%;height:100%;background-color:#fff;transform:translateX(-26px);border-radius:20px;transition:.3s;box-shadow:0 0 8px 2px rgba(0,0,0,.25);}
+.switch .checkbox:checked ~ .slider::before{transform:translateX(26px)}
+.switch .checkbox:checked ~ .slider{background-color:var(--acc)}
+.switch .checkbox:active ~ .slider::before{transform:translate(0)}
 .btn{display:flex;align-items:center;justify-content:center;border:none;border-radius:var(--r);font-family:inherit;cursor:pointer;font-weight:600;transition:all .2s}
 .btn:active{transform:scale(.98)}
-.btn-primary{background:var(--acc);color:#fff;padding:16px;font-size:16px;border-radius:var(--r-lg);width:100%;box-shadow:0 4px 15px rgba(38,91,246,.4)}
+.btn-primary{background:var(--acc);color:#fff;padding:16px;font-size:16px;border-radius:var(--r-lg);width:100%;}
 .btn-secondary{background:var(--s1);color:var(--text);padding:14px 18px;font-size:14px;border:1px solid var(--border)}
 .btn-ghost{background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:4px}
-.btn-danger{background:var(--red-l);color:var(--red);padding:14px 18px;font-size:14px;border:1px solid rgba(239,68,68,.2)}
-
-/* Toggle */
-.tgl{width:44px;height:26px;background:var(--s0);border-radius:13px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;border:1px solid var(--border);box-shadow:var(--sh-in)}
-.tgl.on{background:var(--acc)}
-.tgl::after{content:'';position:absolute;width:20px;height:20px;background:var(--text);border-radius:50%;top:3px;left:3px;transition:left .2s;box-shadow:2px 2px 4px rgba(0,0,0,.4)}
-.tgl.on::after{left:21px;background:#fff}
-
-/* Gradient card (schedule) */
-.grad-card{background:linear-gradient(135deg,#1a1a2e,#252545,#1a1a2e);padding:1px;border-radius:var(--r-xl);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.grad-card-inner{background:linear-gradient(135deg,#1d1d2e 0%,#252545 50%,#1d1d2e 100%);border-radius:calc(var(--r-xl) - 1px);padding:16px}
-
-/* Quick start */
+.btn-danger{background:var(--red-l);color:var(--red);padding:14px 18px;font-size:14px;border:1px solid rgba(219,76,64,.2)}
+.btn-start{width:100%;padding:17px;background:linear-gradient(135deg,var(--acc),#0a7ad4);color:#fff;border:none;border-radius:var(--r-lg);font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:.2px;box-shadow:0 4px 16px rgba(16,152,247,.25);transition:all .2s}
+.btn-start:active{transform:scale(.98);opacity:.92}
+.grad-card{background:linear-gradient(135deg,var(--s1),var(--s2),var(--s1));padding:1px;border-radius:var(--r-xl);border:1px solid var(--border)}
+.grad-card-inner{background:var(--s1);border-radius:calc(var(--r-xl) - 1px);padding:16px}
 .quickstart{background:var(--s1);border-radius:var(--r-lg);padding:13px 14px;margin-bottom:2px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer}
 .quickstart:active{opacity:.8}
 .qs-label{font-size:10px;font-weight:700;color:var(--hint);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
 .qs-session{font-size:14px;font-weight:700}
-.qs-btn{margin-left:auto;background:var(--acc);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 4px 10px rgba(38,91,246,.4)}
-
-/* Schedule card inner */
+.qs-btn{margin-left:auto;background:var(--acc);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
 .sc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .sc-title{font-size:14px;font-weight:700}
-.sc-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(38,91,246,.2);color:var(--acc-t);border:1px solid rgba(38,91,246,.2)}
+.sc-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(16,152,247,.15);color:var(--acc-t);border:1px solid rgba(16,152,247,.2)}
 .sc-sessions{display:flex;flex-direction:column;gap:6px}
-.sc-row{display:flex;align-items:center;gap:9px;padding:8px 10px;background:rgba(0,0,0,.2);border-radius:10px;border:1px solid rgba(255,255,255,.05)}
+.sc-row{display:flex;align-items:center;gap:9px;padding:8px 10px;background:rgba(0,0,0,.15);border-radius:10px;border:1px solid rgba(255,255,255,.04)}
 .sc-n{width:20px;height:20px;border-radius:50%;background:var(--s3);color:var(--hint);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sc-n.done{background:var(--brk);color:#fff}
-.sc-n.curr{background:var(--acc);color:#fff;box-shadow:0 0 8px rgba(38,91,246,.5)}
+.sc-n.curr{background:var(--acc);color:#fff}
 .sc-subj{font-size:12px;font-weight:600;flex:1}
 .sc-time{font-size:10px;color:var(--muted)}
-.sc-action{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:11px;background:var(--acc);color:#fff;border-radius:11px;font-size:13px;font-weight:700;box-shadow:0 4px 12px rgba(38,91,246,.35)}
+.sc-action{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:11px;background:var(--acc);color:#fff;border-radius:11px;font-size:13px;font-weight:700}
 .schedule-progress{display:flex;gap:4px;margin-top:10px}
-.sp-dot{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.08)}
-.sp-dot.done{background:var(--brk);box-shadow:0 0 4px rgba(16,185,129,.4)}
-
-/* Method grid */
+.sp-dot{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.06)}
+.sp-dot.done{background:var(--brk)}
 .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .method-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .2s}
 .method-card:active{opacity:.8}
-.method-card.sel{border-color:rgba(38,91,246,.4);background:rgba(38,91,246,.08)}
+.method-card.sel{border-color:rgba(16,152,247,.35);background:rgba(16,152,247,.07)}
 .mc-icon{font-size:22px;margin-bottom:6px;display:block}
 .mc-name{font-size:13px;font-weight:700;margin-bottom:2px}
 .mc-tag{font-size:10px;color:var(--muted);line-height:1.4;margin-bottom:5px}
-.mc-time{font-size:10px;font-weight:700;color:var(--acc-t);background:var(--acc-l);padding:2px 7px;border-radius:10px;display:inline-block;border:1px solid rgba(38,91,246,.2)}
+.mc-time{font-size:10px;font-weight:700;color:var(--acc-t);background:var(--acc-l);padding:2px 7px;border-radius:10px;display:inline-block;border:1px solid rgba(16,152,247,.15)}
 .method-card.sel .mc-name{color:var(--acc-t)}
 .custom-row{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.method-desc{background:var(--s0);border:1px solid rgba(38,91,246,.2);border-radius:var(--r);padding:11px 13px;margin-top:8px;font-size:12px;color:var(--acc-t);line-height:1.7;display:none}
+.method-desc{background:var(--s0);border:1px solid rgba(16,152,247,.15);border-radius:var(--r);padding:11px 13px;margin-top:8px;font-size:12px;color:var(--acc-t);line-height:1.7;display:none}
 .method-desc.vis{display:block}
-
-/* Settings */
 .settings-wrap{border-radius:var(--r);overflow:hidden;border:1px solid var(--border);background:var(--s1)}
 .setting-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;gap:12px}
 .setting-row+.setting-row{border-top:1px solid var(--border)}
 .sr-lbl{font-size:14px;font-weight:500}
 .sr-desc{font-size:11px;color:var(--hint);margin-top:2px;line-height:1.4}
-.clear-btn{width:100%;padding:13px;border:1px solid rgba(239,68,68,.25);border-radius:var(--r);background:var(--red-l);color:var(--red);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px}
+.clear-btn{width:100%;padding:13px;border:1px solid rgba(219,76,64,.2);border-radius:var(--r);background:var(--red-l);color:var(--red);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px}
 .clear-btn:active{opacity:.8}
-
-/* Timer */
 .t-top{display:flex;align-items:center;justify-content:space-between;padding:2px 0 4px}
 .pdots{display:flex;gap:6px;align-items:center;margin:4px 0 6px}
 .pdot{width:6px;height:6px;border-radius:50%;background:var(--s3);flex-shrink:0;transition:all .3s}
-.pdot.active{width:22px;border-radius:3px;background:var(--acc);box-shadow:0 0 6px rgba(38,91,246,.5)}
+.pdot.active{width:22px;border-radius:3px;background:var(--acc)}
 .pdot.done{background:var(--brk)}
 .ring-wrap{position:relative;width:min(260px,70vw);height:min(260px,70vw);margin:0 auto}
-.ring-svg{width:100%;height:100%;filter:drop-shadow(0 0 20px rgba(38,91,246,.15))}
+.ring-svg{width:100%;height:100%}
 circle.track{fill:none;stroke:var(--s2);stroke-width:10}
 circle.prog{fill:none;stroke-linecap:round;stroke-width:10;transition:stroke-dashoffset 1s linear,stroke .4s}
 .method-tip{background:var(--s0);border-radius:var(--r);padding:9px 13px;font-size:12px;color:var(--muted);line-height:1.6;margin:4px 0;border:1px solid var(--border);display:none}
@@ -155,19 +147,15 @@ circle.prog{fill:none;stroke-linecap:round;stroke-width:10;transition:stroke-das
 .t-ctrls{display:flex;gap:8px;flex-shrink:0;padding-top:4px}
 .btn-c{flex:1;padding:15px 8px;border:1px solid var(--border);border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;background:var(--s1);color:var(--text)}
 .btn-c:active{opacity:.75}
-.btn-c.bc-end{background:var(--red-l);color:var(--red);border-color:rgba(239,68,68,.2)}
+.btn-c.bc-end{background:var(--red-l);color:var(--red);border-color:rgba(219,76,64,.2)}
 .btn-c.bc-skip{color:var(--muted)}
-
-/* Break */
 .brk-top{display:flex;align-items:center;justify-content:space-between;padding:2px 0}
 .brk-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px 0}
-.breathe-ring{width:min(140px,40vw);height:min(140px,40vw);border-radius:50%;border:1px solid rgba(16,185,129,.2);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 30px rgba(16,185,129,.08)}
-.breathe-ring::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.06),transparent 70%);animation:bscale 8s ease-in-out infinite}
+.breathe-ring{width:min(140px,40vw);height:min(140px,40vw);border-radius:50%;border:1px solid rgba(65,123,90,.2);display:flex;align-items:center;justify-content:center;position:relative}
+.breathe-ring::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(65,123,90,.06),transparent 70%);animation:bscale 8s ease-in-out infinite}
 @keyframes bscale{0%,100%{transform:scale(.88);opacity:.5}50%{transform:scale(1.1);opacity:1}}
-.brk-time{font-size:52px;font-weight:200;letter-spacing:-3px;font-variant-numeric:tabular-nums;color:var(--brk);text-shadow:0 0 20px rgba(16,185,129,.25)}
+.brk-time{font-size:52px;font-weight:200;letter-spacing:-3px;font-variant-numeric:tabular-nums;color:var(--brk)}
 .brk-ctrls{display:flex;gap:8px;flex-shrink:0}
-
-/* Error log */
 .log-intro{background:var(--s0);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:2px}
 .log-intro p{font-size:13px;color:var(--muted);line-height:1.65}
 .log-intro strong{color:var(--log);font-weight:700}
@@ -178,36 +166,30 @@ circle.prog{fill:none;stroke-linecap:round;stroke-width:10;transition:stroke-das
 .mark-cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}
 .mark-cat-btn{padding:10px 6px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);font-size:11px;font-weight:600;cursor:pointer;text-align:center;color:var(--muted);line-height:1.3}
 .mark-cat-btn:active{opacity:.7}
-.mark-cat-btn.sel-app{background:var(--acc-l);border-color:rgba(38,91,246,.4);color:var(--acc-t)}
-.mark-cat-btn.sel-know{background:var(--log-l);border-color:rgba(245,158,11,.3);color:var(--log)}
-.mark-cat-btn.sel-term{background:var(--brk-l);border-color:rgba(16,185,129,.3);color:var(--brk)}
+.mark-cat-btn.sel-app{background:var(--acc-l);border-color:rgba(16,152,247,.3);color:var(--acc-t)}
+.mark-cat-btn.sel-know{background:var(--log-l);border-color:rgba(201,145,26,.3);color:var(--log)}
+.mark-cat-btn.sel-term{background:var(--brk-l);border-color:rgba(65,123,90,.3);color:var(--brk)}
 .mark-guidance{font-size:12px;color:var(--muted);background:var(--s0);border-radius:var(--r);padding:9px 12px;margin-top:6px;line-height:1.6;border:1px solid var(--border);display:none}
 .mark-guidance.vis{display:block}
 .mark-guidance strong{color:var(--text)}
 .marks-row{display:flex;gap:8px;align-items:center;margin-bottom:4px}
-.marks-in{width:52px;background:var(--s0);border:1px solid var(--border);border-radius:var(--r);padding:10px 8px;font-size:16px;color:var(--text);outline:none;font-family:inherit;text-align:center;box-shadow:var(--sh-in)}
-.marks-in:focus{border-color:rgba(38,91,246,.4)}
+.marks-in{width:52px;height:45px;padding:10px 8px;border-radius:12px;border:1.5px solid rgba(186,193,184,.15);outline:none;transition:all .3s cubic-bezier(.19,1,.22,1);background:var(--s0);color:var(--text);font-family:inherit;font-size:16px;text-align:center;}
+.marks-in:focus{border:2px solid rgba(16,152,247,.5)}
 .marks-sep{font-size:20px;color:var(--hint);font-weight:300}
 .marks-lbl{font-size:12px;color:var(--muted)}
-.error-type-grid{display:flex;flex-wrap:wrap;gap:5px}
-.et-btn{padding:6px 11px;background:var(--s1);border:1px solid var(--border);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;color:var(--muted)}
-.et-btn:active{opacity:.7}
-.et-btn.sel{background:var(--log-l);border-color:rgba(245,158,11,.3);color:var(--log);font-weight:700}
 .spaced-row{display:flex;align-items:center;justify-content:space-between;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-top:6px}
-.copy-btn{width:100%;padding:13px;border:1px solid rgba(38,91,246,.3);border-radius:var(--r);background:var(--acc-l);color:var(--acc-t);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.copy-btn{width:100%;padding:13px;border:1px solid rgba(16,152,247,.25);border-radius:var(--r);background:var(--acc-l);color:var(--acc-t);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
 .copy-btn:active{opacity:.8}
-.copy-btn.copied{background:var(--brk-l);border-color:rgba(16,185,129,.3);color:var(--brk)}
+.copy-btn.copied{background:var(--brk-l);border-color:rgba(65,123,90,.3);color:var(--brk)}
 .btn-skip-log{width:100%;padding:10px;border:none;background:none;color:var(--hint);font-size:14px;cursor:pointer;font-family:inherit}
-
-/* Stats */
 .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
 .scard{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px}
 .scard-lbl{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.3px;margin-bottom:3px}
 .scard-val{font-size:26px;font-weight:800;letter-spacing:-1px}
 .scard-unit{font-size:10px;color:var(--hint);margin-top:1px}
-.scard.highlight{background:linear-gradient(135deg,rgba(38,91,246,.2),rgba(38,91,246,.06));border-color:rgba(38,91,246,.3)}
-.scard.highlight .scard-lbl{color:rgba(147,180,255,.7)}
-.scard.highlight .scard-unit{color:rgba(147,180,255,.5)}
+.scard.highlight{background:linear-gradient(135deg,rgba(16,152,247,.15),rgba(16,152,247,.05));border-color:rgba(16,152,247,.25)}
+.scard.highlight .scard-lbl{color:rgba(110,203,251,.7)}
+.scard.highlight .scard-unit{color:rgba(110,203,251,.5)}
 .scard.highlight .scard-val{color:var(--acc-t)}
 .chart-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:8px}
 .chart-title{font-size:10px;font-weight:700;color:var(--hint);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
@@ -225,19 +207,17 @@ canvas.chart{width:100%;display:block}
 .tr-track{height:5px;background:var(--s0);border-radius:3px;overflow:hidden}
 .tr-fill{height:100%;border-radius:3px;background:var(--acc);transition:width .6s}
 .tr-fill.met{background:var(--brk)}
-
-/* Spec tracker - improved pill tabs */
 .spec-subj-scroll{overflow-x:auto;margin-bottom:12px;padding-bottom:4px}
 .spec-subj-scroll::-webkit-scrollbar{display:none}
 .spec-pills{display:flex;gap:6px;width:max-content}
 .spec-pill{padding:7px 14px;background:var(--s1);border:1px solid var(--border);border-radius:20px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .2s}
-.spec-pill.act{background:var(--acc);color:#fff;border-color:var(--acc);box-shadow:0 4px 12px rgba(38,91,246,.35)}
+.spec-pill.act{background:var(--acc);color:#fff;border-color:var(--acc)}
 .spec-point{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--s1);border-radius:var(--r);border:1px solid var(--border);margin-bottom:5px;cursor:pointer}
 .spec-point:active{opacity:.7}
 .spec-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:2px solid var(--s3);margin-top:1px;transition:all .2s}
-.spec-dot.green{background:#10b981;border-color:#10b981;box-shadow:0 0 6px rgba(16,185,129,.4)}
-.spec-dot.amber{background:#f59e0b;border-color:#f59e0b;box-shadow:0 0 6px rgba(245,158,11,.4)}
-.spec-dot.red{background:#ef4444;border-color:#ef4444;box-shadow:0 0 6px rgba(239,68,68,.4)}
+.spec-dot.green{background:#417b5a;border-color:#417b5a}
+.spec-dot.amber{background:#c9911a;border-color:#c9911a}
+.spec-dot.red{background:#db4c40;border-color:#db4c40}
 .spec-txt{font-size:12px;color:var(--text);flex:1;line-height:1.5}
 .spec-legend{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
 .spec-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
@@ -247,16 +227,14 @@ canvas.chart{width:100%;display:block}
 .spec-prog-n{font-size:18px;font-weight:800;letter-spacing:-1px}
 .spec-prog-lbl{font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 .spec-section-lbl{font-size:10px;font-weight:700;color:var(--hint);letter-spacing:.8px;text-transform:uppercase;margin:12px 0 6px;padding-left:4px}
-
-/* Resources */
 .res-lock{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
 .res-lock-icon{font-size:48px;margin-bottom:16px}
 .res-lock-title{font-size:18px;font-weight:700;margin-bottom:8px}
 .res-lock-sub{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.5}
 .exam-list{display:flex;flex-direction:column;gap:6px}
 .exam-row{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
-.exam-row.soon{border-color:rgba(38,91,246,.3);background:rgba(38,91,246,.06)}
-.exam-row.today{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.06)}
+.exam-row.soon{border-color:rgba(16,152,247,.25);background:rgba(16,152,247,.06)}
+.exam-row.today{border-color:rgba(219,76,64,.25);background:rgba(219,76,64,.06)}
 .exam-name{font-size:13px;font-weight:700}
 .exam-paper{font-size:11px;color:var(--muted);margin-top:1px}
 .exam-days{font-size:22px;font-weight:800;letter-spacing:-1px;color:var(--acc-t)}
@@ -271,7 +249,7 @@ canvas.chart{width:100%;display:block}
 .site-cat-lbl{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--hint);margin-bottom:7px;margin-top:14px}
 .acc-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;-webkit-user-select:none;user-select:none}
 .acc-title{font-size:13px;font-weight:700}
-.acc-exam{font-size:10px;color:var(--acc-t);font-weight:600;background:var(--acc-l);padding:2px 7px;border-radius:10px;border:1px solid rgba(38,91,246,.2)}
+.acc-exam{font-size:10px;color:var(--acc-t);font-weight:600;background:var(--acc-l);padding:2px 7px;border-radius:10px;border:1px solid rgba(16,152,247,.15)}
 .acc-arrow{font-size:10px;color:var(--hint);transition:transform .2s;flex-shrink:0;margin-left:6px}
 .acc-body{display:none;padding:0 14px 13px;border-top:1px solid var(--border)}
 .acc-body.open{display:block}
@@ -279,73 +257,88 @@ canvas.chart{width:100%;display:block}
 .acc-tip::before{content:'';position:absolute;left:0;top:8px;width:4px;height:4px;border-radius:50%;background:var(--acc)}
 .acc-tip strong{color:var(--text);font-weight:600}
 .subj-accordion{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:6px}
-/* Weekly schedule table - scrollable */
-.sched-table-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;max-height:320px;overflow-y:auto}
-.sched-table-wrap::-webkit-scrollbar{display:none}
-.sched-th-row{display:grid;grid-template-columns:50px 1fr 1fr 70px;background:var(--s0);border-bottom:1px solid var(--border);padding:8px 12px;position:sticky;top:0;z-index:1}
+.sched-table-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.sched-th-row{display:grid;grid-template-columns:50px 1fr 1fr 70px;background:var(--s0);border-bottom:1px solid var(--border);padding:8px 12px}
 .sched-th{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--hint)}
 .sched-tr{display:grid;grid-template-columns:50px 1fr 1fr 70px;padding:8px 12px;border-bottom:1px solid var(--border);align-items:center}
 .sched-tr:last-child{border:none}
-.sched-tr.today-row{background:rgba(38,91,246,.06)}
+.sched-tr.today-row{background:rgba(16,152,247,.05)}
 .sched-td{font-size:12px;color:var(--muted)}
 .sched-td.day{font-weight:700;color:var(--text)}
-
-/* Notion section */
 .notion-search-wrap{display:flex;gap:8px}
-.notion-search-btn{flex-shrink:0;padding:0 16px;background:var(--acc);color:#fff;border:none;border-radius:var(--r);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(38,91,246,.4)}
+.notion-search-btn{flex-shrink:0;padding:0 16px;background:var(--acc);color:#fff;border:none;border-radius:var(--r);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
 .notion-search-btn:active{opacity:.8}
-.notion-results{margin-top:8px;display:flex;flex-direction:column;gap:6px}
-.notion-result{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:12px 13px}
-.notion-result-title{font-size:13px;font-weight:700;color:var(--acc-t);margin-bottom:3px;text-decoration:none;display:block}
-.notion-result-snippet{font-size:11px;color:var(--muted);line-height:1.5}
 .notion-quick-link{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);text-decoration:none;margin-bottom:5px}
 .notion-quick-link:active{opacity:.75}
 .notion-quick-icon{font-size:16px;flex-shrink:0}
 .notion-quick-title{font-size:13px;font-weight:600;color:var(--acc-t)}
 .notion-quick-sub{font-size:10px;color:var(--hint);margin-top:1px}
-.notion-info{font-size:11px;color:var(--hint);padding:6px;text-align:center;line-height:1.5}
 
-/* Overlays */
 .overlay{display:none;position:fixed;inset:0;z-index:200;align-items:flex-end;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .overlay.open{display:flex}
-.sheet{background:var(--s1);border-radius:24px 24px 0 0;padding:20px 18px calc(env(safe-area-inset-bottom,16px)+20px);width:100%;box-shadow:0 -8px 40px rgba(0,0,0,.4);border-top:1px solid var(--border)}
-.sheet-handle{width:36px;height:4px;background:var(--s3);border-radius:2px;margin:0 auto 20px}
+.sheet{background:var(–s1);border-radius:24px 24px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom,16px)+20px);width:100%;border-top:1px solid var(–border)}
+.sheet-handle{width:36px;height:4px;background:var(–s3);border-radius:2px;margin:0 auto 20px}
 .sheet-title{font-size:18px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px}
-.sheet-body{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:18px}
+.sheet-body{font-size:14px;color:var(–muted);line-height:1.6;margin-bottom:18px}
 .sheet-btns{display:flex;flex-direction:column;gap:8px}
 .lock-icon-big{font-size:40px;margin-bottom:12px;display:block;text-align:center}
-.pin-input{width:100%;background:var(--s0);border:1px solid var(--border);border-radius:var(--r);padding:14px 15px;font-size:16px;color:var(--text);outline:none;font-family:inherit;text-align:center;letter-spacing:2px;margin-bottom:12px;box-shadow:var(--sh-in)}
-.pin-input:focus{border-color:rgba(38,91,246,.4)}
-.lock-error{font-size:13px;color:var(--red);text-align:center;height:16px;margin-bottom:8px}
-.sched-ov-row{display:flex;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.pin-input{width:100%;height:48px;padding:14px 15px;border-radius:12px;border:1.5px solid rgba(186,193,184,.15);outline:none;transition:all .3s cubic-bezier(.19,1,.22,1);background:var(–s0);color:var(–text);font-family:inherit;font-size:16px;text-align:center;letter-spacing:2px;margin-bottom:12px;}
+.pin-input:focus{border:2px solid rgba(16,152,247,.5)}
+.lock-error{font-size:13px;color:var(–red);text-align:center;height:16px;margin-bottom:8px}
+.sched-ov-row{display:flex;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(–border)}
 .sched-ov-row:last-child{border:none}
-.sched-ov-n{width:22px;height:22px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-right:10px;margin-top:1px;color:var(--muted)}
-.sched-ov-n.curr{background:var(--acc);color:#fff;box-shadow:0 0 8px rgba(38,91,246,.4)}
-.sched-ov-n.done{background:var(--brk);color:#fff}
+.sched-ov-n{width:22px;height:22px;border-radius:50%;background:var(–s2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-right:10px;margin-top:1px;color:var(–muted)}
+.sched-ov-n.curr{background:var(–acc);color:#fff}
+.sched-ov-n.done{background:var(–brk);color:#fff}
 .checkin-ov{position:fixed;bottom:0;left:0;right:0;z-index:150;transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.3,1)}
 .checkin-ov.vis{transform:translateY(0)}
-.checkin-sheet{background:var(--s1);border-radius:22px 22px 0 0;padding:18px 18px calc(env(safe-area-inset-bottom,16px)+18px);box-shadow:0 -8px 30px rgba(0,0,0,.4);border-top:1px solid var(--border)}
+.checkin-sheet{background:var(–s1);border-radius:22px 22px 0 0;padding:18px 20px calc(env(safe-area-inset-bottom,16px)+18px);border-top:1px solid var(–border)}
 .checkin-title{font-size:16px;font-weight:800;margin-bottom:3px}
-.checkin-sub{font-size:13px;color:var(--muted);margin-bottom:12px}
+.checkin-sub{font-size:13px;color:var(–muted);margin-bottom:12px}
 .checkin-opts{display:flex;gap:7px}
-.checkin-opt{flex:1;padding:12px 6px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);font-size:22px;cursor:pointer;text-align:center}
+.checkin-opt{flex:1;padding:12px 6px;background:var(–s2);border:1px solid var(–border);border-radius:var(–r);font-size:22px;cursor:pointer;text-align:center}
 .checkin-opt:active{opacity:.7}
-.checkin-opt.picked{border-color:rgba(38,91,246,.4);background:var(--acc-l)}
-.checkin-dismiss{width:100%;padding:10px;border:none;background:none;font-size:13px;color:var(--hint);cursor:pointer;margin-top:6px;font-family:inherit}
-
-/* Toast */
-.toast{position:fixed;top:calc(env(safe-area-inset-top,16px)+16px);left:50%;transform:translateX(-50%) translateY(-120px);background:#1e1e30;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;min-width:260px;max-width:340px;box-shadow:0 8px 30px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);z-index:300;transition:transform .4s cubic-bezier(.2,.8,.3,1);pointer-events:none}
+.checkin-opt.picked{border-color:rgba(16,152,247,.35);background:var(–acc-l)}
+.checkin-dismiss{width:100%;padding:10px;border:none;background:none;font-size:13px;color:var(–hint);cursor:pointer;margin-top:6px;font-family:inherit}
+.toast{position:fixed;top:calc(env(safe-area-inset-top,16px)+16px);left:50%;transform:translateX(-50%) translateY(-120px);background:var(–s2);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;min-width:260px;max-width:340px;border:1px solid var(–border);z-index:300;transition:transform .4s cubic-bezier(.2,.8,.3,1);pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);pointer-events:auto}
-.toast-icon{color:var(--brk);background:rgba(255,255,255,.05);padding:6px;border-radius:8px;flex-shrink:0}
+.toast-icon{color:var(–brk);background:rgba(255,255,255,.05);padding:6px;border-radius:8px;flex-shrink:0}
 .toast-text{flex:1}
 .toast-title{font-size:13px;font-weight:700}
-.toast-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.toast-close{color:var(--hint);background:none;border:none;cursor:pointer;padding:4px;border-radius:6px}
+.toast-sub{font-size:11px;color:var(–muted);margin-top:1px}
+.toast-close{color:var(–hint);background:none;border:none;cursor:pointer;padding:4px;border-radius:6px}
+
+/* Spaced repetition */
+.sr-card{background:linear-gradient(135deg,rgba(201,145,26,.15),rgba(201,145,26,.05));border:1px solid rgba(201,145,26,.25);border-radius:var(–r-lg);padding:14px;margin-bottom:2px;cursor:pointer}
+.sr-card:active{opacity:.85}
+.sr-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.sr-card-title{font-size:13px;font-weight:700;color:var(–log)}
+.sr-badge{background:var(–log);color:#fff;border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700}
+.sr-card-sub{font-size:12px;color:var(–muted);line-height:1.5}
+/* SR review overlay */
+.sr-ov{display:none;position:fixed;inset:0;z-index:210;align-items:flex-end;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.sr-ov.open{display:flex}
+.sr-sheet{background:var(–s1);border-radius:24px 24px 0 0;padding:22px 24px calc(env(safe-area-inset-bottom,20px)+24px);width:100%;border-top:1px solid var(–border)}
+.sr-handle{width:36px;height:4px;background:var(–s3);border-radius:2px;margin:0 auto 20px}
+.sr-progress{display:flex;gap:4px;margin-bottom:16px}
+.sr-prog-dot{flex:1;height:3px;border-radius:2px;background:var(–s3)}
+.sr-prog-dot.done{background:var(–log)}
+.sr-topic{font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px;line-height:1.4}
+.sr-subj{font-size:12px;color:var(–muted);margin-bottom:20px}
+.sr-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sr-btn{padding:14px;border:none;border-radius:var(–r-lg);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.sr-btn.nope{background:var(–red-l);color:var(–red);border:1px solid rgba(219,76,64,.2)}
+.sr-btn.got{background:var(–brk-l);color:var(–brk);border:1px solid rgba(65,123,90,.3)}
+.sr-btn:active{transform:scale(.97)}
+.sr-card-hint{font-size:11px;color:var(–hint);margin-top:8px;text-align:center}
+
+@keyframes bscale2{0%,100%{transform:scale(.88);opacity:.5}50%{transform:scale(1.1);opacity:1}}
 @keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .fadeup{animation:fadeup .3s ease forwards}
 @keyframes pulse-slow{0%,100%{opacity:1}50%{opacity:.4}}
 .pulse{animation:pulse-slow 2s ease-in-out infinite}
 </style>
+
 </head>
 <body>
 <!-- Toast -->
@@ -354,11 +347,10 @@ canvas.chart{width:100%;display:block}
   <div class="toast-text"><div class="toast-title" id="toast-title">Done</div><div class="toast-sub" id="toast-sub"></div></div>
   <button class="toast-close" onclick="hideToast()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></button>
 </div>
-<!-- Lock -->
 <div class="overlay" id="lock-ov" onclick="if(event.target===this)closeLock()">
   <div class="sheet"><div class="sheet-handle"></div><span class="lock-icon-big">🔒</span>
   <div class="sheet-title" style="text-align:center">Personal mode</div>
-  <div class="sheet-body" style="text-align:center;font-size:13px">Unlock to see your timetable, schedule, and resources.</div>
+  <div class="sheet-body" style="text-align:center;font-size:13px">Unlock to see your timetable, schedule, resources and spec tracker.</div>
   <input class="pin-input" type="password" id="pin-input" placeholder="Enter password" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()">
   <div class="lock-error" id="lock-error"></div>
   <button class="btn btn-primary" onclick="tryUnlock()">Unlock</button>
@@ -366,13 +358,11 @@ canvas.chart{width:100%;display:block}
   <button class="btn-ghost" style="width:100%;padding:10px;text-align:center" onclick="closeLock()">Not now</button>
   </div>
 </div>
-<!-- Confirm -->
 <div class="overlay" id="confirm-ov" onclick="if(event.target===this)closeConfirm()">
   <div class="sheet"><div class="sheet-handle"></div><div class="sheet-title" id="confirm-title">Are you sure?</div><div class="sheet-body" id="confirm-body"></div>
   <div class="sheet-btns"><button class="btn btn-danger" id="confirm-ok" onclick="doConfirm()">Confirm</button><button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button></div>
   </div>
 </div>
-<!-- Schedule overlay -->
 <div class="overlay" id="sched-ov" onclick="if(event.target===this)closeSchedOv()">
   <div class="sheet"><div class="sheet-handle"></div><div class="sheet-title" id="sched-ov-title">Today's Plan</div>
   <div id="sched-ov-body" style="margin-bottom:16px"></div>
@@ -380,7 +370,6 @@ canvas.chart{width:100%;display:block}
   <div style="height:8px"></div><button class="btn-ghost" style="width:100%;padding:10px;text-align:center" onclick="closeSchedOv()">Close</button>
   </div>
 </div>
-<!-- Check-in -->
 <div class="checkin-ov" id="checkin-ov">
   <div class="checkin-sheet"><div class="checkin-title">Focus check</div><div class="checkin-sub">How sharp are you right now?</div>
   <div class="checkin-opts">
@@ -390,7 +379,6 @@ canvas.chart{width:100%;display:block}
   <button class="checkin-dismiss" onclick="dismissCheckin()">Dismiss</button>
   </div>
 </div>
-
 <!-- HOME -->
 <div class="screen tab-screen active" id="home-screen">
   <div class="screen-head"><div class="hdr"><span class="app-name">Revision</span><div class="hdr-right"><div class="exam-chip" id="exam-chip">55d</div><div class="icon-btn" id="lock-btn" onclick="openLock()">🔒</div></div></div></div>
@@ -399,13 +387,17 @@ canvas.chart{width:100%;display:block}
       <div><div class="qs-label">Start now</div><div class="qs-session" id="qs-text">Loading...</div></div>
       <button class="qs-btn" onclick="event.stopPropagation();quickStart()">Go</button>
     </div>
+    <div id="sr-due-card" style="display:none" class="sr-card" onclick="openSRReview()">
+      <div class="sr-card-top"><span class="sr-card-title">Spaced repetition due</span><span class="sr-badge" id="sr-due-count">0</span></div>
+      <div class="sr-card-sub" id="sr-due-preview">Tap to review what needs refreshing today</div>
+    </div>
     <div style="margin-top:10px">
       <div class="grad-card" onclick="openSchedOv()" style="cursor:pointer">
         <div class="grad-card-inner">
           <div class="sc-header"><div class="sc-title" id="sc-title">Today's Plan</div><div class="sc-badge" id="sc-badge">0/3 done</div></div>
           <div class="sc-sessions" id="sc-sessions"></div>
           <div class="schedule-progress" id="sc-progress"></div>
-          <div class="sc-action"><span>View schedule</span><span style="font-size:16px">›</span></div>
+          <div class="sc-action"><span>View schedule</span><span style="font-size:16px">&#8250;</span></div>
         </div>
       </div>
     </div>
@@ -428,20 +420,19 @@ canvas.chart{width:100%;display:block}
     </div>
     <div class="lbl">Settings</div>
     <div class="settings-wrap">
-      <div class="setting-row"><div><div class="sr-lbl">Sound chimes</div><div class="sr-desc">Audio at each phase transition</div></div><div class="tgl on" id="tgl-sound" onclick="toggleSetting(this,'sound')"></div></div>
-      <div class="setting-row"><div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div><div class="tgl" id="tgl-notif" onclick="toggleSetting(this,'notif')"></div></div>
-      <div class="setting-row"><div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div><div class="tgl on" id="tgl-eye" onclick="toggleSetting(this,'eye')"></div></div>
-      <div class="setting-row"><div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div><div class="tgl on" id="tgl-hydra" onclick="toggleSetting(this,'hydra')"></div></div>
-      <div class="setting-row"><div><div class="sr-lbl">Focus check-ins</div><div class="sr-desc">Prompt every 7 to 12 min</div></div><div class="tgl on" id="tgl-checkin" onclick="toggleSetting(this,'checkin')"></div></div>
+      <div class="setting-row"><div><div class="sr-lbl">Sound chimes</div><div class="sr-desc">Audio at each phase transition</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-sound" onchange="toggleSetting(this,'sound')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-notif" onchange="toggleSetting(this,'notif')"><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-eye" onchange="toggleSetting(this,'eye')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-hydra" onchange="toggleSetting(this,'hydra')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Focus check-ins</div><div class="sr-desc">Prompt every 7 to 12 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label></div>
     </div>
     <button class="clear-btn" onclick="confirmClearData()">Clear all data</button>
     <div style="height:12px"></div>
   </div>
-  <div class="screen-foot tab-screen">
-    <button class="btn-blob" onclick="startSession()"><div class="blob-blob"></div><div class="inner">Start Session</div></button>
+  <div class="screen-foot">
+    <button class="btn-start" onclick="startSession()">Start Session</button>
   </div>
 </div>
-
 <!-- TIMER -->
 <div class="screen full-screen" id="timer-screen">
   <div class="screen-head">
@@ -452,12 +443,12 @@ canvas.chart{width:100%;display:block}
   <div class="scroll-area" style="display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden">
     <div class="ring-wrap">
       <svg class="ring-svg" viewBox="0 0 280 280">
-        <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#265bf6"/><stop offset="100%" style="stop-color:#93b4ff"/></linearGradient></defs>
+        <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1098f7"/><stop offset="100%" style="stop-color:#6ecbfb"/></linearGradient></defs>
         <circle class="track" cx="140" cy="140" r="122"/>
         <circle class="prog" id="ring" cx="140" cy="140" r="122" stroke="url(#rg)" stroke-dasharray="766.55" stroke-dashoffset="0" transform="rotate(-90 140 140)"/>
-        <text id="t-time" x="140" y="128" font-size="46" font-weight="300" fill="#e2e8f0" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif" font-variant-numeric="tabular-nums">50:00</text>
-        <text id="t-sub" x="140" y="158" font-size="11" fill="#7a82a3" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif">Focus</text>
-        <text id="t-subj" x="140" y="174" font-size="10" fill="#4a5070" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif">Session</text>
+        <text id="t-time" x="140" y="128" font-size="46" font-weight="300" fill="#e8ebe8" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif" font-variant-numeric="tabular-nums">50:00</text>
+        <text id="t-sub" x="140" y="158" font-size="11" fill="#7a8c82" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif">Focus</text>
+        <text id="t-subj" x="140" y="174" font-size="10" fill="#4a5c52" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif">Session</text>
       </svg>
     </div>
   </div>
@@ -473,7 +464,6 @@ canvas.chart{width:100%;display:block}
     </div>
   </div>
 </div>
-
 <!-- BREAK -->
 <div class="screen full-screen" id="break-screen">
   <div class="screen-head"><div class="brk-top"><div class="pill pill-brk" id="brk-lbl">Break</div><button class="btn-ghost" onclick="confirmSkip()">Skip</button></div></div>
@@ -488,7 +478,6 @@ canvas.chart{width:100%;display:block}
     <div class="brk-ctrls"><button class="btn-c bc-pause" id="brk-pause" onclick="togglePause()">Pause</button><button class="btn-c bc-skip" onclick="confirmSkip()">Done early</button></div>
   </div>
 </div>
-
 <!-- LOG -->
 <div class="screen full-screen" id="log-screen">
   <div class="screen-head"><div style="font-size:19px;font-weight:800;letter-spacing:-.5px;padding:6px 0 12px" id="log-header">Session complete</div></div>
@@ -511,16 +500,15 @@ canvas.chart{width:100%;display:block}
     <div class="lbl">Correct method or answer</div><textarea class="tarea" id="log-correct" placeholder="The right approach or answer"></textarea>
     <div class="lbl">How to avoid next time</div><textarea class="tarea" id="log-avoid" placeholder="Concrete action for next session"></textarea>
     <div class="lbl">Exam question (optional)</div><input class="tinput" id="log-question" type="text" placeholder="Exact question or task">
-    <div class="spaced-row"><div><div style="font-size:13px;font-weight:500">Add to spaced repetition</div><div style="font-size:11px;color:var(--hint);margin-top:2px">Review in 2 weeks, then 1 month</div></div><div class="tgl" id="tgl-spaced" onclick="this.classList.toggle('on')"></div></div>
+    <div class="spaced-row"><div><div style="font-size:13px;font-weight:500">Add to spaced repetition</div><div style="font-size:11px;color:var(--hint);margin-top:2px">Intervals: 14d then 28d then 60d max</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-spaced"><div class="slider"></div></label></div>
     <button class="copy-btn" id="copy-btn" onclick="copyForNotion()"><span>Copy for Notion</span><span style="font-size:15px">📋</span></button>
     <div style="height:10px"></div>
   </div>
   <div class="screen-foot full-screen">
-    <button class="btn btn-primary" style="background:linear-gradient(135deg,#d97706,#f59e0b);box-shadow:0 4px 15px rgba(245,158,11,.35)" onclick="doneLog()">Save and continue</button>
+    <button class="btn btn-primary" style="background:linear-gradient(135deg,#c9911a,#e5a820);" onclick="doneLog()">Save and continue</button>
     <button class="btn-skip-log" onclick="doneLog(true)">Skip error log</button>
   </div>
 </div>
-
 <!-- STATS -->
 <div class="screen tab-screen" id="stats-screen">
   <div class="screen-head"><div class="hdr"><span class="app-name">Stats</span></div></div>
@@ -539,43 +527,41 @@ canvas.chart{width:100%;display:block}
     <div style="height:8px"></div>
   </div>
 </div>
-
 <!-- SPEC -->
 <div class="screen tab-screen" id="spec-screen">
-  <div class="screen-head"><div class="hdr" style="flex-direction:column;align-items:flex-start;padding-bottom:8px"><span class="app-name">Spec</span><div style="font-size:11px;color:var(--muted);font-weight:500;margin-top:3px">Tap a point to cycle: grey, red, amber, green</div></div></div>
+  <div class="screen-head"><div class="hdr" style="flex-direction:column;align-items:flex-start;padding-bottom:8px"><span class="app-name">Spec</span></div></div>
   <div class="scroll-area" style="padding-top:4px">
-    <div class="spec-legend"><div class="spec-leg-item"><div class="spec-leg-dot" style="background:var(--s3)"></div>Not rated</div><div class="spec-leg-item"><div class="spec-leg-dot" style="background:#ef4444"></div>Red: urgent</div><div class="spec-leg-item"><div class="spec-leg-dot" style="background:#f59e0b"></div>Amber: shaky</div><div class="spec-leg-item"><div class="spec-leg-dot" style="background:#10b981"></div>Green: solid</div></div>
-    <div class="spec-subj-scroll"><div class="spec-pills" id="spec-pills"></div></div>
-    <div class="spec-prog-row" id="spec-prog-row"></div>
-    <div id="spec-list"></div>
+    <div id="spec-lock-view" class="res-lock">
+      <div class="res-lock-icon">🎯</div>
+      <div class="res-lock-title">Spec tracker is locked</div>
+      <div class="res-lock-sub">Unlock personal mode to track your spec confidence and see your progress across every subject.</div>
+      <button class="btn btn-primary" style="max-width:240px" onclick="openLock()">Unlock</button>
+    </div>
+    <div id="spec-unlocked-view" style="display:none">
+      <div style="font-size:11px;color:var(--muted);font-weight:500;margin-bottom:12px">Tap a point to cycle: grey, red, amber, green</div>
+      <div class="spec-legend"><div class="spec-leg-item"><div class="spec-leg-dot" style="background:var(--s3)"></div>Not rated</div><div class="spec-leg-item"><div class="spec-leg-dot" style="background:#db4c40"></div>Red - urgent</div><div class="spec-leg-item"><div class="spec-leg-dot" style="background:#c9911a"></div>Amber - shaky</div><div class="spec-leg-item"><div class="spec-leg-dot" style="background:#417b5a"></div>Green - solid</div></div>
+      <div class="spec-subj-scroll"><div class="spec-pills" id="spec-pills"></div></div>
+      <div class="spec-prog-row" id="spec-prog-row"></div>
+      <div id="spec-list"></div>
+    </div>
     <div style="height:12px"></div>
   </div>
 </div>
-
-<!-- RESOURCES (password locked) -->
+<!-- RESOURCES -->
 <div class="screen tab-screen" id="resources-screen">
   <div class="screen-head"><div class="hdr"><span class="app-name">Resources</span></div></div>
-  <div class="scroll-area" style="padding-top:4px" id="resources-scroll">
-    <!-- Lock state shown when not unlocked -->
+  <div class="scroll-area" style="padding-top:4px">
     <div id="res-lock-view" class="res-lock">
       <div class="res-lock-icon">🔐</div>
       <div class="res-lock-title">Resources are locked</div>
       <div class="res-lock-sub">Unlock personal mode to access your revision sites, Notion notes, exam dates, and subject guides.</div>
       <button class="btn btn-primary" style="max-width:240px" onclick="openLock()">Unlock</button>
     </div>
-    <!-- Unlocked resources content -->
     <div id="res-unlocked-view" style="display:none">
       <div class="lbl">Your Notion</div>
-      <div class="notion-search-wrap">
-        <input class="tinput" id="notion-query" type="text" placeholder="Search or open a page..." style="flex:1" onkeydown="if(event.key==='Enter')searchNotion()">
-        <button class="notion-search-btn" onclick="searchNotion()">Search</button>
-      </div>
-      <div class="notion-info" id="notion-info">Search opens Notion in a new tab. Quick links below.</div>
-      <div id="notion-quicklinks" style="margin-top:6px"></div>
-
+      <div id="notion-quicklinks"></div>
       <div class="lbl">Upcoming exams</div>
       <div class="exam-list" id="exam-list"></div>
-
       <div class="lbl">Revision sites</div>
       <div class="site-cat-lbl" style="margin-top:0">Flashcards and recall</div>
       <div class="site-grid">
@@ -598,29 +584,38 @@ canvas.chart{width:100%;display:block}
         <a class="site-card" href="https://corbettmaths.com/5-a-day/" target="_blank"><div class="site-name">Corbett 5-a-day</div><div class="site-desc">Daily maths practice</div><div class="site-tag">Daily habit</div></a>
         <a class="site-card" href="https://www.mathsgenie.co.uk/" target="_blank"><div class="site-name">Maths Genie</div><div class="site-desc">Graded topic questions</div></a>
       </div>
-
       <div class="lbl">How to revise</div><div id="how-to-revise"></div>
       <div class="lbl">Weekly schedule</div>
       <div class="sched-table-wrap" id="res-sched-table"></div>
-      <div style="height:8px"></div>
+      <div style="height:20px"></div>
     </div>
   </div>
 </div>
-
-<!-- NAV -->
 <nav class="bottom-nav" id="bottom-nav">
   <button class="nav-btn active" id="nav-home" onclick="showTab('home')"><span class="nav-icon">📚</span><span class="nav-lbl">Home</span></button>
   <button class="nav-btn" id="nav-stats" onclick="showTab('stats')"><span class="nav-icon">📊</span><span class="nav-lbl">Stats</span></button>
   <button class="nav-btn" id="nav-spec" onclick="showTab('spec')"><span class="nav-icon">🎯</span><span class="nav-lbl">Spec</span></button>
   <button class="nav-btn" id="nav-resources" onclick="showTab('resources')"><span class="nav-icon">🔗</span><span class="nav-lbl">Resources</span></button>
 </nav>
+<div class="sr-ov" id="sr-ov" onclick="if(event.target===this)closeSRReview()">
+  <div class="sr-sheet">
+    <div class="sr-handle"></div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--hint);margin-bottom:12px">Review</div>
+    <div class="sr-progress" id="sr-prog"></div>
+    <div class="sr-topic" id="sr-topic"></div>
+    <div class="sr-subj" id="sr-subj-lbl"></div>
+    <div class="sr-btns">
+      <button class="sr-btn nope" onclick="srAnswer(false)">Not yet</button>
+      <button class="sr-btn got" onclick="srAnswer(true)">Got it</button>
+    </div>
+    <div class="sr-card-hint" id="sr-hint"></div>
+  </div>
+</div>
+
 <script>
 if(!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(r,w/2,h/2);this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};}
-
 const PASSWORD='Xaniel32!';
 const CIRC=2*Math.PI*122;
-
-// Your Notion pages (works on any host)
 const NOTION_PAGES=[
   {title:'Homepage',icon:'🏠',url:'https://notion.so/2d08392dca1880c88e6de03886c260c3',sub:'Main workspace hub'},
   {title:'Subjects',icon:'📚',url:'https://notion.so/2e68392dca1880aab770dbd20d6d654c',sub:'All subject pages'},
@@ -631,7 +626,6 @@ const NOTION_PAGES=[
   {title:'Maths Subject',icon:'➗',url:'https://notion.so/3278392dca1881348f5ac299431b980a',sub:'Past paper tracker and notes'},
   {title:'Biology Subject',icon:'🧬',url:'https://notion.so/3278392dca1881d29d5aff2740a18254',sub:'Notes and revision'},
 ];
-
 const TIMETABLE={
   0:{s1:{subj:'Computer Science',mins:60},s2:{subj:'Biology',mins:60},s3:{subj:'Weekly Review',mins:20}},
   1:{s1:{subj:'Maths',mins:60},s2:{subj:'English Literature',mins:60},s3:{subj:'Rotation',mins:30},s3detail:'English: Quote blurting | French: Flashcards 20 to 30 vocab'},
@@ -641,7 +635,6 @@ const TIMETABLE={
   5:{s1:{subj:'Maths',mins:60},s2:{subj:'English Language',mins:60},s3:{subj:'Rotation',mins:30},s3detail:'English: Timed paragraph 12 to 15 min | French: Mixed review'},
   6:{s1:{subj:'Maths',mins:60},s2:{subj:'Weakest Science',mins:60},s3:{subj:'English / Geography',mins:40},s3detail:'English: Timed paragraph | French: Flashcards + short translation'}
 };
-
 const SUBJECTS=[
   {name:'Maths',grade:'8',gradeNote:'unsure',examDates:'Jun 10, 18, 22',weeklyMins:220},
   {name:'English Lit',grade:'9',gradeNote:'unsure',examDates:'Jun 11',weeklyMins:90},
@@ -654,9 +647,7 @@ const SUBJECTS=[
   {name:'Business',grade:'7',gradeNote:'unsure',examDates:'Jun 24',weeklyMins:25},
   {name:'French',grade:'Pass',gradeNote:'unsure',examDates:'Jun 17, 22, 23',weeklyMins:30}
 ];
-
 const SUBJ_MAP={'maths':'Maths','math':'Maths','mathematics':'Maths','bio':'Biology','biology':'Biology','chem':'Chemistry','chemistry':'Chemistry','phys':'Physics','physics':'Physics','cs':'Computer Science','computer science':'Computer Science','comp sci':'Computer Science','english lit':'English Lit','english literature':'English Lit','lit':'English Lit','english lang':'English Lang','english language':'English Lang','lang':'English Lang','english':'English Lit','geo':'Geography','geography':'Geography','business':'Business','biz':'Business','french':'French','fr':'French'};
-
 const EXAMS=[
   {date:'2026-06-10',subj:'Maths',paper:'Paper 1'},{date:'2026-06-11',subj:'English Literature',paper:'Component 2'},
   {date:'2026-06-16',subj:'English Language',paper:'Paper 1'},{date:'2026-06-17',subj:'French',paper:'Reading'},
@@ -667,7 +658,6 @@ const EXAMS=[
   {date:'2026-06-23',subj:'French',paper:'Listening'},{date:'2026-06-23',subj:'Computer Science',paper:'Paper 1'},
   {date:'2026-06-24',subj:'Business',paper:'Paper 1'},{date:'2026-06-25',subj:'Computer Science',paper:'Paper 2'}
 ];
-
 const HOW_TO={
   'Maths':['<strong>Daily Corbett 5-a-day</strong>: non-negotiable. Keeps every topic warm.','<strong>Higher tier priorities</strong>: circle theorems, vectors, algebraic proof, iteration, completing the square. Do not avoid them.','<strong>Full past papers on PMT</strong>: show every step, never skip lines.','<strong>After marking</strong>: write down the exact step you missed, not just the topic.'],
   'Biology':['<strong>Blurting for every subtopic</strong>: write from memory, open notes, circle gaps. Repeat missed points 3x.','<strong>End every session with one 6-mark question</strong> marked against the scheme.','<strong>Flashcard every bold term</strong>: you need precise definitions not vague recall.','<strong>Paper 1 vs Paper 2</strong>: calculations dominate P1; evaluate and explain dominate P2.'],
@@ -680,101 +670,75 @@ const HOW_TO={
   'Business':['<strong>Apply everything to the given context</strong>: a generic answer scores 1 mark at most.','<strong>Consequence chains</strong>: X leads to Y, because of Z. Answers that stop at X are incomplete.','<strong>Key calculations</strong>: revenue, profit margin, break-even, ARR. Always show working.','<strong>Theme 2 is under-revised by most students</strong>: check your confidence on globalisation, production, and HR.'],
   'French':['<strong>20 to 30 flashcards every session without exception.</strong> Mark weak cards and return to them at the end.','<strong>Tense range in writing</strong>: include at least 3 tenses. Passive voice and conditional push marks higher.','<strong>Translation practice</strong>: short paragraphs English to French and back. Forces vocabulary in context.','<strong>Listening</strong>: past paper audio only, no looking at text first.']
 };
-
-// Spec points from actual specifications
 const SPEC={
-  'Maths':{
-    sections:[
-      {name:'Number',points:['N7: Fractional indices (e.g. x^(1/3)) and surds','N8: Calculate with surds, simplify and rationalise denominators','N10: Convert recurring decimals to fractions and back','N16: Upper and lower bounds in calculations']},
-      {name:'Algebra',points:['A4: Factorise ax2+bx+c; difference of two squares','A6: Algebraic proof (show expressions are equivalent)','A11: Turning points by completing the square','A12: Sketch exponential y=k^x and trig functions y=sinx, y=cosx, y=tanx','A13: Sketch transformations: translations and reflections of functions','A15: Estimate gradient at a point; area under a graph (non-linear)','A16: Equation of circle x2+y2=r2; tangent at a given point','A18: Solve quadratics: factorising, completing the square, formula','A19: Linear and quadratic simultaneous equations algebraically','A20: Iteration to find approximate solutions numerically','A22: Quadratic inequalities; solution set on number line or graph','A25: nth term of quadratic sequences']},
-      {name:'Ratio and Proportion',points:['R15: Gradient at a point on a curve as instantaneous rate of change','R16: Growth and decay with compound interest and iterative processes']},
-      {name:'Geometry',points:['G7: Negative and fractional scale factor enlargements','G8: Combined transformations: describe changes and invariance','G10: Circle theorems: prove and apply (angles, radii, tangents, chords)','G19: Similarity: relationships between lengths, areas, and volumes','G22: Sine rule and cosine rule to find unknown sides and angles','G23: Area = 1/2 ab sinC for any triangle','G25: Vectors in geometric proofs and arguments']},
-      {name:'Statistics and Probability',points:['P9: Conditional probability using two-way tables, tree diagrams, Venn diagrams','S3: Histograms with unequal class intervals; interpret and construct','S4: Box plots; quartiles and interquartile range']}
-    ]
-  },
-  'English Lit':{
-    sections:[
-      {name:'Paper 1 (40%) - Shakespeare + 19th Century Novel',points:['Section A: One question on your Shakespeare play (extract + whole text)','Macbeth: Act 1 Sc 7 (ambition), Act 2 Sc 1-2 (guilt), Act 3 Sc 4 (banquet), Act 5 Sc 1 (sleepwalking)','Macbeth themes: ambition, guilt, power, gender, appearance vs reality','Macbeth context: Jacobean society, divine right of kings, witchcraft, patriarchy','Section B: One question on your 19th century novel (extract + whole text)','A Christmas Carol: Scrooge\'s transformation across all 5 staves','A Christmas Carol themes: redemption, poverty, social responsibility, family','A Christmas Carol context: Victorian England, Industrial Revolution, New Poor Law (1834)']},
-      {name:'Paper 2 (60%) - Modern Text + Poetry + Unseen',points:['Section A: One essay from two choices on your modern text','An Inspector Calls: themes of responsibility, social class, age, and gender','An Inspector Calls context: 1912 setting written 1945 - Priestley\'s socialist message','Section B: Compare a named poem to one poem of your own choice from your cluster','Power and Conflict cluster: 15 poems, be ready to write on any of them','Section C: Analyse one unseen poem, then compare with a second unseen poem','AO1: Critical style, informed personal response, quotation to support interpretations','AO2: Analyse language, form, and structure using subject terminology','AO3: Context linked to effect (one reference per paragraph is enough)','AO4: Vocabulary range, spelling, and punctuation (5% of total marks)']}
-    ]
-  },
-  'English Lang':{
-    sections:[
-      {name:'Paper 1 (50%) - Creative Reading and Writing',points:['Source: literature fiction text (20th or 21st century prose)','Q1 (4 marks): identify 4 true statements from a list about the source','Q2 (8 marks): language analysis using PETL - Point, Evidence, Technique, Link to effect','Q3 (8 marks): structure analysis at whole text level, not just sentences','Q4 (20 marks): critical evaluation of a statement about the text, with evidence','Q5 (40 marks): descriptive or narrative writing - plan for 5 min before writing']},
-      {name:'Paper 2 (50%) - Viewpoints and Perspectives',points:['Sources: one non-fiction + one literary non-fiction, different time periods','Q1 (4 marks): identify 4 true statements across both sources','Q2 (8 marks): summarise and synthesise from both sources','Q3 (12 marks): language analysis on one of the sources','Q4 (16 marks): compare writers\' perspectives across both sources - the mark separator','Q5 (40 marks): writing to present a viewpoint - specify audience, purpose, form','AO5 (30%): communicate clearly, adapt tone, style, register for purpose and audience','AO6 (20% of total GCSE): vocabulary, sentence structures, spelling, punctuation']}
-    ]
-  },
-  'Biology':{
-    sections:[
-      {name:'Cell Biology',points:['Prokaryotic vs eukaryotic cells: differences and examples','Cell structures: nucleus, cytoplasm, cell membrane, mitochondria, ribosomes','Plant cells: cell wall, chloroplasts, vacuole - functions of each','Mitosis: PMAT stages, why cells divide (growth, repair, asexual reproduction)','Required practical: microscopy - calculate magnification, draw cells to scale','Diffusion, osmosis, active transport: definitions and comparisons','Required practical: osmosis in plant tissue']},
-      {name:'Organisation',points:['Enzymes: lock and key model, optimum pH and temperature, denaturation','Required practical: effect of pH on amylase activity','Digestive system: organs and their functions, absorption in small intestine','Heart: structure (4 chambers, valves), double circulatory system','Blood vessels: artery, vein, capillary - structure and function','Blood components: red cells (haemoglobin), white cells, platelets, plasma','Lungs: alveoli adaptations, gas exchange, breathing mechanics','Liver and kidneys: roles in homeostasis']},
-      {name:'Infection and Response',points:['Pathogens: bacteria, viruses, fungi, protists - examples and diseases','How the body defends itself: skin, mucus, phagocytes, lymphocytes, antibodies','Vaccines: how they work, herd immunity, MMR example','Antibiotics: how they work, resistance, why they cannot kill viruses','Required practical: growing bacteria and testing antibiotics (aseptic technique)']},
-      {name:'Bioenergetics',points:['Photosynthesis equation: 6CO2 + 6H2O + light energy = C6H12O6 + 6O2','Limiting factors: light intensity, CO2 concentration, temperature','Required practical: effect of light intensity on photosynthesis rate','Aerobic respiration: C6H12O6 + 6O2 = 6CO2 + 6H2O + energy','Anaerobic respiration in humans: glucose = lactic acid + energy','Anaerobic in yeast: glucose = ethanol + CO2 + energy']},
-      {name:'Homeostasis and Response',points:['Nervous system: receptors, neurones, synapses, effectors','Reflex arcs: receptor, sensory, relay, motor neurone, effector','Required practical: reaction time','Hormones vs nervous system: speed, specificity, duration differences','Blood glucose control: insulin and glucagon (type 1 and 2 diabetes)','Thermoregulation: hypothalamus, vasodilation, vasoconstriction, sweating, shivering']},
-      {name:'Inheritance and Evolution',points:['DNA: double helix, base pairs (A-T, C-G), chromosomes, genes','Mitosis vs meiosis: purpose, outcome, where each occurs','Genetic inheritance: dominant, recessive, homozygous, heterozygous','Punnett squares: monohybrid crosses including sex-linked traits','Evolution: natural selection mechanism (Darwin)','Evidence for evolution: fossils, antibiotic resistance, molecular biology']}
-    ]
-  },
-  'Computer Science':{
-    sections:[
-      {name:'Algorithms',points:['Trace tables: trace through code showing variable values at each step','Bubble sort: how it works, best/worst case, compare values and swap','Merge sort: divide and conquer, best/worst/average O(n log n)','Linear search: O(n), works on unsorted data','Binary search: O(log n), sorted data only, divide and check mid point','Flowcharts: draw and interpret; standard symbols for start/stop, process, decision','Pseudocode: write algorithms from scratch without help']},
-      {name:'Programming',points:['Variables and data types: integer, real, Boolean, string, character','Sequence, selection (if/elif/else), and iteration (for/while loops)','Functions/subroutines: parameters, return values, local vs global scope','String operations: length, substring, concatenation, upper/lower','File handling: open, read, write, close - read line by line','Arrays/lists: index from 0, 2D arrays, common operations','Exception handling: try/except to prevent crashes']},
-      {name:'Data Representation',points:['Binary: convert to and from denary and hex','Binary arithmetic: addition, overflow error','Two\'s complement: represent negative numbers in binary','Hexadecimal: used in memory addresses and colour codes','Character codes: ASCII and Unicode (why Unicode needed)','Images: pixels, bit depth, resolution, file size calculation','Sound: sample rate, bit depth, file size calculation','Data compression: lossy vs lossless, run length encoding, Huffman coding']},
-      {name:'Hardware and Software',points:['Von Neumann architecture: CPU, ALU, control unit, registers, buses','Fetch-decode-execute cycle: steps and what happens at each','Factors affecting CPU performance: clock speed, number of cores, cache size','Primary storage: RAM (volatile), ROM (non-volatile) - purpose of each','Secondary storage: HDD vs SSD vs optical vs flash - pros and cons','Operating system roles: memory management, process scheduling, file management','High vs low level languages; compilers vs interpreters']},
-      {name:'Networks',points:['Network types: LAN vs WAN; topology: star, bus, mesh','Network hardware: router, switch, hub, NIC','Wired vs wireless: ethernet vs Wi-Fi - speed, security, reliability','TCP/IP protocol suite: layers and what each does','IP addressing: IPv4 vs IPv6; packets and packet switching','Network security threats: malware, phishing, brute force, SQL injection','Network security measures: firewall, encryption, authentication, access control']},
-      {name:'Boolean Logic',points:['Logic gates: AND, OR, NOT, NAND, NOR, XOR - draw and label from memory','Truth tables: construct for any gate or combination of gates','Boolean algebra: simplify expressions using laws (De Morgan\'s theorem)','Logic diagrams: draw circuit from Boolean expression and vice versa']}
-    ]
-  },
-  'Chemistry':{
-    sections:[
-      {name:'Atomic Structure and Bonding',points:['Atomic structure: protons, neutrons, electrons; atomic number and mass number','Isotopes: same element, different neutrons; relative atomic mass calculation','Electronic structure: shells, how to fill them, link to periodic table groups','Ionic bonding: transfer of electrons, giant ionic lattice, high melting point','Covalent bonding: sharing electrons; simple molecular vs giant covalent','Metallic bonding: delocalised electrons, explains conductivity and malleability','Intermolecular forces: weak forces between molecules, explains low boiling points']},
-      {name:'Quantitative Chemistry',points:['Relative formula mass (Mr): add up all atomic masses','Moles = mass / Mr; use to calculate amounts in reactions','Balanced equations: use ratio of moles to find reacting quantities','Percentage yield = (actual/theoretical) x 100','Atom economy = (useful products Mr / all products Mr) x 100','Concentration (mol/dm3) = moles / volume','Titration calculations: find unknown concentration from volumes and known concentration']},
-      {name:'Chemical Changes',points:['Reactivity series: K, Na, Ca, Mg, Al, Zn, Fe, Cu - memorise order','Displacement reactions: more reactive metal displaces less reactive one','Acids and bases: pH scale, neutralisation, salts formed from acid + base','Making salts: acid + metal, acid + metal oxide, acid + metal carbonate, titration','Electrolysis: splitting ionic compounds with electricity; cathode (reduction) and anode (oxidation)','Products of electrolysis: predict products from molten salts vs aqueous solutions']},
-      {name:'Energy Changes',points:['Exothermic reactions: energy released, temperature rises, products lower energy than reactants','Endothermic reactions: energy absorbed, temperature falls','Bond energies: energy needed to break bonds; energy released making bonds','Exothermic if energy released (making) > energy absorbed (breaking)','Required practical: temperature change for different reactions']},
-      {name:'Rates, Equilibrium and Organic Chemistry',points:['Factors affecting rate: temperature, concentration, surface area, catalyst, pressure (gases)','Collision theory: explains why each factor increases rate','Le Chatelier\'s principle: equilibrium shifts to oppose changes in conditions','Haber process: N2 + 3H2 = 2NH3; conditions 450 degrees C, 200 atm, iron catalyst','Contact process: SO3 production; compromise conditions','Alkanes: CnH2n+2; saturated; combustion reactions','Alkenes: CnH2n; unsaturated (C=C double bond); addition reactions; bromine water test']},
-      {name:'Analysis and the Atmosphere',points:['History of atmosphere: early atmosphere, how oxygen increased, where CO2 went','Carbon dioxide and climate change: greenhouse effect mechanism','Tests for gases: H2 (squeaky pop), O2 (glowing splint relights), CO2 (limewater), Cl2 (bleaches damp litmus)','Flame tests: Li (red), Na (yellow), K (lilac), Ca (orange-red), Cu (green)','Required practical: identifying ions using precipitation reactions']}
-    ]
-  },
-  'Physics':{
-    sections:[
-      {name:'Forces',points:['Vector vs scalar quantities: vectors have magnitude and direction','Resultant forces: add/subtract forces; use Pythagoras for perpendicular forces','Newton\'s 1st law: stationary or constant velocity unless resultant force acts','Newton\'s 2nd law: F = ma; calculate resultant force, mass, or acceleration','Newton\'s 3rd law: equal and opposite forces on different objects','Momentum = mass x velocity; p = mv; conservation of momentum in collisions','Stopping distance = thinking distance + braking distance; factors affecting each','Work done = force x distance; W = Fd; measured in joules','Hooke\'s law: F = ke; spring constant k; elastic limit']},
-      {name:'Waves',points:['Wave equation: v = f x lambda (wave speed = frequency x wavelength)','Transverse vs longitudinal waves: key differences and examples','Electromagnetic spectrum: order, properties, uses and dangers of each type','Required practical: investigate reflection, refraction, and wavelength','Sound waves: compression waves; speed in different media','Required practical: determine speed of sound in air']},
-      {name:'Electricity',points:['V = IR (Ohm\'s law); calculate resistance, voltage, or current','P = IV = I2R = V2/R; power calculations','Series circuits: same current everywhere; voltages add up','Parallel circuits: voltages equal; currents split','Component characteristics: resistor (ohmic), filament lamp, diode, LDR, thermistor','Mains electricity: 230V AC, 50Hz in the UK; live, neutral, earth wires','Fuses and circuit breakers: protect against overload; earth wire prevents electrocution','Required practical: I-V characteristics of different components']},
-      {name:'Magnetism and Electromagnetism',points:['Magnetic fields: shape around bar magnet and current-carrying wire','Fleming\'s left-hand rule: force on current in magnetic field (motor effect)','F = BIl; force on a conductor in a magnetic field','Electric motors: how they work; split ring commutator','Electromagnetic induction: moving conductor in magnetic field induces EMF','Generators: AC generator and DC generator; how they differ','Transformers: step-up and step-down; Vp/Vs = Np/Ns; power equation VpIp = VsIs']},
-      {name:'Particle Model and Atomic Structure',points:['Specific heat capacity: E = mcT; calculate energy for temperature change','Required practical: determine specific heat capacity of water or metal','Specific latent heat: energy for state change without temperature change','Pressure in a gas: pV = constant (Boyle\'s law) at constant temperature','Radioactive decay: alpha, beta, gamma - properties and penetration','Nuclear equations: balance atomic and mass numbers in decay equations','Half-life: time for activity to halve; calculate remaining amount','Uses of radiation: medical (tracers, radiotherapy), irradiating food, smoke alarms']},
-      {name:'Space and Energy',points:['Energy stores: kinetic, gravitational potential, elastic, thermal, chemical','Energy transfers: by heating, by mechanical working, by electrical current, by radiation','Efficiency = useful output / total input; express as fraction or percentage','Required practical: investigate efficiency of energy transfers','Renewable energy: solar, wind, hydro, tidal, geothermal - advantages and disadvantages','Non-renewable: fossil fuels, nuclear; reliability vs environmental impact','Life cycle of stars: nebula to main sequence to red giant to white dwarf or supernova','Big Bang theory: evidence from red-shift and cosmic microwave background radiation']}
-    ]
-  },
-  'Geography':{
-    sections:[
-      {name:'Natural Hazards',points:['Tectonic hazards: plate boundaries (destructive, constructive, conservative)','Earthquakes: cause, primary and secondary effects, responses (immediate and long-term)','Volcanoes: cause, types of lava, effects; Montserrat vs Iceland case studies','Tropical storms: structure, how they form, effects; Typhoon Hainan or Hurricane Katrina','Weather hazards in the UK: droughts, flooding, storms']},
-      {name:'Living World',points:['Ecosystems: producers, consumers, decomposers; food chains and webs','Tropical rainforests: structure (canopy, understory, shrub, forest floor), adaptations, deforestation causes and effects','Tropical rainforest case study: specific example (Amazon or Malaysia)','Hot deserts: characteristics, plant and animal adaptations','Desertification: causes and reduction strategies']},
-      {name:'Physical Landscapes UK',points:['Rivers: erosion processes (hydraulic action, abrasion, attrition, solution); transportation; deposition','River landforms: V-shaped valley, waterfall, meander, ox-bow lake, flood plain, levee','Coasts: wave types (constructive vs destructive); erosion and deposition','Coastal landforms: cliff, wave-cut platform, headland, bay, spit, bar, tombolo','Coastal management: hard engineering vs soft engineering - evaluate each']},
-      {name:'Urban Issues',points:['Urbanisation: causes and consequences; differences between HICs and LICs','UK city case study: Bristol or Sheffield - urban challenges and regeneration','LIC/NEE city case study: Rio de Janeiro or Mumbai - squatter settlements, access to services','Urban sustainability: transport, green spaces, waste management']},
-      {name:'Resource Management',points:['Food security: causes of food insecurity; intensive farming vs organic; GM crops','Water management: uneven distribution; increasing demand; dams and water transfer','Energy: energy mix; fossil fuels vs renewables; energy insecurity']},
-      {name:'Fieldwork and Skills',points:['Fieldwork: you need to know your own data, location, methods, and conclusions','Graphs and charts: describe patterns (highest, lowest, trend), do not just read values','OS maps: 6-figure grid references, contour lines, map symbols, cross-sections','Statistical skills: mean, median, mode, range; Spearman rank correlation']}
-    ]
-  },
-  'Business':{
-    sections:[
-      {name:'Theme 1: Investigating Small Business',points:['Entrepreneurs: role, characteristics, purpose; risks and rewards','Business aims and objectives: survival, profit, growth, market share','Market research: primary (surveys, interviews) vs secondary (internet, reports)','Market segmentation: age, income, location - target the right customers','Revenue = price x quantity sold','Costs: fixed vs variable; total costs = fixed + variable','Profit = total revenue - total costs','Break-even: output where TR = TC; break-even = fixed costs / (price - variable cost)','Cash flow: positive vs negative; cash flow forecasts and managing cash','Sources of finance: personal savings, loans, share issue, retained profit, crowdfunding','Marketing mix: Product, Price, Place, Promotion (4Ps)','Methods of promotion: advertising, PR, social media, sales promotions']},
-      {name:'Theme 2: Building a Business',points:['Business growth: organic (internal) vs inorganic (mergers, takeovers)','Limited vs unlimited liability: sole trader vs Ltd/PLC','Globalisation: benefits and drawbacks for businesses; trading internationally','Competitive advantage: price, quality, USP, customer service','Production: job, batch, and flow production - advantages and disadvantages','Lean production: just-in-time, kaizen (continuous improvement)','Quality management: quality control vs quality assurance','Human resources: recruitment process, training, motivation theories (Maslow, Taylor)','Organisational structures: hierarchical vs flat; span of control','Business ethics: environmental responsibility, fair trade, ethical sourcing','Impacts of technology: e-commerce, automation, social media','ARR = average annual profit / initial investment x 100']}
-    ]
-  },
-  'French':{
-    sections:[
-      {name:'Core Topics',points:['Identity and culture: family, friends, relationships, role models','Technology: social media, internet, mobile phones - opinions in French','Free time: hobbies, sport, music, reading, cinema','Holidays: transport, accommodation, activities, past and future trips','School: subjects, timetable, school life, rules, future plans']},
-      {name:'Grammar Essentials',points:['Present tense: all verbs including irregular (aller, avoir, etre, faire, prendre)','Perfect tense (passe compose): avoir and etre verbs, past participles','Imperfect tense: used for habitual past actions and descriptions','Future tense: aller + infinitive (near future) and future simple','Conditional tense: would - je voudrais, ce serait, j\'aimerais','Reflexive verbs: se lever, se coucher, s\'appeler - in all tenses','Pronouns: direct object (me, te, le, la), indirect (me, te, lui), y, en','Negation: ne...pas, ne...jamais, ne...rien, ne...plus','Questions: using intonation, est-ce que, inversion, question words']},
-      {name:'Exam Skills',points:['Reading: identify gist first, then specific details; watch for negatives and tense','Listening: predict answers from questions before audio plays; numbers and dates are common traps','Writing: include 3+ tenses, opinions with justifications, and a range of structures','Speaking: prepare opinions on all core topics; extend answers with connectives and reasons','Translation: know high frequency vocabulary; mark schemes reward accuracy over volume','AQA French uses GCSE (9-1) scale; separate papers for each skill']}
-    ]
-  },
-  'English Lang':{
-    sections:[
-      {name:'Paper 1 (50%) - Creative Reading and Writing',points:['Source: literature fiction text (20th or 21st century prose)','Q1 (4 marks): identify 4 true statements from a list about the source','Q2 (8 marks): language analysis using PETL - Point, Evidence, Technique, Link to effect','Q3 (8 marks): structure analysis at whole text level, not just sentences','Q4 (20 marks): critical evaluation of a statement about the text, with evidence','Q5 (40 marks): descriptive or narrative writing - plan for 5 min before writing']},
-      {name:'Paper 2 (50%) - Viewpoints and Perspectives',points:['Sources: one non-fiction + one literary non-fiction, different time periods','Q1 (4 marks): identify 4 true statements across both sources','Q2 (8 marks): summarise and synthesise from both sources','Q3 (12 marks): language analysis on one of the sources','Q4 (16 marks): compare writers\' perspectives across both sources - the mark separator','Q5 (40 marks): writing to present a viewpoint - specify audience, purpose, form','AO5 (30%): communicate clearly, adapt tone, style, register for purpose and audience','AO6 (20% of total GCSE): vocabulary, sentence structures, spelling, punctuation']}
-    ]
-  }
+  'Maths':{sections:[
+    {name:'Number',points:['N7: Fractional indices (e.g. x^(1/3)) and surds','N8: Calculate with surds, simplify and rationalise denominators','N10: Convert recurring decimals to fractions and back','N16: Upper and lower bounds in calculations']},
+    {name:'Algebra',points:['A4: Factorise ax2+bx+c; difference of two squares','A6: Algebraic proof - show expressions are equivalent','A11: Turning points by completing the square','A12: Sketch exponential and trig functions sinx, cosx, tanx','A13: Sketch transformations: translations and reflections','A15: Estimate gradient at a point; area under a graph','A16: Equation of circle x2+y2=r2; tangent at a given point','A18: Solve quadratics: factorising, completing the square, formula','A19: Linear and quadratic simultaneous equations','A20: Iteration to find approximate solutions numerically','A22: Quadratic inequalities; solution set on number line or graph','A25: nth term of quadratic sequences']},
+    {name:'Ratio and Proportion',points:['R15: Gradient at a point on a curve as instantaneous rate of change','R16: Growth and decay with compound interest and iterative processes']},
+    {name:'Geometry',points:['G7: Negative and fractional scale factor enlargements','G8: Combined transformations - describe changes and invariance','G10: Circle theorems: prove and apply (angles, radii, tangents, chords)','G19: Similarity: relationships between lengths, areas, and volumes','G22: Sine rule and cosine rule to find unknown sides and angles','G23: Area = 1/2 ab sinC for any triangle','G25: Vectors in geometric proofs and arguments']},
+    {name:'Statistics and Probability',points:['P9: Conditional probability using two-way tables, tree diagrams, Venn diagrams','S3: Histograms with unequal class intervals - interpret and construct','S4: Box plots - quartiles and interquartile range']}
+  ]},
+  'English Lit':{sections:[
+    {name:'Paper 1 (40%) - Shakespeare and 19th Century Novel',points:['Section A: One question on your Shakespeare play (extract plus whole text)','Macbeth: Act 1 Sc 7 (ambition), Act 2 Sc 1-2 (guilt), Act 3 Sc 4 (banquet), Act 5 Sc 1 (sleepwalking)','Macbeth themes: ambition, guilt, power, gender, appearance vs reality','Macbeth context: Jacobean society, divine right of kings, witchcraft, patriarchy','Section B: One question on your 19th century novel','A Christmas Carol: Scrooge transformation across all 5 staves','A Christmas Carol themes: redemption, poverty, social responsibility, family','A Christmas Carol context: Victorian England, Industrial Revolution, New Poor Law (1834)']},
+    {name:'Paper 2 (60%) - Modern Text, Poetry and Unseen',points:['Section A: One essay from two choices on your modern text','An Inspector Calls: themes of responsibility, social class, age, and gender','An Inspector Calls context: 1912 setting written 1945 - Priestley socialist message','Section B: Compare a named poem to one poem of your own choice from your cluster','Power and Conflict cluster: 15 poems, be ready to write on any of them','Section C: Analyse one unseen poem, then compare with a second unseen poem','AO1: Critical style, informed personal response, quotation to support interpretations','AO2: Analyse language, form, and structure using subject terminology','AO3: Context linked to effect (one reference per paragraph is enough)','AO4: Vocabulary range, spelling, and punctuation (5% of total marks)']}
+  ]},
+  'English Lang':{sections:[
+    {name:'Paper 1 (50%) - Creative Reading and Writing',points:['Source: literature fiction text (20th or 21st century prose)','Q1 (4 marks): identify 4 true statements from a list about the source','Q2 (8 marks): language analysis using PETL - Point, Evidence, Technique, Link to effect','Q3 (8 marks): structure analysis at whole text level, not just sentences','Q4 (20 marks): critical evaluation of a statement about the text, with evidence','Q5 (40 marks): descriptive or narrative writing - plan for 5 min before writing']},
+    {name:'Paper 2 (50%) - Viewpoints and Perspectives',points:['Sources: one non-fiction and one literary non-fiction, different time periods','Q1 (4 marks): identify 4 true statements across both sources','Q2 (8 marks): summarise and synthesise from both sources','Q3 (12 marks): language analysis on one of the sources','Q4 (16 marks): compare writers perspectives across both sources - the mark separator','Q5 (40 marks): writing to present a viewpoint - specify audience, purpose, form','AO5 (30%): communicate clearly, adapt tone, style, register for purpose and audience','AO6 (20% of total GCSE): vocabulary, sentence structures, spelling, punctuation']}
+  ]},
+  'Biology':{sections:[
+    {name:'Cell Biology',points:['Prokaryotic vs eukaryotic cells: differences and examples','Cell structures: nucleus, cytoplasm, cell membrane, mitochondria, ribosomes','Plant cells: cell wall, chloroplasts, vacuole - functions of each','Mitosis: PMAT stages, why cells divide (growth, repair, asexual reproduction)','Required practical: microscopy - calculate magnification, draw cells to scale','Diffusion, osmosis, active transport: definitions and comparisons','Required practical: osmosis in plant tissue']},
+    {name:'Organisation',points:['Enzymes: lock and key model, optimum pH and temperature, denaturation','Required practical: effect of pH on amylase activity','Digestive system: organs and their functions, absorption in small intestine','Heart: structure (4 chambers, valves), double circulatory system','Blood vessels: artery, vein, capillary - structure and function','Blood components: red cells (haemoglobin), white cells, platelets, plasma','Lungs: alveoli adaptations, gas exchange, breathing mechanics','Liver and kidneys: roles in homeostasis']},
+    {name:'Infection and Response',points:['Pathogens: bacteria, viruses, fungi, protists - examples and diseases','How the body defends itself: skin, mucus, phagocytes, lymphocytes, antibodies','Vaccines: how they work, herd immunity, MMR example','Antibiotics: how they work, resistance, why they cannot kill viruses','Required practical: growing bacteria and testing antibiotics (aseptic technique)']},
+    {name:'Bioenergetics',points:['Photosynthesis equation: 6CO2 + 6H2O + light energy = C6H12O6 + 6O2','Limiting factors: light intensity, CO2 concentration, temperature','Required practical: effect of light intensity on photosynthesis rate','Aerobic respiration: C6H12O6 + 6O2 = 6CO2 + 6H2O + energy','Anaerobic respiration in humans: glucose = lactic acid + energy','Anaerobic in yeast: glucose = ethanol + CO2 + energy']},
+    {name:'Homeostasis and Response',points:['Nervous system: receptors, neurones, synapses, effectors','Reflex arcs: receptor, sensory, relay, motor neurone, effector','Required practical: reaction time','Hormones vs nervous system: speed, specificity, duration differences','Blood glucose control: insulin and glucagon (type 1 and 2 diabetes)','Thermoregulation: hypothalamus, vasodilation, vasoconstriction, sweating, shivering']},
+    {name:'Inheritance and Evolution',points:['DNA: double helix, base pairs (A-T, C-G), chromosomes, genes','Mitosis vs meiosis: purpose, outcome, where each occurs','Genetic inheritance: dominant, recessive, homozygous, heterozygous','Punnett squares: monohybrid crosses including sex-linked traits','Evolution: natural selection mechanism (Darwin)','Evidence for evolution: fossils, antibiotic resistance, molecular biology']}
+  ]},
+  'Computer Science':{sections:[
+    {name:'Algorithms',points:['Trace tables: trace through code showing variable values at each step','Bubble sort: how it works, best/worst case, compare values and swap','Merge sort: divide and conquer, best/worst/average O(n log n)','Linear search: O(n), works on unsorted data','Binary search: O(log n), sorted data only, divide and check mid point','Flowcharts: draw and interpret; standard symbols for start/stop, process, decision','Pseudocode: write algorithms from scratch without help']},
+    {name:'Programming',points:['Variables and data types: integer, real, Boolean, string, character','Sequence, selection (if/elif/else), and iteration (for/while loops)','Functions/subroutines: parameters, return values, local vs global scope','String operations: length, substring, concatenation, upper/lower','File handling: open, read, write, close - read line by line','Arrays/lists: index from 0, 2D arrays, common operations','Exception handling: try/except to prevent crashes']},
+    {name:'Data Representation',points:['Binary: convert to and from denary and hex','Binary arithmetic: addition, overflow error','Two\'s complement: represent negative numbers in binary','Hexadecimal: used in memory addresses and colour codes','Character codes: ASCII and Unicode (why Unicode needed)','Images: pixels, bit depth, resolution, file size calculation','Sound: sample rate, bit depth, file size calculation','Data compression: lossy vs lossless, run length encoding, Huffman coding']},
+    {name:'Hardware and Software',points:['Von Neumann architecture: CPU, ALU, control unit, registers, buses','Fetch-decode-execute cycle: steps and what happens at each','Factors affecting CPU performance: clock speed, number of cores, cache size','Primary storage: RAM (volatile), ROM (non-volatile) - purpose of each','Secondary storage: HDD vs SSD vs optical vs flash - pros and cons','Operating system roles: memory management, process scheduling, file management','High vs low level languages; compilers vs interpreters']},
+    {name:'Networks',points:['Network types: LAN vs WAN; topology: star, bus, mesh','Network hardware: router, switch, hub, NIC','Wired vs wireless: ethernet vs Wi-Fi - speed, security, reliability','TCP/IP protocol suite: layers and what each does','IP addressing: IPv4 vs IPv6; packets and packet switching','Network security threats: malware, phishing, brute force, SQL injection','Network security measures: firewall, encryption, authentication, access control']},
+    {name:'Boolean Logic',points:['Logic gates: AND, OR, NOT, NAND, NOR, XOR - draw and label from memory','Truth tables: construct for any gate or combination of gates','Boolean algebra: simplify expressions using laws (De Morgan\'s theorem)','Logic diagrams: draw circuit from Boolean expression and vice versa']}
+  ]},
+  'Chemistry':{sections:[
+    {name:'Atomic Structure and Bonding',points:['Atomic structure: protons, neutrons, electrons; atomic number and mass number','Isotopes: same element, different neutrons; relative atomic mass calculation','Electronic structure: shells, how to fill them, link to periodic table groups','Ionic bonding: transfer of electrons, giant ionic lattice, high melting point','Covalent bonding: sharing electrons; simple molecular vs giant covalent','Metallic bonding: delocalised electrons, explains conductivity and malleability','Intermolecular forces: weak forces between molecules, explains low boiling points']},
+    {name:'Quantitative Chemistry',points:['Relative formula mass (Mr): add up all atomic masses','Moles = mass / Mr; use to calculate amounts in reactions','Balanced equations: use ratio of moles to find reacting quantities','Percentage yield = (actual/theoretical) x 100','Atom economy = (useful products Mr / all products Mr) x 100','Concentration (mol/dm3) = moles / volume','Titration calculations: find unknown concentration from volumes and known concentration']},
+    {name:'Chemical Changes',points:['Reactivity series: K, Na, Ca, Mg, Al, Zn, Fe, Cu - memorise order','Displacement reactions: more reactive metal displaces less reactive one','Acids and bases: pH scale, neutralisation, salts formed from acid + base','Making salts: acid + metal, acid + metal oxide, acid + metal carbonate, titration','Electrolysis: splitting ionic compounds with electricity; cathode (reduction) and anode (oxidation)','Products of electrolysis: predict products from molten salts vs aqueous solutions']},
+    {name:'Energy Changes',points:['Exothermic reactions: energy released, temperature rises, products lower energy than reactants','Endothermic reactions: energy absorbed, temperature falls','Bond energies: energy needed to break bonds; energy released making bonds','Exothermic if energy released (making) is greater than energy absorbed (breaking)','Required practical: temperature change for different reactions']},
+    {name:'Rates, Equilibrium and Organic Chemistry',points:['Factors affecting rate: temperature, concentration, surface area, catalyst, pressure (gases)','Collision theory: explains why each factor increases rate','Le Chatelier\'s principle: equilibrium shifts to oppose changes in conditions','Haber process: N2 + 3H2 = 2NH3; conditions 450 degrees C, 200 atm, iron catalyst','Alkanes: CnH2n+2; saturated; combustion reactions','Alkenes: CnH2n; unsaturated (C=C double bond); addition reactions; bromine water test']},
+    {name:'Analysis and the Atmosphere',points:['History of atmosphere: early atmosphere, how oxygen increased, where CO2 went','Carbon dioxide and climate change: greenhouse effect mechanism','Tests for gases: H2 (squeaky pop), O2 (glowing splint relights), CO2 (limewater), Cl2 (bleaches damp litmus)','Flame tests: Li (red), Na (yellow), K (lilac), Ca (orange-red), Cu (green)','Required practical: identifying ions using precipitation reactions']}
+  ]},
+  'Physics':{sections:[
+    {name:'Forces',points:['Vector vs scalar quantities: vectors have magnitude and direction','Resultant forces: add/subtract forces; use Pythagoras for perpendicular forces','Newton\'s 1st law: stationary or constant velocity unless resultant force acts','Newton\'s 2nd law: F = ma; calculate resultant force, mass, or acceleration','Newton\'s 3rd law: equal and opposite forces on different objects','Momentum = mass x velocity; p = mv; conservation of momentum in collisions','Stopping distance = thinking distance + braking distance; factors affecting each','Work done = force x distance; W = Fd; measured in joules','Hooke\'s law: F = ke; spring constant k; elastic limit']},
+    {name:'Waves',points:['Wave equation: v = f x lambda (wave speed = frequency x wavelength)','Transverse vs longitudinal waves: key differences and examples','Electromagnetic spectrum: order, properties, uses and dangers of each type','Required practical: investigate reflection, refraction, and wavelength','Sound waves: compression waves; speed in different media']},
+    {name:'Electricity',points:['V = IR (Ohm\'s law); calculate resistance, voltage, or current','P = IV = I2R = V2/R; power calculations','Series circuits: same current everywhere; voltages add up','Parallel circuits: voltages equal; currents split','Component characteristics: resistor (ohmic), filament lamp, diode, LDR, thermistor','Mains electricity: 230V AC, 50Hz in the UK; live, neutral, earth wires','Fuses and circuit breakers: protect against overload; earth wire prevents electrocution','Required practical: I-V characteristics of different components']},
+    {name:'Magnetism and Electromagnetism',points:['Magnetic fields: shape around bar magnet and current-carrying wire','Fleming\'s left-hand rule: force on current in magnetic field (motor effect)','F = BIl; force on a conductor in a magnetic field','Electric motors: how they work; split ring commutator','Electromagnetic induction: moving conductor in magnetic field induces EMF','Generators: AC generator and DC generator; how they differ','Transformers: step-up and step-down; Vp/Vs = Np/Ns; power equation VpIp = VsIs']},
+    {name:'Particle Model and Atomic Structure',points:['Specific heat capacity: E = mcT; calculate energy for temperature change','Required practical: determine specific heat capacity of water or metal','Specific latent heat: energy for state change without temperature change','Pressure in a gas: pV = constant (Boyle\'s law) at constant temperature','Radioactive decay: alpha, beta, gamma - properties and penetration','Nuclear equations: balance atomic and mass numbers in decay equations','Half-life: time for activity to halve; calculate remaining amount','Uses of radiation: medical (tracers, radiotherapy), irradiating food, smoke alarms']},
+    {name:'Space and Energy',points:['Energy stores: kinetic, gravitational potential, elastic, thermal, chemical','Energy transfers: by heating, by mechanical working, by electrical current, by radiation','Efficiency = useful output / total input; express as fraction or percentage','Renewable energy: solar, wind, hydro, tidal, geothermal - advantages and disadvantages','Non-renewable: fossil fuels, nuclear; reliability vs environmental impact','Life cycle of stars: nebula to main sequence to red giant to white dwarf or supernova','Big Bang theory: evidence from red-shift and cosmic microwave background radiation']}
+  ]},
+  'Geography':{sections:[
+    {name:'Paper 1 - Hazardous Earth (Topic 1)',points:['Atmosphere: global atmospheric circulation, circulation cells and ocean currents redistributing heat energy','Global circulation determines location of arid (high pressure) and high rainfall (low pressure) areas','Natural causes of climate change: asteroid collisions, orbital changes, volcanic activity, variations in solar output','Evidence for natural climate change: ice cores, tree rings, historical sources - reconstructing glacial and interglacial climate','Human activities (industry, transport, energy, farming) produce greenhouse gases causing enhanced greenhouse effect','Evidence for human-caused change: sea level rise, warming oceans, global temperature rise, declining Arctic ice','Range of projections for global temperature change and sea level rise to 2100; reasons for uncertainty','Tropical cyclone characteristics: pressure, rotation, structure; seasonal global distribution and tracks','How global circulation leads to tropical cyclones; why some intensify; dissipation process','Physical hazards of tropical cyclones: high winds, intense rainfall, storm surges, coastal flooding, landslides','Why some countries are more vulnerable (physically, socially, economically) to tropical cyclone impacts','Preparation and response: weather forecasting, satellite technology, warning and evacuation, storm-surge defences','Earth layered structure including asthenosphere: composition, temperature, density, physical state','Core internal heat through radioactive decay generates convection - key foundation for plate motion','Three plate boundary types (conservative, convergent, divergent) and hotspots: distribution and characteristics','Causes of contrasting volcanic hazards: volcano type, magma type, lava flows, explosivity','Earthquake hazards including tsunami: shallow vs deep focus, magnitude differences','Primary and secondary impacts of earthquakes or volcanoes on property and people in contrasting countries','Management: short-term relief, long-term planning, preparation (warning, evacuation, building design) and prediction']},
+    {name:'Paper 1 - Development Dynamics (Topic 2)',points:['Defining and measuring development: GDP per capita, Human Development Index, inequality measures','Demographic differences at development levels: fertility rates, death rates, population structures','Causes of global inequality: social, historical (colonialism), environmental, economic and political','Rostow modernisation theory and Frank dependency theory: contrasting views on development','Top-down vs bottom-up strategies: scale, aims, funding and technology differences','Advantages and disadvantages of NGO-led, IGO-funded infrastructure and TNC investment','Emerging country case study: site, situation and connectivity nationally, regionally and globally','Key economic trends since 1990: GDP, GNI, economic sector shifts, imports/exports, FDI','Role of globalisation: TNCs, outsourcing, communications and transport technology in development','Government policy role: tied and multilateral aid, education and infrastructure investment, pro-FDI policy','Demographic change and urbanisation from rapid economic growth: rural-urban migration','Positive and negative impacts of economic development on different age and gender groups','Environmental impacts of development: air, water and land pollution, greenhouse gases','Changed geopolitical influence: regional role, international organisations, relationships with EU and USA']},
+    {name:'Paper 1 - Urbanising World (Topic 3)',points:['Global urbanisation trends since 1980: how they vary between regions and future projections','Global megacity pattern: size, location, growth rates; urban primacy','How economic change and migration contributes to urban growth or decline in contrasting countries','Urban economies differ: formal vs informal employment, importance of economic sectors, working conditions','Urban change over time: urbanisation, suburbanisation, deindustrialisation, counter-urbanisation, regeneration','Megacity case study: site, situation and connectivity nationally, regionally and globally','Megacity structure: CBD, inner city, suburbs, urban-rural fringe - functions and building age','Opportunities in megacity: access to education, health services, formal and informal employment','Challenges: housing shortages, poor quality housing, insecure property rights, inadequate water and waste disposal','Pattern of extreme wealth contrasted with poor quality housing; reasons for quality of life differences','Government top-down sustainability strategies: water supply, waste disposal, transport, air quality','Community and NGO bottom-up strategies: housing, health and education services in megacity']},
+    {name:'Paper 2 - UK Physical Landscape (Topic 4)',points:['Geology and past processes: role of tectonic and glacial processes in upland and lowland landscapes','UK rock type distribution: sedimentary (chalk, limestone, clay), igneous (granite), metamorphic (schists, slates)','Physical processes creating distinctive landscapes: weathering, climatological, post-glacial river and slope processes','Coastal landscape geology: concordant and discordant coasts, hard/soft rock influence on landforms','Erosional coastal landforms: headlands and bays, caves, arches, cliffs, stacks, wave-cut platforms','UK climate, marine (destructive waves) and sub-aerial processes (mass movement, weathering) in coastal landscapes','Coastal deposition: longshore drift and constructive waves create spits, beaches and bars','Increasing coastal flood risks: climate change, increased storm frequency, rising sea level','Hard engineering: groynes and sea walls - costs, benefits and conflicting views','Soft engineering: beach replenishment, slope stabilisation - costs and benefits','Sustainable approaches: do nothing and strategic realignment (Integrated Coastal Zone Management)','River landscape contrast between upper, mid and lower courses: width, depth, gradient, discharge, velocity, sediment','River erosion: hydraulic action, abrasion, attrition, solution; transport: traction, saltation, suspension, solution','River landforms: meanders, interlocking spurs, waterfalls, flood plains, levees, oxbow lakes, deltas','Storm hydrographs and lag-times explained by physical factors: geology, soil type, slope, drainage basin shape','Human activities altering river landscapes: urbanisation, land-use change, deforestation affect storm hydrographs','River flood management: hard engineering (flood walls, embankments, barriers) and soft engineering compared']},
+    {name:'Paper 2 - UK Human Landscape (Topic 5)',points:['Urban-rural differences: population density, age structure, economic activities and settlement patterns','Government policies to reduce urban-rural differences: enterprise zones, transport infrastructure, regional development','National and international migration over 50 years: impact on UK population geography and cultural diversity','Decline of primary and secondary sectors and rise of tertiary and quaternary sectors across UK regions','Globalisation, free-trade policies and privatisation: increased FDI and TNC role in UK economy','UK city case study: site, situation and connectivity in national, regional and global context','City structure: CBD, inner city, suburbs, urban-rural fringe - functions, building age, land use, environmental quality','Migration causing growth and character of city parts: age structure, ethnicity, housing, services, culture','City decline: deindustrialisation, depopulation, out-of-town retail, e-commerce, transport changes','City growth: urban fringe sprawl, financial and business services, TNC investment, gentrification, culture and leisure','Regeneration and rebranding: positive and negative impacts on people, environment and economy','Sustainable urban strategies: recycling, employment, green spaces, transport, affordable and energy-efficient housing','City and rural interdependence: flows of goods, services and labour - economic, social and environmental costs','Rural challenges: housing affordability, declining primary employment, healthcare and education provision','Rural diversification: farm shops, accommodation, leisure - income opportunities and environmental impacts']},
+    {name:'Paper 2 - Geographical Investigations (Topic 6)',points:['Fieldwork enquiry: formulating questions based on location and task in coastal, river, urban or rural environments','Coastal fieldwork: quantitative method measuring beach morphology; qualitative method on coastal management success','River fieldwork: quantitative method measuring river channel characteristics; qualitative method on flood risk factors','Urban fieldwork: qualitative method on quality of life perceptions; quantitative method on environmental quality','Rural fieldwork: qualitative method on quality of rural life; quantitative method on environmental quality','Secondary data: geology maps, flood risk maps, census data - one appropriate source per investigation','Processing and presenting fieldwork data: maps, GIS, graphs and diagrams','Analysing and explaining field data using knowledge of geographical case studies and theories','Drawing evidenced conclusions and summaries from fieldwork transcripts and data','Reflecting critically on fieldwork data, methods used, conclusions drawn and knowledge gained','Sampling procedures: systematic vs random vs stratified - understanding sample size and accuracy']},
+    {name:'Paper 3 - People and Biosphere (Topic 7)',points:['Global biome distribution: tropical, temperate and boreal forests, tropical and temperate grasslands, deserts, tundra','How climate (temperature, precipitation, sunshine hours) influences global biome distribution','Local factors altering biome distribution: altitude, rock type, soil type, drainage','Biotic (flora, fauna) and abiotic (soils, rock, water, atmosphere) components interact within biomes','Biosphere provides resources for indigenous and local people: food, medicine, building materials, fuel','Commercial exploitation of biosphere for energy, water and mineral resources','Biosphere regulates atmosphere composition, maintains soil health and regulates water in hydrological cycle','Global resource demand trends: population growth, rising affluence, urbanisation, industrialisation','Malthus theory: population growth outstrips resources leading to crisis','Boserup theory: population pressure drives innovation and agricultural improvement']},
+    {name:'Paper 3 - Forests Under Threat (Topic 8)',points:['Tropical rainforest: biotic and abiotic interdependence - climate, soil, water, plants, animals, humans','Rainforest plant adaptations: stratified layers, buttress roots, drip tips; high nutrient cycling and high biodiversity','Taiga: biotic and abiotic interdependence; plant adaptations (cone-shaped, needles, simple structure)','Taiga animal adaptations: migratory; lower productivity, less active nutrient cycling, lower biodiversity','Tropical deforestation causes: commercial hardwood logging, subsistence and commercial agriculture, fuel wood demand','Additional deforestation drivers: biofuels, mineral resources and HEP electricity generation','Climate change indirect threat to tropical rainforests: ecosystem stress and drought','Direct threats to taiga: logging for softwood, pulp and paper production','Indirect taiga threats: exploitation of minerals, fossil fuels and HEP potential','Taiga biodiversity loss from: acid precipitation, forest fires, pests and diseases','Global tropical rainforest protection: CITES and REDD - advantages, disadvantages, why deforestation rates vary','Sustainable rainforest management and alternative livelihoods: ecotourism and sustainable farming','Protected wilderness areas, national parks and sustainable forestry in taiga: challenges']},
+    {name:'Paper 3 - Consuming Energy Resources (Topic 9)',points:['Energy classification: non-renewable (fossil fuels: coal, oil, gas), renewable (solar, wind, HEP), recyclable (nuclear, biofuels)','Environmental impacts of mining and drilling: landscape scarring, oil spills, carbon emissions, forest removal','Landscape impacts of renewable energy: HEP flooding, land use for wind turbines and solar panels','Access to energy affected by technology, physical resources, geology, climate and landscape renewable potential','Global energy use per capita: causes of variation - economic development, traditional fuels, sector demand','Oil reserves and production unevenly distributed; growing consumption from rising GDP and rapid industrialisation','Oil supply and prices: affected by international relations (conflicts, diplomacy) and economic factors (recession vs boom)','Economic benefits and environmental costs of new conventional oil and gas in ecologically sensitive areas','Unconventional oil and gas (tar sands, shale gas): environmental costs - water quality and ecosystem impacts','Energy efficiency and conservation in transport and the home: reducing demand, extending finite supplies','Alternatives to fossil fuels: biofuels, wind, solar, HEP and hydrogen - costs, benefits and carbon footprint reduction','Contrasting views on energy futures: consumers, TNCs, governments, climate scientists, environmental groups','Carbon and ecological footprint: understanding and calculating personal environmental impact']}
+  ]},
+  'Business':{sections:[
+    {name:'Theme 1: Investigating Small Business',points:['Entrepreneurs: role, characteristics, purpose; risks and rewards','Business aims and objectives: survival, profit, growth, market share','Market research: primary (surveys, interviews) vs secondary (internet, reports)','Market segmentation: age, income, location - target the right customers','Revenue = price x quantity sold','Costs: fixed vs variable; total costs = fixed + variable','Profit = total revenue - total costs','Break-even: output where TR = TC; break-even = fixed costs / (price - variable cost)','Cash flow: positive vs negative; cash flow forecasts and managing cash','Sources of finance: personal savings, loans, share issue, retained profit, crowdfunding','Marketing mix: Product, Price, Place, Promotion (4Ps)','Methods of promotion: advertising, PR, social media, sales promotions']},
+    {name:'Theme 2: Building a Business',points:['Business growth: organic (internal) vs inorganic (mergers, takeovers)','Limited vs unlimited liability: sole trader vs Ltd/PLC','Globalisation: benefits and drawbacks for businesses; trading internationally','Competitive advantage: price, quality, USP, customer service','Production: job, batch, and flow production - advantages and disadvantages','Lean production: just-in-time, kaizen (continuous improvement)','Quality management: quality control vs quality assurance','Human resources: recruitment process, training, motivation theories (Maslow, Taylor)','Organisational structures: hierarchical vs flat; span of control','Business ethics: environmental responsibility, fair trade, ethical sourcing','Impacts of technology: e-commerce, automation, social media','ARR = average annual profit / initial investment x 100']}
+  ]},
+  'French':{sections:[
+    {name:'Core Topics',points:['Identity and culture: family, friends, relationships, role models','Technology: social media, internet, mobile phones - opinions in French','Free time: hobbies, sport, music, reading, cinema','Holidays: transport, accommodation, activities, past and future trips','School: subjects, timetable, school life, rules, future plans']},
+    {name:'Grammar Essentials',points:['Present tense: all verbs including irregular (aller, avoir, etre, faire, prendre)','Perfect tense (passe compose): avoir and etre verbs, past participles','Imperfect tense: used for habitual past actions and descriptions','Future tense: aller + infinitive (near future) and future simple','Conditional tense: would - je voudrais, ce serait, j\'aimerais','Reflexive verbs: se lever, se coucher, s\'appeler - in all tenses','Negation: ne...pas, ne...jamais, ne...rien, ne...plus','Questions: using intonation, est-ce que, inversion, question words']},
+    {name:'Exam Skills',points:['Reading: identify gist first, then specific details; watch for negatives and tense','Listening: predict answers from questions before audio plays; numbers and dates are common traps','Writing: include 3+ tenses, opinions with justifications, and a range of structures','Speaking: prepare opinions on all core topics; extend answers with connectives and reasons','Translation: know high frequency vocabulary; mark schemes reward accuracy over volume','AQA French uses GCSE (9-1) scale; separate papers for each skill']}
+  ]}
 };
-
 const METHODS={
   blurt:{name:'Blurting',icon:'✏️',desc:'Write everything you know without notes. Open notes, circle the gaps. Repeat missed points 3 times. Fastest way to find what you do not know.',phases:[{t:'focus',d:25*60,l:'Blurting',s:'Write from memory, then check'},{t:'log',d:0,l:'Error Log',s:''}]},
   paper:{name:'Past Paper',icon:'📄',desc:'Strict timed conditions, no notes. Mark against the scheme immediately after. Every unanswered mark is a diagnosis.',phases:[{t:'focus',d:50*60,l:'Past Paper',s:'Timed, no notes'},{t:'brk',d:5*60,l:'Break',s:'5 min step away'},{t:'log',d:0,l:'Error Log',s:''}]},
@@ -783,7 +747,6 @@ const METHODS={
   practise:{name:'Practice Qs',icon:'📝',desc:'Topic questions from Save My Exams or PMT. Show all working. Self-mark immediately. Do not move on without understanding each wrong answer.',phases:[{t:'focus',d:50*60,l:'Practice Questions',s:'Topic Qs with mark scheme'},{t:'brk',d:5*60,l:'Break',s:'5 min'},{t:'log',d:0,l:'Error Log',s:''}]},
   custom:{name:'Custom',icon:'⏱️',desc:'Set your own focus duration and optional break.',phases:null}
 };
-
 let isUnlocked=false;
 try{isUnlocked=sessionStorage.getItem('rv_unlocked')==='1';}catch(e){}
 let confirmCallback=null,activeTab='home',selM='paper',markCatSel='',currentSpecSubj='Maths';
@@ -791,499 +754,255 @@ let S={type:'paper',subject:'',phases:[],phaseIdx:0,timeLeft:0,totalTime:0,pause
 let CFG={sound:true,notif:false,eye:true,hydra:true,checkin:true};
 let STATS={total:0,mins:0,hist:[]};
 let SPACED=[],TODAY_DONE={date:'',s1:false,s2:false,s3:false},SPEC_CONF={};
-
 try{CFG=JSON.parse(localStorage.getItem('rv_cfg')||JSON.stringify(CFG));}catch(e){}
 try{STATS=JSON.parse(localStorage.getItem('rv_stats')||JSON.stringify(STATS));}catch(e){}
 try{SPACED=JSON.parse(localStorage.getItem('rv_spaced')||'[]');}catch(e){}
 try{TODAY_DONE=JSON.parse(localStorage.getItem('rv_today_done')||JSON.stringify(TODAY_DONE));}catch(e){}
 try{SPEC_CONF=JSON.parse(localStorage.getItem('rv_spec')||'{}');}catch(e){}
-
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-function saveCFG(){save('rv_cfg',CFG);}
-function saveStats(){save('rv_stats',STATS);}
-function saveSpaced(){save('rv_spaced',SPACED);}
-function saveTodayDone(){save('rv_today_done',TODAY_DONE);}
-function saveSpec(){save('rv_spec',SPEC_CONF);}
-
+function saveCFG(){save('rv_cfg',CFG);}function saveStats(){save('rv_stats',STATS);}function saveSpaced(){save('rv_spaced',SPACED);}function saveTodayDone(){save('rv_today_done',TODAY_DONE);}function saveSpec(){save('rv_spec',SPEC_CONF);}
 function checkTodayDone(){const today=new Date().toDateString();if(TODAY_DONE.date!==today){TODAY_DONE={date:today,s1:false,s2:false,s3:false};saveTodayDone();}}
-
 let toastTimer=null;
-function showToast(title,sub,ok=true){
-  document.getElementById('toast-title').textContent=title;
-  document.getElementById('toast-sub').textContent=sub||'';
-  const t=document.getElementById('toast');
-  t.querySelector('.toast-icon').style.color=ok?'var(--brk)':'var(--log)';
-  t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(hideToast,4000);
-}
+function showToast(title,sub,ok=true){document.getElementById('toast-title').textContent=title;document.getElementById('toast-sub').textContent=sub||'';const t=document.getElementById('toast');t.querySelector('.toast-icon').style.color=ok?'var(--brk)':'var(--log)';t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(hideToast,4000);}
 function hideToast(){document.getElementById('toast').classList.remove('show');}
-
-function openLock(){
-  if(isUnlocked){if(confirm('Sign out of personal mode?')){isUnlocked=false;try{sessionStorage.removeItem('rv_unlocked');}catch(e){}updateLockUI();}return;}
-  document.getElementById('pin-input').value='';document.getElementById('lock-error').textContent='';
-  document.getElementById('lock-ov').classList.add('open');setTimeout(()=>document.getElementById('pin-input').focus(),300);
-}
+function openLock(){if(isUnlocked){if(confirm('Sign out of personal mode?')){isUnlocked=false;try{sessionStorage.removeItem('rv_unlocked');}catch(e){}updateLockUI();}return;}document.getElementById('pin-input').value='';document.getElementById('lock-error').textContent='';document.getElementById('lock-ov').classList.add('open');setTimeout(()=>document.getElementById('pin-input').focus(),300);}
 function closeLock(){document.getElementById('lock-ov').classList.remove('open');}
-function tryUnlock(){
-  if(document.getElementById('pin-input').value===PASSWORD){
-    isUnlocked=true;try{sessionStorage.setItem('rv_unlocked','1');}catch(e){}
-    closeLock();updateLockUI();buildScheduleCard();showToast('Unlocked','Personal mode active');
-  } else {document.getElementById('lock-error').textContent='Incorrect password';document.getElementById('pin-input').value='';document.getElementById('pin-input').focus();}
-}
+function tryUnlock(){if(document.getElementById('pin-input').value===PASSWORD){isUnlocked=true;try{sessionStorage.setItem('rv_unlocked','1');}catch(e){}closeLock();updateLockUI();buildScheduleCard();showToast('Unlocked','Personal mode active');}else{document.getElementById('lock-error').textContent='Incorrect password';document.getElementById('pin-input').value='';document.getElementById('pin-input').focus();}}
 function updateLockUI(){
   const btn=document.getElementById('lock-btn');btn.textContent=isUnlocked?'🔓':'🔒';btn.classList.toggle('unlocked',isUnlocked);
   buildSubjChips();
   const ta=document.getElementById('target-achieved');const tl=document.getElementById('targets-lbl');
   if(ta)ta.style.display=isUnlocked?'block':'none';if(tl)tl.style.display=isUnlocked?'block':'none';
-  // Update resources lock view
   const lv=document.getElementById('res-lock-view');const uv=document.getElementById('res-unlocked-view');
   if(lv)lv.style.display=isUnlocked?'none':'flex';if(uv)uv.style.display=isUnlocked?'block':'none';
+  const sl=document.getElementById('spec-lock-view');const su=document.getElementById('spec-unlocked-view');
+  if(sl)sl.style.display=isUnlocked?'none':'flex';if(su)su.style.display=isUnlocked?'block':'none';
+  if(isUnlocked&&activeTab==='spec')renderSpec();
+  if(isUnlocked&&activeTab==='resources'){resourcesBuilt=false;renderResources();}
 }
-
 let actx=null,audioUnlocked=false;
 function getAC(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx;}
 async function unlockAudio(){if(audioUnlocked)return;try{const ctx=getAC();if(ctx.state==='suspended')await ctx.resume();const b=ctx.createBuffer(1,1,22050);const s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(0);audioUnlocked=true;}catch(e){}}
-async function tone(type){
-  if(!CFG.sound)return;
-  try{const ctx=getAC();if(ctx.state==='suspended')await ctx.resume();
-    const notes={start:[[440,.07],[550,.07],[660,.16]],end:[[660,.1],[550,.1],[440,.22]],warn:[[600,.16],[400,.22]],done:[[523,.09],[659,.09],[784,.11],[1047,.22]],soft:[[880,.05]]};
-    let t=ctx.currentTime;(notes[type]||notes.soft).forEach(([f,d])=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.start(t);o.stop(t+d+.01);t+=d*.82;});
-  }catch(e){}
-}
-
-async function askNotif(){if(!('Notification'in window))return;const p=await Notification.requestPermission();CFG.notif=p==='granted';saveCFG();document.getElementById('tgl-notif').classList.toggle('on',CFG.notif);}
+async function tone(type){if(!CFG.sound)return;try{const ctx=getAC();if(ctx.state==='suspended')await ctx.resume();const notes={start:[[440,.07],[550,.07],[660,.16]],end:[[660,.1],[550,.1],[440,.22]],warn:[[600,.16],[400,.22]],done:[[523,.09],[659,.09],[784,.11],[1047,.22]],soft:[[880,.05]]};let t=ctx.currentTime;(notes[type]||notes.soft).forEach(([f,d])=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.start(t);o.stop(t+d+.01);t+=d*.82;});}catch(e){}}
+async function askNotif(){if(!('Notification'in window))return;const p=await Notification.requestPermission();CFG.notif=p==='granted';saveCFG();const el=document.getElementById('tgl-notif');if(el)el.checked=CFG.notif;}
 function notify(title,body,urgent){if(CFG.notif&&Notification.permission==='granted')new Notification(title,{body,silent:!urgent});if('vibrate'in navigator)urgent?navigator.vibrate([200,80,200]):navigator.vibrate([100,50,100]);}
-
-function showTab(name){
-  activeTab=name;
-  ['home','stats','spec','resources'].forEach(t=>{
-    const s=document.getElementById(t+'-screen');const b=document.getElementById('nav-'+t);
-    if(s)s.classList.toggle('active',t===name);if(b)b.classList.toggle('active',t===name);
-  });
-  document.getElementById('bottom-nav').classList.remove('hidden');
-  if(name==='stats')refreshStats();if(name==='spec')renderSpec();if(name==='resources')renderResources();
-}
-function showTimerScreen(id){
-  ['home-screen','stats-screen','spec-screen','resources-screen','timer-screen','break-screen','log-screen'].forEach(s=>{const el=document.getElementById(s);if(el)el.classList.toggle('active',s===id);});
-  document.getElementById('bottom-nav').classList.add('hidden');
-}
+function showTab(name){activeTab=name;['home','stats','spec','resources'].forEach(t=>{const s=document.getElementById(t+'-screen');const b=document.getElementById('nav-'+t);if(s)s.classList.toggle('active',t===name);if(b)b.classList.toggle('active',t===name);});document.getElementById('bottom-nav').classList.remove('hidden');if(name==='stats')refreshStats();if(name==='spec')renderSpec();if(name==='resources')renderResources();}
+function showTimerScreen(id){['home-screen','stats-screen','spec-screen','resources-screen','timer-screen','break-screen','log-screen'].forEach(s=>{const el=document.getElementById(s);if(el)el.classList.toggle('active',s===id);});document.getElementById('bottom-nav').classList.add('hidden');}
 function returnToHome(){showTab(activeTab||'home');}
 function fmt(secs){const m=Math.floor(secs/60),s=secs%60;return`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
-
-function applySettings(){Object.keys(CFG).forEach(k=>{const el=document.getElementById('tgl-'+k);if(el)el.classList.toggle('on',!!CFG[k]);});}
-function toggleSetting(el,key){el.classList.toggle('on');CFG[key]=el.classList.contains('on');saveCFG();if(key==='notif'&&CFG.notif)askNotif();}
-function confirmClearData(){
-  openConfirm('Clear all data?','Deletes all session history, spec confidence, and spaced repetition data. Cannot be undone.','Clear everything','btn btn-danger',()=>{
-    STATS={total:0,mins:0,hist:[]};SPACED=[];TODAY_DONE={date:'',s1:false,s2:false,s3:false};SPEC_CONF={};
-    try{['rv_stats','rv_spaced','rv_today_done','rv_spec'].forEach(k=>localStorage.removeItem(k));}catch(e){}
-    saveStats();saveSpaced();saveTodayDone();saveSpec();refreshStats();buildScheduleCard();
-    showToast('Data cleared','All sessions removed',false);
-  });
-}
-
-function buildQuickStart(){
-  checkTodayDone();const dow=new Date().getDay();const td=TIMETABLE[dow];
-  let text='';
-  const slots=[td.s1.subj,td.s2.subj,td.s3.subj];
-  const keys=['s1','s2','s3'];
-  let next=-1;for(let i=0;i<3;i++){if(!TODAY_DONE[keys[i]]){next=i;break;}}
-  if(next<0){document.getElementById('quickstart').style.display='none';return;}
-  text=isUnlocked?slots[next]:`Session ${next+1}`;
-  document.getElementById('quickstart').style.display='flex';
-  document.getElementById('qs-text').textContent=text;
-}
-
-function quickStart(){
-  checkTodayDone();const dow=new Date().getDay();const td=TIMETABLE[dow];
-  const slots=[td.s1.subj,td.s2.subj,td.s3.subj];const keys=['s1','s2','s3'];
-  let next=-1;for(let i=0;i<3;i++){if(!TODAY_DONE[keys[i]]){next=i;break;}}
-  if(next<0)return;
-  S.subject=isUnlocked?slots[next]:'General';S.type=selM;S.scheduleMode=true;
-  const m=METHODS[selM==='custom'?'paper':selM];
-  S.phases=JSON.parse(JSON.stringify(m.phases)).map(p=>({...p,sessionLabel:S.subject,method:selM==='custom'?'paper':selM}));
-  beginSession();
-}
-
-function buildScheduleCard(){
-  checkTodayDone();const dow=new Date().getDay();const td=TIMETABLE[dow];
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  document.getElementById('sc-title').textContent=`${days[dow]}'s Plan`;
-  const doneCount=[TODAY_DONE.s1,TODAY_DONE.s2,TODAY_DONE.s3].filter(Boolean).length;
-  document.getElementById('sc-badge').textContent=`${doneCount}/3 done`;
-  const s1=isUnlocked?td.s1.subj:'Session 1';
-  const s2=isUnlocked?td.s2.subj:'Session 2';
-  const s3=isUnlocked?td.s3.subj:'Session 3';
-  const mkRow=(n,subj,time,done,curr)=>`<div class="sc-row"><div class="sc-n ${done?'done':curr?'curr':''}">${done?'✓':n}</div><div class="sc-subj">${subj}</div><div class="sc-time">${time}</div></div>`;
-  document.getElementById('sc-sessions').innerHTML=
-    mkRow(1,s1,'5:00pm',TODAY_DONE.s1,!TODAY_DONE.s1)+
-    mkRow(2,s2,'6:20pm',TODAY_DONE.s2,TODAY_DONE.s1&&!TODAY_DONE.s2)+
-    mkRow(3,s3,'7:40pm',TODAY_DONE.s3,TODAY_DONE.s1&&TODAY_DONE.s2&&!TODAY_DONE.s3);
-  document.getElementById('sc-progress').innerHTML=[1,2,3].map(i=>`<div class="sp-dot ${TODAY_DONE['s'+i]?'done':''}"></div>`).join('');
-  buildQuickStart();
-}
-
-function openSchedOv(){
-  const dow=new Date().getDay();const td=TIMETABLE[dow];
-  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  document.getElementById('sched-ov-title').textContent=`${days[dow]}'s Plan`;
-  const show=isUnlocked;let html='';
-  const mkRow=(n,subj,time,detail,done)=>`<div class="sched-ov-row"><div class="sched-ov-n ${done?'done':''}">${done?'✓':n}</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--text)">${subj}</div>${detail?`<div style="font-size:11px;color:var(--hint);margin-top:3px;line-height:1.5">${detail}</div>`:''}</div><div style="font-size:11px;color:var(--muted);margin-left:8px;white-space:nowrap">${time}</div></div>`;
-  html+=mkRow(1,show?td.s1.subj:'Session 1',`5:00pm, ${td.s1.mins}m`,'',TODAY_DONE.s1);
-  html+=mkRow(2,show?td.s2.subj:'Session 2',`6:20pm, ${td.s2.mins}m`,'',TODAY_DONE.s2);
-  html+=mkRow(3,show?td.s3.subj:'Session 3',`7:40pm, ${td.s3.mins}m`,show?td.s3detail||'':'',TODAY_DONE.s3);
-  document.getElementById('sched-ov-body').innerHTML=html;
-  document.getElementById('sched-ov').classList.add('open');
-}
+function applySettings(){Object.keys(CFG).forEach(k=>{const el=document.getElementById('tgl-'+k);if(el)el.checked=!!CFG[k];});}
+function toggleSetting(el,key){CFG[key]=el.checked;saveCFG();if(key==='notif'&&CFG.notif)askNotif();}
+function confirmClearData(){openConfirm('Clear all data?','Deletes all session history, spec confidence, and spaced repetition data. Cannot be undone.','Clear everything','btn btn-danger',()=>{STATS={total:0,mins:0,hist:[]};SPACED=[];TODAY_DONE={date:'',s1:false,s2:false,s3:false};SPEC_CONF={};try{['rv_stats','rv_spaced','rv_today_done','rv_spec'].forEach(k=>localStorage.removeItem(k));}catch(e){}saveStats();saveSpaced();saveTodayDone();saveSpec();refreshStats();buildScheduleCard();buildSRCard();showToast('Data cleared','All sessions removed',false);});}
+function buildQuickStart(){checkTodayDone();const dow=new Date().getDay();const td=TIMETABLE[dow];const slots=[td.s1.subj,td.s2.subj,td.s3.subj];const keys=['s1','s2','s3'];let next=-1;for(let i=0;i<3;i++){if(!TODAY_DONE[keys[i]]){next=i;break;}}if(next<0){document.getElementById('quickstart').style.display='none';return;}const text=isUnlocked?slots[next]:`Session ${next+1}`;document.getElementById('quickstart').style.display='flex';document.getElementById('qs-text').textContent=text;}
+function quickStart(){checkTodayDone();const dow=new Date().getDay();const td=TIMETABLE[dow];const slots=[td.s1.subj,td.s2.subj,td.s3.subj];const keys=['s1','s2','s3'];let next=-1;for(let i=0;i<3;i++){if(!TODAY_DONE[keys[i]]){next=i;break;}}if(next<0)return;S.subject=isUnlocked?slots[next]:'General';S.type=selM;S.scheduleMode=true;const m=METHODS[selM==='custom'?'paper':selM];S.phases=JSON.parse(JSON.stringify(m.phases)).map(p=>({...p,sessionLabel:S.subject,method:selM==='custom'?'paper':selM}));beginSession();}
+function buildScheduleCard(){checkTodayDone();const dow=new Date().getDay();const td=TIMETABLE[dow];const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];document.getElementById('sc-title').textContent=`${days[dow]}'s Plan`;const doneCount=[TODAY_DONE.s1,TODAY_DONE.s2,TODAY_DONE.s3].filter(Boolean).length;document.getElementById('sc-badge').textContent=`${doneCount}/3 done`;const s1=isUnlocked?td.s1.subj:'Session 1';const s2=isUnlocked?td.s2.subj:'Session 2';const s3=isUnlocked?td.s3.subj:'Session 3';const mkRow=(n,subj,time,done,curr)=>`<div class="sc-row"><div class="sc-n ${done?'done':curr?'curr':''}">${done?'✓':n}</div><div class="sc-subj">${subj}</div><div class="sc-time">${time}</div></div>`;document.getElementById('sc-sessions').innerHTML=mkRow(1,s1,'5:00pm',TODAY_DONE.s1,!TODAY_DONE.s1)+mkRow(2,s2,'6:20pm',TODAY_DONE.s2,TODAY_DONE.s1&&!TODAY_DONE.s2)+mkRow(3,s3,'7:40pm',TODAY_DONE.s3,TODAY_DONE.s1&&TODAY_DONE.s2&&!TODAY_DONE.s3);document.getElementById('sc-progress').innerHTML=[1,2,3].map(i=>`<div class="sp-dot ${TODAY_DONE['s'+i]?'done':''}"></div>`).join('');buildQuickStart();}
+function openSchedOv(){const dow=new Date().getDay();const td=TIMETABLE[dow];const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];document.getElementById('sched-ov-title').textContent=`${days[dow]}'s Plan`;const show=isUnlocked;let html='';const mkRow=(n,subj,time,detail,done)=>`<div class="sched-ov-row"><div class="sched-ov-n ${done?'done':''}">${done?'✓':n}</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--text)">${subj}</div>${detail?`<div style="font-size:11px;color:var(--hint);margin-top:3px;line-height:1.5">${detail}</div>`:''}</div><div style="font-size:11px;color:var(--muted);margin-left:8px;white-space:nowrap">${time}</div></div>`;html+=mkRow(1,show?td.s1.subj:'Session 1',`5:00pm, ${td.s1.mins}m`,'',TODAY_DONE.s1);html+=mkRow(2,show?td.s2.subj:'Session 2',`6:20pm, ${td.s2.mins}m`,'',TODAY_DONE.s2);html+=mkRow(3,show?td.s3.subj:'Session 3',`7:40pm, ${td.s3.mins}m`,show?td.s3detail||'':'',TODAY_DONE.s3);document.getElementById('sched-ov-body').innerHTML=html;document.getElementById('sched-ov').classList.add('open');}
 function closeSchedOv(){document.getElementById('sched-ov').classList.remove('open');}
-
-function buildSubjChips(){
-  const chips=document.getElementById('subj-chips');if(!chips)return;
-  const dow=new Date().getDay();const td=TIMETABLE[dow];
-  const todaySubjs=isUnlocked?[td.s1.subj,td.s2.subj].filter((s,i,a)=>a.indexOf(s)===i):[];
-  const ordered=[...new Set([...todaySubjs,...SUBJECTS.map(s=>s.name)])];
-  chips.innerHTML=ordered.map(name=>{
-    const s=SUBJECTS.find(x=>x.name===name);
-    const grade=s&&isUnlocked?` <span style="font-size:9px;opacity:.5">${s.grade}${s.gradeNote==='confirmed'?'':'?'}</span>`:'';
-    const hi=todaySubjs.includes(name)&&isUnlocked;
-    return`<span onclick="document.getElementById('subj').value='${name}'" style="padding:4px 10px;background:${hi?'var(--acc-l)':'var(--s1)'};border:1px solid ${hi?'rgba(38,91,246,.3)':'var(--border)'};border-radius:20px;font-size:12px;font-weight:${hi?700:500};cursor:pointer;color:${hi?'var(--acc-t)':'var(--muted)'};display:inline-flex;align-items:center;gap:3px">${name}${grade}</span>`;
-  }).join('');
-}
-
-function selMethod(el){
-  document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');selM=el.dataset.m;
-  document.getElementById('custom-row').style.display=selM==='custom'?'grid':'none';
-  const desc=document.getElementById('method-desc');
-  if(METHODS[selM]){desc.textContent=METHODS[selM].desc;desc.classList.add('vis');}else desc.classList.remove('vis');
-}
-
+function buildSubjChips(){const chips=document.getElementById('subj-chips');if(!chips)return;const dow=new Date().getDay();const td=TIMETABLE[dow];const todaySubjs=isUnlocked?[td.s1.subj,td.s2.subj].filter((s,i,a)=>a.indexOf(s)===i):[];const ordered=[...new Set([...todaySubjs,...SUBJECTS.map(s=>s.name)])];chips.innerHTML=ordered.map(name=>{const s=SUBJECTS.find(x=>x.name===name);const grade=s&&isUnlocked?` <span style="font-size:9px;opacity:.5">${s.grade}${s.gradeNote==='confirmed'?'':'?'}</span>`:'';const hi=todaySubjs.includes(name)&&isUnlocked;return`<span onclick="document.getElementById('subj').value='${name}'" style="padding:4px 10px;background:${hi?'var(--acc-l)':'var(--s1)'};border:1px solid ${hi?'rgba(16,152,247,.25)':'var(--border)'};border-radius:20px;font-size:12px;font-weight:${hi?700:500};cursor:pointer;color:${hi?'var(--acc-t)':'var(--muted)'};display:inline-flex;align-items:center;gap:3px">${name}${grade}</span>`;}).join('');}
+function selMethod(el){document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');selM=el.dataset.m;document.getElementById('custom-row').style.display=selM==='custom'?'grid':'none';const desc=document.getElementById('method-desc');if(METHODS[selM]){desc.textContent=METHODS[selM].desc;desc.classList.add('vis');}else desc.classList.remove('vis');}
 function daysToDate(d){const t=new Date(d);const today=new Date();today.setHours(0,0,0,0);t.setHours(0,0,0,0);return Math.round((t-today)/86400000);}
-function updateExamChip(){
-  const upcoming=EXAMS.map(e=>({...e,days:daysToDate(e.date)})).filter(e=>e.days>=0).sort((a,b)=>a.days-b.days);
-  const chip=document.getElementById('exam-chip');if(!chip||!upcoming.length)return;
-  const next=upcoming[0];chip.textContent=next.days===0?'Today!':next.days+'d';
-}
-
-function openConfirm(title,body,okLabel,okStyle,cb){
-  confirmCallback=cb;document.getElementById('confirm-title').textContent=title;document.getElementById('confirm-body').textContent=body;
-  const btn=document.getElementById('confirm-ok');btn.textContent=okLabel;btn.className='btn '+okStyle;
-  document.getElementById('confirm-ov').classList.add('open');
-}
+function updateExamChip(){const upcoming=EXAMS.map(e=>({...e,days:daysToDate(e.date)})).filter(e=>e.days>=0).sort((a,b)=>a.days-b.days);const chip=document.getElementById('exam-chip');if(!chip||!upcoming.length)return;const next=upcoming[0];chip.textContent=next.days===0?'Today!':next.days+'d';}
+function openConfirm(title,body,okLabel,okStyle,cb){confirmCallback=cb;document.getElementById('confirm-title').textContent=title;document.getElementById('confirm-body').textContent=body;const btn=document.getElementById('confirm-ok');btn.textContent=okLabel;btn.className='btn '+okStyle;document.getElementById('confirm-ov').classList.add('open');}
 function closeConfirm(){document.getElementById('confirm-ov').classList.remove('open');confirmCallback=null;}
 function doConfirm(){const cb=confirmCallback;closeConfirm();if(cb)cb();}
-
-function confirmSkip(){
-  const next=S.phases[S.phaseIdx+1];
-  const nn=next?(next.t==='log'?'error log':next.t==='brk'?'break':'focus'):'done';
-  openConfirm('Skip phase?',`Jump to ${nn}.`,'Skip','btn btn-secondary',()=>{clearInterval(S.ticker);stopBreathe();dismissCheckin();stopReminders();enterPhase(S.phaseIdx+1);});
-}
-function confirmEnd(){
-  openConfirm('End session?','Progress will be saved.','End','btn btn-danger',()=>{clearInterval(S.ticker);stopReminders();stopBreathe();dismissCheckin();releaseLock();recordSession();returnToHome();buildScheduleCard();});
-}
-
-function startScheduleMode(){
-  closeSchedOv();const dow=new Date().getDay();const td=TIMETABLE[dow];
-  checkTodayDone();
-  let subj=isUnlocked?(!TODAY_DONE.s1?td.s1.subj:!TODAY_DONE.s2?td.s2.subj:td.s3.subj):'General';
-  S.subject=subj;S.type='schedule';S.scheduleMode=true;
-  const m=METHODS['paper'];
-  S.phases=JSON.parse(JSON.stringify(m.phases)).map(p=>({...p,sessionLabel:S.subject,method:'paper'}));
-  beginSession();
-}
-
+function confirmSkip(){const next=S.phases[S.phaseIdx+1];const nn=next?(next.t==='log'?'error log':next.t==='brk'?'break':'focus'):'done';openConfirm('Skip phase?',`Jump to ${nn}.`,'Skip','btn btn-secondary',()=>{clearInterval(S.ticker);stopBreathe();dismissCheckin();stopReminders();enterPhase(S.phaseIdx+1);});}
+function confirmEnd(){openConfirm('End session?','Progress will be saved.','End','btn btn-danger',()=>{clearInterval(S.ticker);stopReminders();stopBreathe();dismissCheckin();releaseLock();recordSession();returnToHome();buildScheduleCard();});}
+function startScheduleMode(){closeSchedOv();const dow=new Date().getDay();const td=TIMETABLE[dow];checkTodayDone();let subj=isUnlocked?(!TODAY_DONE.s1?td.s1.subj:!TODAY_DONE.s2?td.s2.subj:td.s3.subj):'General';S.subject=subj;S.type='schedule';S.scheduleMode=true;const m=METHODS['paper'];S.phases=JSON.parse(JSON.stringify(m.phases)).map(p=>({...p,sessionLabel:S.subject,method:'paper'}));beginSession();}
 function normalizeSubj(s){const k=s.trim().toLowerCase();return SUBJ_MAP[k]||s.trim();}
-
-function startSession(){
-  const raw=document.getElementById('subj').value.trim();
-  S.subject=raw?normalizeSubj(raw):'General';S.type=selM;S.scheduleMode=false;
-  if(selM==='custom'){
-    const fm=parseInt(document.getElementById('cust-focus').value)||45;
-    const bm=parseInt(document.getElementById('cust-break').value)||0;
-    S.phases=[{t:'focus',d:fm*60,l:'Focus',s:`${fm} min`,sessionLabel:S.subject,method:'custom'}];
-    if(bm>0)S.phases.push({t:'brk',d:bm*60,l:'Break',s:`${bm} min`,sessionLabel:S.subject,method:'custom'});
-    S.phases.push({t:'log',d:0,l:'Error Log',s:'',sessionLabel:S.subject,method:'custom'});
-  } else {
-    const m=METHODS[selM];
-    S.phases=JSON.parse(JSON.stringify(m.phases)).map(p=>({...p,sessionLabel:S.subject,method:selM}));
-  }
-  beginSession();
-}
-
+function startSession(){const raw=document.getElementById('subj').value.trim();S.subject=raw?normalizeSubj(raw):'General';S.type=selM;S.scheduleMode=false;if(selM==='custom'){const fm=parseInt(document.getElementById('cust-focus').value)||45;const bm=parseInt(document.getElementById('cust-break').value)||0;S.phases=[{t:'focus',d:fm*60,l:'Focus',s:`${fm} min`,sessionLabel:S.subject,method:'custom'}];if(bm>0)S.phases.push({t:'brk',d:bm*60,l:'Break',s:`${bm} min`,sessionLabel:S.subject,method:'custom'});S.phases.push({t:'log',d:0,l:'Error Log',s:'',sessionLabel:S.subject,method:'custom'});}else{const m=METHODS[selM];S.phases=JSON.parse(JSON.stringify(m.phases)).map(p=>({...p,sessionLabel:S.subject,method:selM}));}beginSession();}
 function beginSession(){S.phaseIdx=0;S.sessionN++;S.checkinScores=[];S.energy=0;markCatSel='';enterPhase(0);if(CFG.notif)askNotif();}
-
-function enterPhase(idx){
-  clearInterval(S.ticker);S.phaseIdx=idx;const ph=S.phases[idx];
-  if(!ph){sessionComplete();return;}
-  S.timeLeft=ph.d;S.totalTime=ph.d;S.paused=false;
-  if(ph.t==='log'){stopReminders();showLogScreen(ph);return;}
-  if(ph.t==='brk'){showTimerScreen('break-screen');renderBreakScreen(ph);tone('end');startBreathe();}
-  else{showTimerScreen('timer-screen');renderTimerScreen(ph);tone('start');startReminders(ph.d);scheduleCheckin(ph.d);requestWakeLock();}
-  notify(ph.l,ph.sessionLabel||'',false);
-  if(ph.d>0)S.ticker=setInterval(tick,1000);else enterPhase(idx+1);
-}
-
+function enterPhase(idx){clearInterval(S.ticker);S.phaseIdx=idx;const ph=S.phases[idx];if(!ph){sessionComplete();return;}S.timeLeft=ph.d;S.totalTime=ph.d;S.paused=false;if(ph.t==='log'){stopReminders();showLogScreen(ph);return;}if(ph.t==='brk'){showTimerScreen('break-screen');renderBreakScreen(ph);tone('end');startBreathe();}else{showTimerScreen('timer-screen');renderTimerScreen(ph);tone('start');startReminders(ph.d);scheduleCheckin(ph.d);requestWakeLock();}notify(ph.l,ph.sessionLabel||'',false);if(ph.d>0)S.ticker=setInterval(tick,1000);else enterPhase(idx+1);}
 function tick(){if(S.paused)return;S.timeLeft=Math.max(0,S.timeLeft-1);renderTimeDisplay();if(S.timeLeft===60)tone('warn');if(S.timeLeft===0){clearInterval(S.ticker);enterPhase(S.phaseIdx+1);}}
-function renderTimeDisplay(){
-  const ph=S.phases[S.phaseIdx];if(!ph)return;const s=fmt(S.timeLeft);
-  if(ph.t==='brk'){const el=document.getElementById('brk-time');if(el)el.textContent=s;}
-  else{const te=document.getElementById('t-time');if(te)te.textContent=s;const ring=document.getElementById('ring');if(ring&&S.totalTime>0)ring.style.strokeDashoffset=CIRC*(1-S.timeLeft/S.totalTime);}
-}
+function renderTimeDisplay(){const ph=S.phases[S.phaseIdx];if(!ph)return;const s=fmt(S.timeLeft);if(ph.t==='brk'){const el=document.getElementById('brk-time');if(el)el.textContent=s;}else{const te=document.getElementById('t-time');if(te)te.textContent=s;const ring=document.getElementById('ring');if(ring&&S.totalTime>0)ring.style.strokeDashoffset=CIRC*(1-S.timeLeft/S.totalTime);}}
 function togglePause(){S.paused=!S.paused;['btn-pause','brk-pause'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=S.paused?'Resume':'Pause';});}
-
-function renderTimerScreen(ph){
-  document.getElementById('phase-lbl').textContent=ph.l||'Focus';
-  document.getElementById('t-sub').textContent=ph.s||'';
-  document.getElementById('t-subj').textContent=ph.sessionLabel||(S.subject||'Session');
-  document.getElementById('t-time').textContent=fmt(ph.d);
-  document.getElementById('btn-pause').textContent='Pause';
-  document.getElementById('ring').style.strokeDashoffset='0';
-  const m=METHODS[ph.method];document.getElementById('timer-method-icon').textContent=m?m.icon:'';
-  const tip=document.getElementById('method-tip');
-  if(m&&m.desc){tip.textContent=m.desc;tip.classList.add('vis');}else tip.classList.remove('vis');
-  renderDots();
-}
-function renderBreakScreen(ph){
-  document.getElementById('brk-lbl').textContent=ph.l||'Break';document.getElementById('brk-time').textContent=fmt(ph.d);
-  document.getElementById('brk-sublabel').textContent=ph.s||'Hydrate, stretch, rest your eyes';
-  const nxt=S.phases[S.phaseIdx+1];document.getElementById('brk-next').textContent=nxt&&nxt.t!=='log'?`Next: ${nxt.l}`:'';
-  document.getElementById('brk-pause').textContent='Pause';
-}
-function renderDots(){
-  const c=document.getElementById('pdots');if(!c)return;c.innerHTML='';
-  const COL={focus:'var(--acc)',brk:'var(--brk)',log:'var(--log)'};
-  S.phases.forEach((p,i)=>{const d=document.createElement('div');d.className='pdot';if(i<S.phaseIdx){d.style.background='var(--brk)';d.classList.add('done');}else if(i===S.phaseIdx){d.style.background=COL[p.t]||'var(--acc)';d.classList.add('active');}c.appendChild(d);});
-}
-
+function renderTimerScreen(ph){document.getElementById('phase-lbl').textContent=ph.l||'Focus';document.getElementById('t-sub').textContent=ph.s||'';document.getElementById('t-subj').textContent=ph.sessionLabel||(S.subject||'Session');document.getElementById('t-time').textContent=fmt(ph.d);document.getElementById('btn-pause').textContent='Pause';document.getElementById('ring').style.strokeDashoffset='0';const m=METHODS[ph.method];document.getElementById('timer-method-icon').textContent=m?m.icon:'';const tip=document.getElementById('method-tip');if(m&&m.desc){tip.textContent=m.desc;tip.classList.add('vis');}else tip.classList.remove('vis');renderDots();}
+function renderBreakScreen(ph){document.getElementById('brk-lbl').textContent=ph.l||'Break';document.getElementById('brk-time').textContent=fmt(ph.d);document.getElementById('brk-sublabel').textContent=ph.s||'Hydrate, stretch, rest your eyes';const nxt=S.phases[S.phaseIdx+1];document.getElementById('brk-next').textContent=nxt&&nxt.t!=='log'?`Next: ${nxt.l}`:'';document.getElementById('brk-pause').textContent='Pause';}
+function renderDots(){const c=document.getElementById('pdots');if(!c)return;c.innerHTML='';const COL={focus:'var(--acc)',brk:'var(--brk)',log:'var(--log)'};S.phases.forEach((p,i)=>{const d=document.createElement('div');d.className='pdot';if(i<S.phaseIdx){d.style.background='var(--brk)';d.classList.add('done');}else if(i===S.phaseIdx){d.style.background=COL[p.t]||'var(--acc)';d.classList.add('active');}c.appendChild(d);});}
 const BRK_MSGS=['Breathe in...','Hold...','Breathe out...','Hold...'];
 const BRK_DUR=[4000,2000,4000,2000];let brkStep=0;
 function startBreathe(){stopBreathe();brkStep=0;nextBrk();}
 function nextBrk(){const el=document.getElementById('brk-breathe');if(el)el.textContent=BRK_MSGS[brkStep%4];S.breatheT=setTimeout(()=>{brkStep++;nextBrk();},BRK_DUR[brkStep%4]);}
 function stopBreathe(){clearTimeout(S.breatheT);}
-
 async function requestWakeLock(){try{if('wakeLock'in navigator)S.wakelock=await navigator.wakeLock.request('screen');}catch(e){}}
 function releaseLock(){try{if(S.wakelock){S.wakelock.release();S.wakelock=null;}}catch(e){}}
-
-function showLogScreen(ph){
-  showTimerScreen('log-screen');
-  document.getElementById('log-header').textContent=ph.sessionLabel?`${ph.sessionLabel} done`:'Session complete';
-  document.getElementById('log-subj').value=(S.subject&&S.subject!=='General')?S.subject:'';
-  ['log-topic','log-wrong','log-correct','log-avoid','log-question'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  ['log-got','log-total'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  document.querySelectorAll('.e-btn,.mark-cat-btn').forEach(b=>b.classList.remove('sel','sel-app','sel-know','sel-term'));
-  document.getElementById('tgl-spaced').classList.remove('on');
-  document.getElementById('mark-guidance').classList.remove('vis');
-  const cb=document.getElementById('copy-btn');cb.classList.remove('copied');cb.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">📋</span>';
-  markCatSel='';S.energy=0;tone('done');notify('Session done','Log your errors.',true);releaseLock();
-}
+function showLogScreen(ph){showTimerScreen('log-screen');document.getElementById('log-header').textContent=ph.sessionLabel?`${ph.sessionLabel} done`:'Session complete';document.getElementById('log-subj').value=(S.subject&&S.subject!=='General')?S.subject:'';['log-topic','log-wrong','log-correct','log-avoid','log-question'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});['log-got','log-total'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.querySelectorAll('.e-btn,.mark-cat-btn').forEach(b=>b.classList.remove('sel','sel-app','sel-know','sel-term'));const spaced=document.getElementById('tgl-spaced');if(spaced)spaced.checked=false;document.getElementById('mark-guidance').classList.remove('vis');const cb=document.getElementById('copy-btn');cb.classList.remove('copied');cb.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">📋</span>';markCatSel='';S.energy=0;tone('done');notify('Session done','Log your errors.',true);releaseLock();}
 function selEnergy(el){document.querySelectorAll('.e-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');S.energy=parseInt(el.dataset.e);}
-function selMarkCat(el,cat){
-  document.querySelectorAll('.mark-cat-btn').forEach(b=>b.classList.remove('sel-app','sel-know','sel-term'));
-  el.classList.add('sel-'+cat);markCatSel=cat;
-  const guidance={
-    app:'<strong>Application</strong>: You knew the content but did not connect it to the question context. Fix: more timed exam questions. Read the question twice before answering.',
-    know:'<strong>Knowledge gap</strong>: You could not recall a fact, process, or definition. Fix: add to flashcards today and review until automatic.',
-    term:'<strong>Terminology</strong>: You used the wrong word or missed a mark scheme term. Fix: study the mark scheme carefully. Highlight every term you would not have written.'
-  };
-  const g=document.getElementById('mark-guidance');g.innerHTML=guidance[cat]||'';g.classList.add('vis');
-}
-
-function copyForNotion(){
-  const now=new Date();const dateStr=`${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
-  const subj=document.getElementById('log-subj').value.trim()||S.subject;
-  const got=document.getElementById('log-got').value.trim();const total=document.getElementById('log-total').value.trim();
-  const row=[dateStr,subj,document.getElementById('log-topic').value.trim(),document.getElementById('log-question').value.trim(),{'app':'Application','know':'Knowledge','term':'Terminology'}[markCatSel]||'',got&&total?`${got}/${total}`:'',document.getElementById('log-wrong').value.trim(),document.getElementById('log-correct').value.trim(),document.getElementById('log-avoid').value.trim()].join('\t');
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(row).then(()=>{const btn=document.getElementById('copy-btn');btn.classList.add('copied');btn.innerHTML='<span>Copied</span><span>✓</span>';setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">📋</span>';},2500);}).catch(()=>alert('Paste into Notion:\n\n'+row));
-  } else alert('Paste into Notion:\n\n'+row);
-}
-
-function doneLog(skip){
-  const logSubj=document.getElementById('log-subj').value.trim();if(logSubj)S.subject=normalizeSubj(logSubj);
-  if(!skip){const topic=document.getElementById('log-topic').value.trim();if(topic&&document.getElementById('tgl-spaced').classList.contains('on')){const now=Date.now();SPACED.push({topic,subj:S.subject,added:now,reviews:[now+14*86400000,now+44*86400000],done:[]});saveSpaced();}}
-  recordSession();stopBreathe();releaseLock();returnToHome();refreshStats();buildScheduleCard();
-}
+function selMarkCat(el,cat){document.querySelectorAll('.mark-cat-btn').forEach(b=>b.classList.remove('sel-app','sel-know','sel-term'));el.classList.add('sel-'+cat);markCatSel=cat;const guidance={app:'<strong>Application</strong>: You knew the content but did not connect it to the question context. Fix: more timed exam questions. Read the question twice before answering.',know:'<strong>Knowledge gap</strong>: You could not recall a fact, process, or definition. Fix: add to flashcards today and review until automatic.',term:'<strong>Terminology</strong>: You used the wrong word or missed a mark scheme term. Fix: study the mark scheme carefully. Highlight every term you would not have written.'};const g=document.getElementById('mark-guidance');g.innerHTML=guidance[cat]||'';g.classList.add('vis');}
+function copyForNotion(){const now=new Date();const dateStr=`${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;const subj=document.getElementById('log-subj').value.trim()||S.subject;const got=document.getElementById('log-got').value.trim();const total=document.getElementById('log-total').value.trim();const row=[dateStr,subj,document.getElementById('log-topic').value.trim(),document.getElementById('log-question').value.trim(),{'app':'Application','know':'Knowledge','term':'Terminology'}[markCatSel]||'',got&&total?`${got}/${total}`:'',document.getElementById('log-wrong').value.trim(),document.getElementById('log-correct').value.trim(),document.getElementById('log-avoid').value.trim()].join('\t');if(navigator.clipboard){navigator.clipboard.writeText(row).then(()=>{const btn=document.getElementById('copy-btn');btn.classList.add('copied');btn.innerHTML='<span>Copied</span><span>✓</span>';setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">📋</span>';},2500);}).catch(()=>alert('Paste into Notion:\n\n'+row));}else alert('Paste into Notion:\n\n'+row);}
+function doneLog(skip){const logSubj=document.getElementById('log-subj').value.trim();if(logSubj)S.subject=normalizeSubj(logSubj);if(!skip){const topic=document.getElementById('log-topic').value.trim();const spaced=document.getElementById('tgl-spaced');if(topic&&spaced&&spaced.checked){addToSR(topic,S.subject);}}recordSession();stopBreathe();releaseLock();returnToHome();refreshStats();buildScheduleCard();}
 function sessionComplete(){tone('done');notify('All done!','Great work.',true);recordSession();releaseLock();returnToHome();refreshStats();buildScheduleCard();}
-
-function markScheduledDone(){
-  checkTodayDone();const dow=new Date().getDay();const td=TIMETABLE[dow];
-  const slots=['s1','s2','s3'];const schSubjs=[td.s1.subj,td.s2.subj,td.s3.subj];
-  for(let i=0;i<3;i++){
-    if(!TODAY_DONE[slots[i]]){
-      const sched=schSubjs[i].toLowerCase();const sess=S.subject.toLowerCase();
-      if(S.scheduleMode||sched.includes(sess)||sess.includes(sched)||sched.split(' ').some(w=>w.length>3&&sess.includes(w))){
-        TODAY_DONE[slots[i]]=true;saveTodayDone();
-        const done=[TODAY_DONE.s1,TODAY_DONE.s2,TODAY_DONE.s3].filter(Boolean).length;
-        showToast('Session done',done===3?'All 3 done today. Great work.':done+'/3 sessions done');break;
-      }
-    }
-  }
-}
-function recordSession(){
-  const today=new Date().toDateString();
-  const focusMins=Math.max(1,Math.round(S.phases.filter(p=>p.t==='focus').reduce((a,p)=>a+p.d,0)/60));
-  STATS.total++;STATS.mins=(STATS.mins||0)+focusMins;
-  STATS.hist.unshift({date:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),dateStr:today,subj:S.subject,method:selM,mins:focusMins,energy:S.energy,markCat:markCatSel});
-  if(STATS.hist.length>90)STATS.hist.pop();saveStats();markScheduledDone();
-}
-
-function startReminders(dur){
-  stopReminders();if(CFG.eye)S.eyeT=setInterval(()=>flash('b-eye',4000),20*60*1000);if(CFG.hydra)S.hydraT=setInterval(()=>flash('b-hydra',4000),45*60*1000);
-  if(dur>=25*60)S.gratT=setTimeout(()=>flash('b-gratitude',5000),25*60*1000);if(dur>=35*60)S.standT=setTimeout(()=>flash('b-stand',5000),35*60*1000);
-}
+function markScheduledDone(){checkTodayDone();const dow=new Date().getDay();const td=TIMETABLE[dow];const slots=['s1','s2','s3'];const schSubjs=[td.s1.subj,td.s2.subj,td.s3.subj];for(let i=0;i<3;i++){if(!TODAY_DONE[slots[i]]){const sched=schSubjs[i].toLowerCase();const sess=S.subject.toLowerCase();if(S.scheduleMode||sched.includes(sess)||sess.includes(sched)||sched.split(' ').some(w=>w.length>3&&sess.includes(w))){TODAY_DONE[slots[i]]=true;saveTodayDone();const done=[TODAY_DONE.s1,TODAY_DONE.s2,TODAY_DONE.s3].filter(Boolean).length;showToast('Session done',done===3?'All 3 done today. Great work.':done+'/3 sessions done');break;}}}}
+function recordSession(){const today=new Date().toDateString();const focusMins=Math.max(1,Math.round(S.phases.filter(p=>p.t==='focus').reduce((a,p)=>a+p.d,0)/60));STATS.total++;STATS.mins=(STATS.mins||0)+focusMins;STATS.hist.unshift({date:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),dateStr:today,subj:S.subject,method:selM,mins:focusMins,energy:S.energy,markCat:markCatSel});if(STATS.hist.length>90)STATS.hist.pop();saveStats();markScheduledDone();}
+function startReminders(dur){stopReminders();if(CFG.eye)S.eyeT=setInterval(()=>flash('b-eye',4000),20*60*1000);if(CFG.hydra)S.hydraT=setInterval(()=>flash('b-hydra',4000),45*60*1000);if(dur>=25*60)S.gratT=setTimeout(()=>flash('b-gratitude',5000),25*60*1000);if(dur>=35*60)S.standT=setTimeout(()=>flash('b-stand',5000),35*60*1000);}
 function flash(id,ms){const el=document.getElementById(id);if(!el)return;if(!document.getElementById('timer-screen').classList.contains('active'))return;el.classList.add('show');tone('soft');setTimeout(()=>el.classList.remove('show'),ms);}
 function stopReminders(){[S.eyeT,S.hydraT].forEach(t=>{if(t!=null)clearInterval(t);});[S.gratT,S.standT].forEach(t=>{if(t!=null)clearTimeout(t);});S.eyeT=S.hydraT=S.gratT=S.standT=null;}
-
 function scheduleCheckin(rem){clearTimeout(S.checkinT);if(!CFG.checkin||rem<8*60)return;S.checkinT=setTimeout(showCheckin,(7+Math.random()*5)*60*1000);}
 function showCheckin(){if(!document.getElementById('timer-screen').classList.contains('active'))return;if(S.paused){scheduleCheckin(S.timeLeft);return;}document.getElementById('checkin-ov').classList.add('vis');S.checkinDismissT=setTimeout(dismissCheckin,15000);}
 function logCheckin(score,el){document.querySelectorAll('.checkin-opt').forEach(o=>o.classList.remove('picked'));el.classList.add('picked');S.checkinScores.push(score);clearTimeout(S.checkinDismissT);if(score<=2)setTimeout(()=>flash('b-boxbreath',6000),700);setTimeout(dismissCheckin,600);}
 function dismissCheckin(){clearTimeout(S.checkinDismissT);document.getElementById('checkin-ov').classList.remove('vis');document.querySelectorAll('.checkin-opt').forEach(o=>o.classList.remove('picked'));scheduleCheckin(S.timeLeft);}
+function refreshStats(){document.getElementById('st-total').textContent=STATS.total||0;document.getElementById('st-mins').textContent=STATS.mins||0;const today=new Date().toDateString();document.getElementById('st-today').textContent=(STATS.hist||[]).filter(h=>h.dateStr===today).reduce((a,h)=>a+(h.mins||0),0);const ws=new Date();ws.setDate(ws.getDate()-ws.getDay());ws.setHours(0,0,0,0);document.getElementById('st-week').textContent=(STATS.hist||[]).filter(h=>h.dateStr&&new Date(h.dateStr)>=ws).reduce((a,h)=>a+(h.mins||0),0);renderWeekChart();renderSubjBars();if(isUnlocked)renderTargetVsAchieved();}
+function renderWeekChart(){const canvas=document.getElementById('week-chart');if(!canvas)return;const dpr=window.devicePixelRatio||1;const W=canvas.offsetWidth||300;canvas.width=W*dpr;canvas.height=90*dpr;canvas.style.width=W+'px';canvas.style.height='90px';const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const today=new Date();const data=[];for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);const ds=d.toDateString();const mins=(STATS.hist||[]).filter(h=>h.dateStr===ds).reduce((a,h)=>a+(h.mins||0),0);data.push({label:days[d.getDay()],mins,today:i===0});}const maxMins=Math.max(...data.map(d=>d.mins),60);const barW=(W-40)/7-6;const chartH=68;ctx.clearRect(0,0,W,90);data.forEach((d,i)=>{const x=20+i*((W-40)/7);const barH=d.mins>0?(d.mins/maxMins)*chartH:2;const y=chartH-barH+8;ctx.beginPath();ctx.roundRect(x,y,barW,barH,3);if(d.today&&d.mins>0){const g=ctx.createLinearGradient(x,y,x,y+barH);g.addColorStop(0,'#6ecbfb');g.addColorStop(1,'#1098f7');ctx.fillStyle=g;}else ctx.fillStyle=d.mins>0?'#4a5c52':'#1c1f1f';ctx.fill();ctx.fillStyle='#4a5c52';ctx.font=`600 9px Outfit,sans-serif`;ctx.textAlign='center';ctx.fillText(d.label,x+barW/2,85);if(d.mins>0){ctx.fillStyle=d.today?'#6ecbfb':'#4a5c52';ctx.font='700 9px Outfit,sans-serif';ctx.fillText(d.mins,x+barW/2,y-2);}});}
+function renderTargetVsAchieved(){const el=document.getElementById('target-achieved');if(!el)return;const ws=new Date();ws.setDate(ws.getDate()-ws.getDay());ws.setHours(0,0,0,0);const achieved={};(STATS.hist||[]).forEach(h=>{if(h.dateStr&&new Date(h.dateStr)>=ws&&h.subj)achieved[h.subj]=(achieved[h.subj]||0)+(h.mins||0);});if(!Object.keys(achieved).length){el.innerHTML='<div style="font-size:13px;color:var(--hint);text-align:center;padding:6px">No sessions this week yet</div>';return;}el.innerHTML=SUBJECTS.map(s=>{const done=achieved[s.name]||0;const pct=Math.min(100,Math.round(done/s.weeklyMins*100));const met=done>=s.weeklyMins;return`<div class="target-row"><div class="tr-top"><span class="tr-name">${s.name} <span style="font-size:9px;color:${met?'var(--brk)':'var(--hint)'}">${s.grade}${s.gradeNote==='confirmed'?'':'?'}</span></span><span class="tr-nums ${met?'met':''}">${done}/${s.weeklyMins}m${met?' done':''}</span></div><div class="tr-track"><div class="tr-fill ${met?'met':''}" style="width:${pct}%"></div></div></div>`;}).join('');}
+function renderSubjBars(){const el=document.getElementById('subj-bars');if(!el)return;const mins={};(STATS.hist||[]).forEach(h=>{if(h.subj)mins[h.subj]=(mins[h.subj]||0)+(h.mins||0);});const sorted=Object.entries(mins).sort((a,b)=>b[1]-a[1]).slice(0,8);if(!sorted.length){el.innerHTML='<div style="font-size:13px;color:var(--hint);text-align:center;padding:8px">No sessions yet</div>';return;}const max=sorted[0][1];el.innerHTML=sorted.map(([subj,m])=>`<div class="subj-bar-row"><div class="subj-bar-lbl">${subj}</div><div class="subj-bar-track"><div class="subj-bar-fill" style="width:${(m/max*100).toFixed(0)}%"></div></div><div class="subj-bar-n">${m}m</div></div>`).join('');}
+function renderSpec(){if(!isUnlocked)return;const pills=document.getElementById('spec-pills');const list=document.getElementById('spec-list');const prog=document.getElementById('spec-prog-row');if(!pills||!list||!prog)return;pills.innerHTML=SUBJECTS.map(s=>`<div class="spec-pill${s.name===currentSpecSubj?' act':''}" onclick="switchSpec('${s.name}')">${s.name}</div>`).join('');renderSpecContent(list,prog);}
+function switchSpec(name){currentSpecSubj=name;document.querySelectorAll('.spec-pill').forEach(p=>p.classList.toggle('act',p.textContent===name));renderSpecContent(document.getElementById('spec-list'),document.getElementById('spec-prog-row'));}
 
-// Stats
-function refreshStats(){
-  document.getElementById('st-total').textContent=STATS.total||0;document.getElementById('st-mins').textContent=STATS.mins||0;
-  const today=new Date().toDateString();
-  document.getElementById('st-today').textContent=(STATS.hist||[]).filter(h=>h.dateStr===today).reduce((a,h)=>a+(h.mins||0),0);
-  const ws=new Date();ws.setDate(ws.getDate()-ws.getDay());ws.setHours(0,0,0,0);
-  document.getElementById('st-week').textContent=(STATS.hist||[]).filter(h=>h.dateStr&&new Date(h.dateStr)>=ws).reduce((a,h)=>a+(h.mins||0),0);
-  renderWeekChart();renderSubjBars();if(isUnlocked)renderTargetVsAchieved();
+function fmtSpec(t){
+  return t
+    // Superscripts
+    .replace(/\^2/g,'²').replace(/\^3/g,'³')
+    .replace(/x2\+/g,'x²+').replace(/\bax2\b/g,'ax²')
+    .replace(/\bx2\b/g,'x²').replace(/\by2\b/g,'y²').replace(/\br2\b/g,'r²')
+    .replace(/\(1\/3\)/g,'⅓')
+    .replace(/x2\+y2/g,'x²+y²')
+    // Chemistry subscripts
+    .replace(/\bC6H12O6\b/g,'C₆H₁₂O₆')
+    .replace(/\bCnH2n\+2\b/g,'Cₙ H₂ₙ₊₂').replace(/\bCnH2n\b/g,'CₙH₂ₙ')
+    .replace(/\bC2H5OH\b/g,'C₂H₅OH').replace(/\bC2H4\b/g,'C₂H₄')
+    .replace(/\bH2SO4\b/g,'H₂SO₄').replace(/\bHNO3\b/g,'HNO₃')
+    .replace(/\bH2O\b/g,'H₂O').replace(/\bCO2\b/g,'CO₂')
+    .replace(/\bNH3\b/g,'NH₃').replace(/\bSO3\b/g,'SO₃').replace(/\bSO2\b/g,'SO₂')
+    .replace(/\bCH4\b/g,'CH₄').replace(/\bO2\b/g,'O₂').replace(/\bN2\b/g,'N₂')
+    .replace(/\bH2\b/g,'H₂').replace(/\bCl2\b/g,'Cl₂')
+    // Units
+    .replace(/mol\/dm3\b/g,'mol/dm³').replace(/\bdm3\b/g,'dm³').replace(/\bcm3\b/g,'cm³')
+    // Physics equations — keep readable
+    .replace(/\blambda\b/g,'λ').replace(/\bv = f x lambda\b/g,'v = fλ')
+    .replace(/\bDelta\b/g,'Δ')
+    .replace(/E = mcT\b/g,'E = mcΔT')
+    // Temperatures
+    .replace(/(\d+) degrees C\b/g,'$1 °C').replace(/(\d+) degrees\b/g,'$1°')
+    // Haber process
+    .replace(/N2 \+ 3H2/g,'N₂ + 3H₂').replace(/2NH3/g,'2NH₃')
+    // Photosynthesis / respiration
+    .replace(/6CO2 \+ 6H2O/g,'6CO₂ + 6H₂O').replace(/6CO2\b/g,'6CO₂')
+    .replace(/C6H12O6 \+ 6O2/g,'C₆H₁₂O₆ + 6O₂')
+    .replace(/6CO2 \+ 6H2O \+ energy/g,'6CO₂ + 6H₂O + energy')
+    // Equation labels
+    .replace(/\bx2\+y2=r2\b/g,'x²+y²=r²')
+    // Remove stray spaces introduced
+    .replace(/Cₙ H₂ₙ/g,'CₙH₂ₙ');
 }
+function renderSpecContent(list,prog){if(!list||!prog)return;const specData=SPEC[currentSpecSubj];const conf=SPEC_CONF[currentSpecSubj]||{};if(!specData){list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:12px;text-align:center">Spec points coming soon.</div>';prog.innerHTML='';return;}let green=0,amber=0,red=0,none=0,totalIdx=0;specData.sections.forEach(sec=>{sec.points.forEach(()=>{const c=conf[totalIdx++];if(c==='green')green++;else if(c==='amber')amber++;else if(c==='red')red++;else none++;});});prog.innerHTML=`<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#db4c40">${red}</div><div class="spec-prog-lbl">Red</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:#c9911a">${amber}</div><div class="spec-prog-lbl">Amber</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:#417b5a">${green}</div><div class="spec-prog-lbl">Green</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:var(--hint)">${none}</div><div class="spec-prog-lbl">Not rated</div></div>`;let idx=0;let html='';specData.sections.forEach(sec=>{html+=`<div class="spec-section-lbl">${sec.name}</div>`;sec.points.forEach(p=>{const c=conf[idx]||'';html+=`<div class="spec-point" onclick="cycleSpec(${idx},this)"><div class="spec-dot${c?' '+c:''}"></div><div class="spec-txt">${fmtSpec(p)}</div></div>`;idx++;});});list.innerHTML=html;}
+function cycleSpec(idx,el){if(!isUnlocked)return;if(!SPEC_CONF[currentSpecSubj])SPEC_CONF[currentSpecSubj]={};const cur=SPEC_CONF[currentSpecSubj][idx]||'';const next={'':'red','red':'amber','amber':'green','green':''}[cur];if(next)SPEC_CONF[currentSpecSubj][idx]=next;else delete SPEC_CONF[currentSpecSubj][idx];saveSpec();const dot=el.querySelector('.spec-dot');dot.className='spec-dot'+(next?' '+next:'');renderSpecContent(document.getElementById('spec-list'),document.getElementById('spec-prog-row'));}
 
-function renderWeekChart(){
-  const canvas=document.getElementById('week-chart');if(!canvas)return;
-  const dpr=window.devicePixelRatio||1;const W=canvas.offsetWidth||300;
-  canvas.width=W*dpr;canvas.height=90*dpr;canvas.style.width=W+'px';canvas.style.height='90px';
-  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const today=new Date();const data=[];
-  for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);const ds=d.toDateString();const mins=(STATS.hist||[]).filter(h=>h.dateStr===ds).reduce((a,h)=>a+(h.mins||0),0);data.push({label:days[d.getDay()],mins,today:i===0});}
-  const maxMins=Math.max(...data.map(d=>d.mins),60);const barW=(W-40)/7-6;const chartH=68;
-  ctx.clearRect(0,0,W,90);
-  data.forEach((d,i)=>{
-    const x=20+i*((W-40)/7);const barH=d.mins>0?(d.mins/maxMins)*chartH:2;const y=chartH-barH+8;
-    ctx.beginPath();ctx.roundRect(x,y,barW,barH,3);
-    if(d.today&&d.mins>0){const g=ctx.createLinearGradient(x,y,x,y+barH);g.addColorStop(0,'#93b4ff');g.addColorStop(1,'#265bf6');ctx.fillStyle=g;}
-    else ctx.fillStyle=d.mins>0?'#4a5070':'#1d1d2e';ctx.fill();
-    ctx.fillStyle='#4a5070';ctx.font=`600 9px Outfit,sans-serif`;ctx.textAlign='center';ctx.fillText(d.label,x+barW/2,85);
-    if(d.mins>0){ctx.fillStyle=d.today?'#93b4ff':'#4a5070';ctx.font='700 9px Outfit,sans-serif';ctx.fillText(d.mins,x+barW/2,y-2);}
-  });
-}
-function renderTargetVsAchieved(){
-  const el=document.getElementById('target-achieved');if(!el)return;
-  const ws=new Date();ws.setDate(ws.getDate()-ws.getDay());ws.setHours(0,0,0,0);const achieved={};
-  (STATS.hist||[]).forEach(h=>{if(h.dateStr&&new Date(h.dateStr)>=ws&&h.subj)achieved[h.subj]=(achieved[h.subj]||0)+(h.mins||0);});
-  if(!Object.keys(achieved).length){el.innerHTML='<div style="font-size:13px;color:var(--hint);text-align:center;padding:6px">No sessions this week yet</div>';return;}
-  el.innerHTML=SUBJECTS.map(s=>{const done=achieved[s.name]||0;const pct=Math.min(100,Math.round(done/s.weeklyMins*100));const met=done>=s.weeklyMins;
-    return`<div class="target-row"><div class="tr-top"><span class="tr-name">${s.name} <span style="font-size:9px;color:${met?'var(--brk)':'var(--hint)'}">${s.grade}${s.gradeNote==='confirmed'?'':'?'}</span></span><span class="tr-nums ${met?'met':''}">${done}/${s.weeklyMins}m${met?' done':''}</span></div><div class="tr-track"><div class="tr-fill ${met?'met':''}" style="width:${pct}%"></div></div></div>`;
-  }).join('');
-}
-function renderSubjBars(){
-  const el=document.getElementById('subj-bars');if(!el)return;
-  const mins={};(STATS.hist||[]).forEach(h=>{if(h.subj)mins[h.subj]=(mins[h.subj]||0)+(h.mins||0);});
-  const sorted=Object.entries(mins).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  if(!sorted.length){el.innerHTML='<div style="font-size:13px;color:var(--hint);text-align:center;padding:8px">No sessions yet</div>';return;}
-  const max=sorted[0][1];
-  el.innerHTML=sorted.map(([subj,m])=>`<div class="subj-bar-row"><div class="subj-bar-lbl">${subj}</div><div class="subj-bar-track"><div class="subj-bar-fill" style="width:${(m/max*100).toFixed(0)}%"></div></div><div class="subj-bar-n">${m}m</div></div>`).join('');
-}
-
-// Spec tracker with sections
-function renderSpec(){
-  const pills=document.getElementById('spec-pills');const list=document.getElementById('spec-list');const prog=document.getElementById('spec-prog-row');
-  pills.innerHTML=SUBJECTS.map(s=>`<div class="spec-pill${s.name===currentSpecSubj?' act':''}" onclick="switchSpec('${s.name}')">${s.name}</div>`).join('');
-  renderSpecContent(list,prog);
-}
-function switchSpec(name){
-  currentSpecSubj=name;document.querySelectorAll('.spec-pill').forEach(p=>p.classList.toggle('act',p.textContent===name));
-  renderSpecContent(document.getElementById('spec-list'),document.getElementById('spec-prog-row'));
-}
-function renderSpecContent(list,prog){
-  const specData=SPEC[currentSpecSubj];const conf=SPEC_CONF[currentSpecSubj]||{};
-  if(!specData){list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:12px;text-align:center">Spec points coming soon. Upload the spec PDF to add them.</div>';prog.innerHTML='';return;}
-  // Count all points across all sections
-  let green=0,amber=0,red=0,none=0,totalIdx=0;
-  specData.sections.forEach(sec=>{sec.points.forEach(()=>{const c=conf[totalIdx++];if(c==='green')green++;else if(c==='amber')amber++;else if(c==='red')red++;else none++;});});
-  prog.innerHTML=`<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#ef4444">${red}</div><div class="spec-prog-lbl">Red</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:#f59e0b">${amber}</div><div class="spec-prog-lbl">Amber</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:#10b981">${green}</div><div class="spec-prog-lbl">Green</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:var(--hint)">${none}</div><div class="spec-prog-lbl">Not rated</div></div>`;
-  let idx=0;let html='';
-  specData.sections.forEach(sec=>{
-    html+=`<div class="spec-section-lbl">${sec.name}</div>`;
-    sec.points.forEach(p=>{
-      const c=conf[idx]||'';
-      html+=`<div class="spec-point" onclick="cycleSpec(${idx},this)"><div class="spec-dot${c?' '+c:''}"></div><div class="spec-txt">${p}</div></div>`;
-      idx++;
-    });
-  });
-  list.innerHTML=html;
-}
-function cycleSpec(idx,el){
-  if(!SPEC_CONF[currentSpecSubj])SPEC_CONF[currentSpecSubj]={};
-  const cur=SPEC_CONF[currentSpecSubj][idx]||'';
-  const next={'':'red','red':'amber','amber':'green','green':''}[cur];
-  if(next)SPEC_CONF[currentSpecSubj][idx]=next;else delete SPEC_CONF[currentSpecSubj][idx];
-  saveSpec();
-  const dot=el.querySelector('.spec-dot');dot.className='spec-dot'+(next?' '+next:'');
-  renderSpecContent(document.getElementById('spec-list'),document.getElementById('spec-prog-row'));
-}
-
-// Notion - works on any host (GitHub included) using direct links + open Notion search
-function searchNotion(){
-  const query=document.getElementById('notion-query').value.trim();
-  if(!query)return;
-  // Open Notion search in new tab - works everywhere
-  window.open('https://notion.so/search?q='+encodeURIComponent(query),'_blank');
-}
-
-// Resources
 let resourcesBuilt=false;
-function renderResources(){
-  if(isUnlocked&&!resourcesBuilt){
-    renderNotionQuickLinks();renderExamList();renderHowToRevise();renderResSchedule();resourcesBuilt=true;
-  } else if(isUnlocked){
-    renderExamList();
-  }
-}
-function renderNotionQuickLinks(){
-  const el=document.getElementById('notion-quicklinks');if(!el)return;
-  el.innerHTML=NOTION_PAGES.map(p=>`<a class="notion-quick-link" href="${p.url}" target="_blank" rel="noopener"><span class="notion-quick-icon">${p.icon}</span><div><div class="notion-quick-title">${p.title}</div><div class="notion-quick-sub">${p.sub}</div></div><span style="color:var(--hint);font-size:14px;margin-left:auto">›</span></a>`).join('');
-}
-function renderExamList(){
-  const el=document.getElementById('exam-list');if(!el)return;
-  const today=new Date();today.setHours(0,0,0,0);
-  const upcoming=EXAMS.map(e=>{const d=new Date(e.date);d.setHours(0,0,0,0);return{...e,days:Math.round((d-today)/86400000)};}).filter(e=>e.days>=-1).sort((a,b)=>a.days-b.days).slice(0,6);
-  el.innerHTML=upcoming.map(e=>{const cls=e.days===0?'today':e.days<=3?'soon':'';const label=e.days===0?'TODAY':e.days<0?'Yest':`${e.days}`;const sub=e.days<=0?'':e.days===1?'day':'days';
-    return`<div class="exam-row ${cls}"><div><div class="exam-name">${e.subj}</div><div class="exam-paper">${e.paper}, ${e.date.replace('2026-','').split('-').reverse().join('/')}</div></div><div style="text-align:right"><div class="exam-days">${label}</div><div class="exam-days-lbl">${sub}</div></div></div>`;
-  }).join('');
-}
-function renderHowToRevise(){
-  const el=document.getElementById('how-to-revise');if(!el)return;
-  el.innerHTML=Object.entries(HOW_TO).map(([subj,tips])=>{
-    const s=SUBJECTS.find(x=>x.name===subj||x.name.startsWith(subj));const examStr=s?`<span class="acc-exam">${s.examDates}</span>`:'';
-    return`<div class="subj-accordion"><div class="acc-header" onclick="toggleAcc(this)"><span class="acc-title">${subj}</span><div style="display:flex;align-items:center;gap:6px">${examStr}<span class="acc-arrow">&#9660;</span></div></div><div class="acc-body"><div style="height:8px"></div>${tips.map(t=>`<div class="acc-tip">${t}</div>`).join('')}</div></div>`;
-  }).join('');
-}
+function renderResources(){if(isUnlocked&&!resourcesBuilt){renderNotionQuickLinks();renderExamList();renderHowToRevise();renderResSchedule();resourcesBuilt=true;}else if(isUnlocked){renderExamList();}}
+function renderNotionQuickLinks(){const el=document.getElementById('notion-quicklinks');if(!el)return;el.innerHTML=NOTION_PAGES.map(p=>`<a class="notion-quick-link" href="${p.url}" target="_blank" rel="noopener"><span class="notion-quick-icon">${p.icon}</span><div><div class="notion-quick-title">${p.title}</div><div class="notion-quick-sub">${p.sub}</div></div><span style="color:var(--hint);font-size:14px;margin-left:auto">&#8250;</span></a>`).join('');}
+function renderExamList(){const el=document.getElementById('exam-list');if(!el)return;const today=new Date();today.setHours(0,0,0,0);const upcoming=EXAMS.map(e=>{const d=new Date(e.date);d.setHours(0,0,0,0);return{...e,days:Math.round((d-today)/86400000)};}).filter(e=>e.days>=-1).sort((a,b)=>a.days-b.days).slice(0,6);el.innerHTML=upcoming.map(e=>{const cls=e.days===0?'today':e.days<=3?'soon':'';const label=e.days===0?'TODAY':e.days<0?'Yest':`${e.days}`;const sub=e.days<=0?'':e.days===1?'day':'days';return`<div class="exam-row ${cls}"><div><div class="exam-name">${e.subj}</div><div class="exam-paper">${e.paper}, ${e.date.replace('2026-','').split('-').reverse().join('/')}</div></div><div style="text-align:right"><div class="exam-days">${label}</div><div class="exam-days-lbl">${sub}</div></div></div>`;}).join('');}
+function renderHowToRevise(){const el=document.getElementById('how-to-revise');if(!el)return;el.innerHTML=Object.entries(HOW_TO).map(([subj,tips])=>{const s=SUBJECTS.find(x=>x.name===subj||x.name.startsWith(subj));const examStr=s?`<span class="acc-exam">${s.examDates}</span>`:'';return`<div class="subj-accordion"><div class="acc-header" onclick="toggleAcc(this)"><span class="acc-title">${subj}</span><div style="display:flex;align-items:center;gap:6px">${examStr}<span class="acc-arrow">&#9660;</span></div></div><div class="acc-body"><div style="height:8px"></div>${tips.map(t=>`<div class="acc-tip">${t}</div>`).join('')}</div></div>`;}).join('');}
 function toggleAcc(h){const b=h.nextElementSibling;const a=h.querySelector('.acc-arrow');const open=b.classList.toggle('open');if(a)a.style.transform=open?'rotate(180deg)':'';}
-function renderResSchedule(){
-  const el=document.getElementById('res-sched-table');if(!el)return;
-  const dow=new Date().getDay();const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  let html=`<div class="sched-th-row"><div class="sched-th">Day</div><div class="sched-th">S1</div><div class="sched-th">S2</div><div class="sched-th">S3</div></div>`;
-  [0,1,2,3,4,5,6].forEach(d=>{const td=TIMETABLE[d];
-    html+=`<div class="${d===dow?'sched-tr today-row':'sched-tr'}"><div class="sched-td day">${days[d]}</div><div class="sched-td">${td.s1.subj} <span style="color:var(--hint)">${td.s1.mins}m</span></div><div class="sched-td">${td.s2.subj} <span style="color:var(--hint)">${td.s2.mins}m</span></div><div class="sched-td">${td.s3.subj} <span style="color:var(--hint)">${td.s3.mins}m</span></div></div>`;
-  });el.innerHTML=html;
+function renderResSchedule(){const el=document.getElementById('res-sched-table');if(!el)return;const dow=new Date().getDay();const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];let html=`<div class="sched-th-row"><div class="sched-th">Day</div><div class="sched-th">S1</div><div class="sched-th">S2</div><div class="sched-th">S3</div></div>`;[0,1,2,3,4,5,6].forEach(d=>{const td=TIMETABLE[d];html+=`<div class="${d===dow?'sched-tr today-row':'sched-tr'}"><div class="sched-td day">${days[d]}</div><div class="sched-td">${td.s1.subj} <span style="color:var(--hint)">${td.s1.mins}m</span></div><div class="sched-td">${td.s2.subj} <span style="color:var(--hint)">${td.s2.mins}m</span></div><div class="sched-td">${td.s3.subj} <span style="color:var(--hint)">${td.s3.mins}m</span></div></div>`;});el.innerHTML=html;}
+function injectManifest(){try{const icon="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23131515'/%3E%3Ccircle cx='50' cy='54' r='28' fill='none' stroke='%231098f7' stroke-width='4'/%3E%3Ccircle cx='50' cy='54' r='3' fill='%231098f7'/%3E%3Cline x1='50' y1='54' x2='50' y2='34' stroke='%231098f7' stroke-width='3.5' stroke-linecap='round'/%3E%3Cline x1='50' y1='54' x2='64' y2='62' stroke='%236ecbfb' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E";const m={name:'Revision',short_name:'Revision',start_url:'.',display:'standalone',background_color:'#131515',theme_color:'#131515',icons:[{src:icon,sizes:'192x192',type:'image/svg+xml'}]};const url=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));const l=document.createElement('link');l.rel='manifest';l.href=url;document.head.appendChild(l);}catch(e){}}
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&(document.getElementById('timer-screen').classList.contains('active')||document.getElementById('break-screen').classList.contains('active'))){e.preventDefault();togglePause();}});
+
+// ── Spaced Repetition Engine ────────────────────────────────────────────────
+// Item: {id, topic, subj, added, nextReview, interval, streak, lastReviewed}
+// interval in days; doubles on success (max 60), resets to 1 on fail
+
+function srDueItems(){
+  const now=Date.now();
+  return SPACED.filter(i=>i.nextReview&&i.nextReview<=now);
 }
 
-function injectManifest(){
-  try{const icon="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2313131f'/%3E%3Ccircle cx='50' cy='54' r='28' fill='none' stroke='%23265bf6' stroke-width='4'/%3E%3Ccircle cx='50' cy='54' r='3' fill='%23265bf6'/%3E%3Cline x1='50' y1='54' x2='50' y2='34' stroke='%23265bf6' stroke-width='3.5' stroke-linecap='round'/%3E%3Cline x1='50' y1='54' x2='64' y2='62' stroke='%2393b4ff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E";
-    const m={name:'Revision',short_name:'Revision',start_url:'.',display:'standalone',background_color:'#13131f',theme_color:'#13131f',icons:[{src:icon,sizes:'192x192',type:'image/svg+xml'}]};
-    const url=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));
-    const l=document.createElement('link');l.rel='manifest';l.href=url;document.head.appendChild(l);
-  }catch(e){}}
-
-document.addEventListener('keydown',e=>{
-  if(e.code==='Space'&&(document.getElementById('timer-screen').classList.contains('active')||document.getElementById('break-screen').classList.contains('active'))){e.preventDefault();togglePause();}
-});
-
-function init(){
-  applySettings();updateLockUI();buildScheduleCard();buildSubjChips();updateExamChip();refreshStats();injectManifest();
-  const dm=document.querySelector('.method-card.sel');
-  if(dm){const m=METHODS[dm.dataset.m];if(m){document.getElementById('method-desc').textContent=m.desc;document.getElementById('method-desc').classList.add('vis');}}
-  document.addEventListener('touchstart',()=>unlockAudio(),{once:true,passive:true});
-  document.addEventListener('click',()=>unlockAudio(),{once:true});
+function buildSRCard(){
+  const due=srDueItems();
+  const card=document.getElementById('sr-due-card');
+  const count=document.getElementById('sr-due-count');
+  const preview=document.getElementById('sr-due-preview');
+  if(!card)return;
+  if(due.length===0){card.style.display='none';return;}
+  card.style.display='block';
+  count.textContent=due.length;
+  if(due.length===1){preview.textContent=`"${due[0].topic}" — ${due[0].subj}`;}
+  else{preview.textContent=`${due.map(d=>d.subj).filter((v,i,a)=>a.indexOf(v)===i).slice(0,3).join(', ')} — tap to review`;}
 }
+
+let srQueue=[],srIdx=0;
+function openSRReview(){
+  srQueue=srDueItems();
+  if(!srQueue.length)return;
+  srIdx=0;
+  document.getElementById('sr-ov').classList.add('open');
+  renderSRCard();
+}
+function closeSRReview(){
+  document.getElementById('sr-ov').classList.remove('open');
+  buildSRCard();
+}
+function renderSRCard(){
+  const item=srQueue[srIdx];
+  if(!item){closeSRReview();showToast('Review done','All caught up',true);buildSRCard();return;}
+  document.getElementById('sr-topic').textContent=item.topic;
+  document.getElementById('sr-subj-lbl').textContent=item.subj+' · '+srIntervalLabel(item.interval||1);
+  // progress dots
+  const prog=document.getElementById('sr-prog');
+  prog.innerHTML=srQueue.map((_,i)=>`<div class="sr-prog-dot${i<srIdx?' done':''}"></div>`).join('');
+  const remaining=srQueue.length-srIdx;
+  document.getElementById('sr-hint').textContent=remaining===1?'Last one':''+remaining+' left';
+}
+function srIntervalLabel(d){
+  if(d<=1)return'Due today';
+  if(d<7)return`Next: ${d} days`;
+  if(d<30)return`Next: ${Math.round(d/7)} week${Math.round(d/7)>1?'s':''}`;
+  return`Next: ${Math.round(d/30)} month${Math.round(d/30)>1?'s':''}`;
+}
+function srAnswer(remembered){
+  const item=srQueue[srIdx];
+  if(!item)return;
+  const now=Date.now();
+  const idx=SPACED.findIndex(i=>i.id===item.id);
+  if(idx<0){srIdx++;renderSRCard();return;}
+  if(remembered){
+    const newInterval=Math.min((item.interval||1)*2,60);
+    SPACED[idx].interval=newInterval;
+    SPACED[idx].streak=(item.streak||0)+1;
+    SPACED[idx].nextReview=now+newInterval*86400000;
+  } else {
+    SPACED[idx].interval=1;
+    SPACED[idx].streak=0;
+    SPACED[idx].nextReview=now+86400000;
+  }
+  SPACED[idx].lastReviewed=now;
+  saveSpaced();
+  srIdx++;
+  renderSRCard();
+}
+
+// Migrate old SPACED items that lack id/nextReview
+function migrateSRItems(){
+  let changed=false;
+  SPACED.forEach((item,i)=>{
+    if(!item.id){SPACED[i].id=Date.now()+'-'+i;changed=true;}
+    if(!item.nextReview&&item.reviews&&item.reviews[0]){
+      SPACED[i].nextReview=item.reviews[0];
+      SPACED[i].interval=14;
+      SPACED[i].streak=0;
+      changed=true;
+    }
+    if(!item.nextReview){
+      SPACED[i].nextReview=Date.now();
+      SPACED[i].interval=1;
+      SPACED[i].streak=0;
+      changed=true;
+    }
+  });
+  if(changed)saveSpaced();
+}
+
+// Updated doneLog to use new SR structure
+function addToSR(topic,subj){
+  const now=Date.now();
+  SPACED.push({
+    id:now+'-'+Math.random().toString(36).slice(2),
+    topic,subj,added:now,
+    nextReview:now+14*86400000,
+    interval:14,streak:0,lastReviewed:null
+  });
+  saveSpaced();
+}
+
+function init(){applySettings();updateLockUI();buildScheduleCard();buildSubjChips();updateExamChip();refreshStats();injectManifest();migrateSRItems();buildSRCard();const dm=document.querySelector('.method-card.sel');if(dm){const m=METHODS[dm.dataset.m];if(m){document.getElementById('method-desc').textContent=m.desc;document.getElementById('method-desc').classList.add('vis');}}document.addEventListener('touchstart',()=>unlockAudio(),{once:true,passive:true});document.addEventListener('click',()=>unlockAudio(),{once:true});}
 init();
 </script>
 </body>
