@@ -1,13 +1,12 @@
 // js/firebase-config.js
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAMj3K7P5eLJZuIVwHZfJ0dITsCnKwNfXM",
-  authDomain: "revision-timer-bf5c8.firebaseapp.com",
-  projectId: "revision-timer-bf5c8",
-  storageBucket: "revision-timer-bf5c8.firebasestorage.app",
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyAMj3K7P5eLJZuIVwHZfJ0dITsCnKwNfXM",
+  authDomain:        "revision-timer-bf5c8.firebaseapp.com",
+  projectId:         "revision-timer-bf5c8",
+  storageBucket:     "revision-timer-bf5c8.firebasestorage.app",
   messagingSenderId: "44515072496",
-  appId: "1:44515072496:web:b9b1f279beffe34d0ba535",
-  measurementId: "G-W7KPR2Y7ZF"
+  appId:             "1:44515072496:web:b9b1f279beffe34d0ba535"
 };
 
 // BUG FIX: `const` at top-level script scope does NOT attach to `window`,
