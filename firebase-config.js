@@ -12,16 +12,16 @@
 //      e.g. yourusername.github.io
 
 const FIREBASE_CONFIG = {
-  apiKey:            "YOUR_API_KEY_HERE",
-  authDomain:        "YOUR_PROJECT.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId:             "YOUR_APP_ID"
+  apiKey:            "AIzaSyAMj3K7P5eLJZuIVwHZfJ0dITsCnKwNfXM",
+  authDomain:        "revision-timer-bf5c8.firebaseapp.com",
+  projectId:         "revision-timer-bf5c8",
+  storageBucket:     "revision-timer-bf5c8.firebasestorage.app",
+  messagingSenderId: "44515072496",
+  appId:             "1:44515072496:web:b9b1f279beffe34d0ba535"
 };
 
 // Automatically detected: if no real config is present, skip Firebase and use localStorage only.
-const FIREBASE_ENABLED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY_HERE";
+const FIREBASE_ENABLED = FIREBASE_CONFIG.apiKey !== "AIzaSyAMj3K7P5eLJZuIVwHZfJ0dITsCnKwNfXM";
 
 if (FIREBASE_ENABLED) {
   try {
