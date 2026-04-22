@@ -1,6 +1,6 @@
-/* css/style2.css - continuation of style.css */
+/* css/style2.css — Solus supplementary styles */
 
-/* ===== TOAST (icon/text/close) ===== */
+/* ===== TOAST INTERNALS ===== */
 .toast-icon{color:var(--brk);background:rgba(255,255,255,.05);padding:6px;border-radius:8px;flex-shrink:0}
 .toast-text{flex:1;min-width:0}
 .toast-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -72,13 +72,5 @@ body.auth-page{display:flex;flex-direction:column;align-items:center;justify-con
 .auth-google-btn:hover{background:var(--s2);border-color:var(--acc)}
 .auth-google-btn:active{transform:scale(.98)}
 .auth-google-icon{width:18px;height:18px;flex-shrink:0}
-.auth-footer{text-align:center;font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px}
-.auth-footer a{color:var(--acc-t);text-decoration:none;font-weight:600}
 .auth-forgot{background:none;border:none;font-family:inherit;font-size:12px;color:var(--acc-t);cursor:pointer;padding:4px 0;display:block;text-align:right;margin-top:-8px;margin-bottom:12px}
 .auth-skip-btn{background:none;border:none;font-family:inherit;font-size:13px;color:var(--hint);cursor:pointer;padding:14px;text-align:center;width:100%;margin-top:6px;display:block}
-
-/* ===== ANIMATIONS ===== */
-@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.fadeup{animation:fadeup .3s ease forwards}
-@keyframes pulse-slow{0%,100%{opacity:1}50%{opacity:.4}}
-.pulse{animation:pulse-slow 2s ease-in-out infinite}
