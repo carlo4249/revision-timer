@@ -3,7 +3,7 @@
 
 // Canvas polyfill for roundRect
 if (!CanvasRenderingContext2D.prototype.roundRect) {
-  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
     r = Math.min(r, w/2, h/2);
     this.beginPath();
     this.moveTo(x+r, y);
@@ -16,7 +16,7 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
   };
 }
 
-// -- Global state (populated by storage.js defaults then loadFromLocalStorage) --
+// -- Global state --
 let CFG        = { ...DEFAULT_CFG };
 let STATS      = { ...DEFAULT_STATS };
 let SPACED     = [];
@@ -27,7 +27,7 @@ let SPEC_CONF  = {};
 let S = {
   type:'paper', subject:'', phases:[], phaseIdx:0,
   timeLeft:0, totalTime:0, paused:false, sessionN:0,
-  actualFocusSecs:0, // tracks real elapsed focus time (not planned duration)
+  actualFocusSecs:0,
   energy:0, ticker:null,
   eyeT:null, hydraT:null, gratT:null, standT:null,
   breatheT:null, checkinT:null, checkinDismissT:null,
@@ -43,6 +43,10 @@ let currentSpecSubj = 'Maths';
 let statPeriod      = 'week';
 let resourcesBuilt  = false;
 
+// Detect pointer type for label adjustments
+const isPointerCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+const clickOrTap = isPointerCoarse ? 'Tap' : 'Click';
+
 try { isUnlocked = sessionStorage.getItem('rv_unlocked') === '1'; } catch(e) {}
 
 // ===================== THEME =====================
@@ -55,17 +59,15 @@ function toggleThemeFromSettings(el) {
 function applyTheme(t) {
   if (!t) { try { t = localStorage.getItem('rv_theme') || 'dark'; } catch(e) { t = 'dark'; } }
   document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('tcm').content = t === 'dark' ? '#131515' : '#f0f0eb';
-  // Sync all theme toggle checkboxes
+  const tcm = document.getElementById('tcm');
+  if (tcm) tcm.content = t === 'dark' ? '#131515' : '#f0f0eb';
   document.querySelectorAll('.theme-chk').forEach(el => el.checked = (t === 'light'));
 }
 
 // ===================== SETTINGS PANEL =====================
 function openSettings() {
-  // Sync theme toggle state
   const t = document.documentElement.getAttribute('data-theme') || 'dark';
   document.querySelectorAll('.theme-chk').forEach(el => el.checked = (t === 'light'));
-  // Sync all setting toggles
   applySettings();
   document.getElementById('settings-panel').classList.add('open');
   document.getElementById('settings-backdrop').style.display = 'block';
@@ -86,11 +88,11 @@ function updateSettingsAccountUI() {
   }
   const user = currentUser;
   if (user) {
-    const name = user.displayName || user.email;
+    const name = user.displayName || user.email || 'Signed in';
     el.innerHTML = `
       <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:6px">
         <div class="sr-lbl">Signed in as</div>
-        <div class="sr-desc" style="word-break:break-all">${name}</div>
+        <div class="sr-desc" style="word-break:break-all">${escHtml(name)}</div>
       </div>
       <div class="setting-row">
         <button class="btn btn-secondary" style="width:100%;font-size:13px" onclick="signOutUser()">Sign out</button>
@@ -112,18 +114,28 @@ async function signOutUser() {
   window.location.href = 'auth.html';
 }
 
+// Simple HTML escape helper
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 // ===================== TOAST =====================
 let toastTimer = null;
 function showToast(title, sub, ok = true) {
+  const t = document.getElementById('toast');
+  if (!t) return;
   document.getElementById('toast-title').textContent = title;
   document.getElementById('toast-sub').textContent = sub || '';
-  const t = document.getElementById('toast');
-  t.querySelector('.toast-icon').style.color = ok ? 'var(--brk)' : 'var(--log)';
+  const icon = t.querySelector('.toast-icon');
+  if (icon) icon.style.color = ok ? 'var(--brk)' : 'var(--log)';
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(hideToast, 4000);
 }
-function hideToast() { document.getElementById('toast').classList.remove('show'); }
+function hideToast() {
+  const t = document.getElementById('toast');
+  if (t) t.classList.remove('show');
+}
 
 // ===================== LOCK / PERSONAL =====================
 function openLock() {
@@ -135,23 +147,31 @@ function openLock() {
     }
     return;
   }
-  document.getElementById('pin-input').value = '';
-  document.getElementById('lock-error').textContent = '';
+  const pi = document.getElementById('pin-input');
+  const le = document.getElementById('lock-error');
+  if (pi) pi.value = '';
+  if (le) le.textContent = '';
   document.getElementById('lock-ov').classList.add('open');
-  setTimeout(() => document.getElementById('pin-input').focus(), 300);
+  setTimeout(() => { if (pi) pi.focus(); }, 300);
 }
 function closeLock() { document.getElementById('lock-ov').classList.remove('open'); }
 function tryUnlock() {
   const PASSWORD = 'Xaniel32!';
-  if (document.getElementById('pin-input').value === PASSWORD) {
+  const pi = document.getElementById('pin-input');
+  if (!pi) return;
+  if (pi.value === PASSWORD) {
     isUnlocked = true;
     try { sessionStorage.setItem('rv_unlocked','1'); } catch(e) {}
     closeLock(); updateLockUI(); buildScheduleCard();
-    showToast('Unlocked','Personal mode active');
+    showToast('Unlocked', 'Personal mode active');
   } else {
-    document.getElementById('lock-error').textContent = 'Incorrect password';
-    document.getElementById('pin-input').value = '';
-    document.getElementById('pin-input').focus();
+    const le = document.getElementById('lock-error');
+    if (le) le.textContent = 'Incorrect password';
+    pi.value = '';
+    pi.focus();
+    // Shake animation
+    pi.style.animation = 'none';
+    requestAnimationFrame(() => { pi.style.animation = 'shake .3s ease'; });
   }
 }
 function updateLockUI() {
@@ -159,27 +179,38 @@ function updateLockUI() {
   const icon = document.getElementById('lock-icon');
   const lbl  = document.getElementById('lock-label');
   if (btn)  btn.classList.toggle('unlocked', isUnlocked);
-  if (icon) icon.textContent = isUnlocked ? '🔓' : '🔒';
+  if (icon) icon.textContent = isUnlocked ? '\uD83D\uDD13' : '\uD83D\uDD12';
   if (lbl)  lbl.textContent  = isUnlocked ? 'Signed in' : 'Personal';
   updateExamChip(); buildSubjChips();
   const ta = document.getElementById('target-achieved');
   const tl = document.getElementById('targets-lbl');
   if (ta) ta.style.display = isUnlocked ? 'block' : 'none';
   if (tl) tl.style.display = isUnlocked ? 'block' : 'none';
-  document.getElementById('res-lock-view').style.display  = isUnlocked ? 'none' : 'flex';
-  document.getElementById('res-unlocked-view').style.display = isUnlocked ? 'block' : 'none';
-  document.getElementById('spec-lock-view').style.display = isUnlocked ? 'none' : 'flex';
-  document.getElementById('spec-unlocked-view').style.display = isUnlocked ? 'block' : 'none';
+  const resLock    = document.getElementById('res-lock-view');
+  const resUnlock  = document.getElementById('res-unlocked-view');
+  const specLock   = document.getElementById('spec-lock-view');
+  const specUnlock = document.getElementById('spec-unlocked-view');
+  if (resLock)    resLock.style.display    = isUnlocked ? 'none' : 'flex';
+  if (resUnlock)  resUnlock.style.display  = isUnlocked ? 'block' : 'none';
+  if (specLock)   specLock.style.display   = isUnlocked ? 'none' : 'flex';
+  if (specUnlock) specUnlock.style.display = isUnlocked ? 'block' : 'none';
   if (isUnlocked && activeTab === 'spec') renderSpec();
   if (isUnlocked && activeTab === 'resources') { resourcesBuilt = false; renderResources(); }
 }
 
 // ===================== AUDIO =====================
 let actx = null, audioUnlocked = false;
-function getAC() { if (!actx) actx = new(window.AudioContext || window.webkitAudioContext)(); return actx; }
+function getAC() {
+  if (!actx) actx = new(window.AudioContext || window.webkitAudioContext)();
+  return actx;
+}
 async function unlockAudio() {
   if (audioUnlocked) return;
-  try { const ctx = getAC(); if (ctx.state === 'suspended') await ctx.resume(); audioUnlocked = true; } catch(e) {}
+  try {
+    const ctx = getAC();
+    if (ctx.state === 'suspended') await ctx.resume();
+    audioUnlocked = true;
+  } catch(e) {}
 }
 async function tone(type) {
   if (!CFG.sound) return;
@@ -187,8 +218,11 @@ async function tone(type) {
     const ctx = getAC();
     if (ctx.state === 'suspended') await ctx.resume();
     const notes = {
-      start:[[440,.07],[550,.07],[660,.16]], end:[[660,.1],[550,.1],[440,.22]],
-      warn:[[600,.16],[400,.22]], done:[[523,.09],[659,.09],[784,.11],[1047,.22]], soft:[[880,.05]]
+      start:[[440,.07],[550,.07],[660,.16]],
+      end:  [[660,.1],[550,.1],[440,.22]],
+      warn: [[600,.16],[400,.22]],
+      done: [[523,.09],[659,.09],[784,.11],[1047,.22]],
+      soft: [[880,.05]]
     };
     let t = ctx.currentTime;
     (notes[type] || notes.soft).forEach(([f,d]) => {
@@ -205,11 +239,16 @@ async function askNotif() {
   if (!('Notification' in window)) return;
   const p = await Notification.requestPermission();
   CFG.notif = p === 'granted'; saveCFG();
-  const el = document.getElementById('tgl-notif'); if (el) el.checked = CFG.notif;
+  const el = document.getElementById('tgl-notif');
+  if (el) el.checked = CFG.notif;
 }
 function notify(title, body, urgent) {
-  if (CFG.notif && Notification.permission === 'granted') new Notification(title, {body, silent: !urgent});
-  if ('vibrate' in navigator) urgent ? navigator.vibrate([200,80,200]) : navigator.vibrate([100,50,100]);
+  if (CFG.notif && Notification.permission === 'granted') {
+    new Notification(title, {body, silent: !urgent});
+  }
+  if ('vibrate' in navigator) {
+    navigator.vibrate(urgent ? [200,80,200] : [100,50,100]);
+  }
 }
 
 // ===================== TABS =====================
@@ -221,7 +260,8 @@ function showTab(name) {
     if (s) s.classList.toggle('active', t === name);
     if (b) b.classList.toggle('active', t === name);
   });
-  document.getElementById('bottom-nav').classList.remove('hidden');
+  const nav = document.getElementById('bottom-nav');
+  if (nav) nav.classList.remove('hidden');
   if (name === 'stats')     refreshStats();
   if (name === 'spec')      renderSpec();
   if (name === 'resources') renderResources();
@@ -231,16 +271,19 @@ function showTimerScreen(id) {
     const el = document.getElementById(sid);
     if (el) el.classList.toggle('active', sid === id);
   });
-  document.getElementById('bottom-nav').classList.add('hidden');
+  const nav = document.getElementById('bottom-nav');
+  if (nav) nav.classList.add('hidden');
 }
 function returnToHome() { showTab(activeTab || 'home'); }
 function fmt(secs) {
-  const m = Math.floor(secs/60), s = secs % 60;
+  const m = Math.floor(Math.abs(secs)/60);
+  const s = Math.abs(secs) % 60;
   return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 function applySettings() {
   Object.keys(CFG).forEach(k => {
-    const el = document.getElementById('tgl-'+k); if (el) el.checked = !!CFG[k];
+    const el = document.getElementById('tgl-'+k);
+    if (el) el.checked = !!CFG[k];
   });
 }
 function toggleSetting(el, key) {
@@ -252,7 +295,7 @@ function confirmClearData() {
     clearAllData();
     CFG = { ...DEFAULT_CFG };
     refreshStats(); buildScheduleCard(); buildSRCard(); updateProgressBar();
-    showToast('Data cleared','All sessions removed', false);
+    showToast('Data cleared', 'All sessions removed', false);
   });
 }
 
@@ -263,19 +306,26 @@ function daysToDate(d) {
   return Math.round((t - today) / 86400000);
 }
 function updateExamChip() {
-  const chip = document.getElementById('exam-chip'); if (!chip) return;
+  const chip = document.getElementById('exam-chip');
+  if (!chip) return;
   if (!isUnlocked) { chip.classList.remove('visible'); return; }
-  const upcoming = EXAMS.map(e => ({...e, days: daysToDate(e.date)})).filter(e => e.days >= 0).sort((a,b) => a.days - b.days);
+  const upcoming = EXAMS
+    .map(e => ({...e, days: daysToDate(e.date)}))
+    .filter(e => e.days >= 0)
+    .sort((a,b) => a.days - b.days);
   if (!upcoming.length) { chip.classList.remove('visible'); return; }
   const next = upcoming[0];
-  chip.textContent = next.subj + ' · ' + (next.days === 0 ? 'Today!' : next.days + 'd');
+  chip.textContent = next.subj + ' \u00b7 ' + (next.days === 0 ? 'Today!' : next.days + 'd');
   chip.classList.add('visible');
 }
 
 // ===================== SCHEDULE CARD =====================
 function checkTodayDone() {
   const t = new Date().toDateString();
-  if (TODAY_DONE.date !== t) { TODAY_DONE = {date:t,s1:false,s2:false,s3:false}; saveTodayDone(); }
+  if (TODAY_DONE.date !== t) {
+    TODAY_DONE = {date:t, s1:false, s2:false, s3:false};
+    saveTodayDone();
+  }
 }
 function updateProgressBar() {
   checkTodayDone();
@@ -284,45 +334,55 @@ function updateProgressBar() {
   if (bar) bar.style.width = (done/3*100) + '%';
 }
 function updateStartBtn() {
-  const btn = document.getElementById('btn-start'); if (!btn) return;
-  const d = {blurt:'25 min',paper:'55 min',flash:'30 min',teach:'35 min',practise:'55 min',custom:'Custom'};
-  btn.textContent = 'Start Session · ' + (d[selM] || 'Go');
+  const btn = document.getElementById('btn-start');
+  if (!btn) return;
+  const d = {blurt:'25 min', paper:'55 min', flash:'30 min', teach:'35 min', practise:'55 min', custom:'Custom'};
+  btn.textContent = 'Start Session \u00b7 ' + (d[selM] || 'Go');
 }
 function buildQuickStart() {
   checkTodayDone();
   const dow = new Date().getDay(), td = TIMETABLE[dow];
+  if (!td) return;
   const slots = [td.s1.subj, td.s2.subj, td.s3.subj];
   const keys  = ['s1','s2','s3'];
   let next = -1;
   for (let i = 0; i < 3; i++) { if (!TODAY_DONE[keys[i]]) { next = i; break; } }
-  const qs = document.getElementById('quickstart'); if (!qs) return;
+  const qs = document.getElementById('quickstart');
+  if (!qs) return;
   if (next < 0) { qs.style.display = 'none'; return; }
   qs.style.display = 'flex';
-  document.getElementById('qs-text').textContent = isUnlocked ? slots[next] : `Session ${next+1}`;
+  const qs_text = document.getElementById('qs-text');
+  if (qs_text) qs_text.textContent = isUnlocked ? slots[next] : `Session ${next+1}`;
 }
 function buildScheduleCard() {
   checkTodayDone();
   const dow  = new Date().getDay(), td = TIMETABLE[dow];
+  if (!td) return;
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  document.getElementById('sc-title').textContent = `${days[dow]}'s Plan`;
+  const titleEl = document.getElementById('sc-title');
+  if (titleEl) titleEl.textContent = `${days[dow]}'s Plan`;
   const doneCount = [TODAY_DONE.s1, TODAY_DONE.s2, TODAY_DONE.s3].filter(Boolean).length;
-  document.getElementById('sc-badge').textContent = `${doneCount}/3 done`;
+  const badgeEl = document.getElementById('sc-badge');
+  if (badgeEl) badgeEl.textContent = `${doneCount}/3 done`;
   const s1 = isUnlocked ? td.s1.subj : 'Session 1';
   const s2 = isUnlocked ? td.s2.subj : 'Session 2';
   const s3 = isUnlocked ? td.s3.subj : 'Session 3';
   const mkRow = (n, subj, done, curr) =>
-    `<div class="sc-row"><div class="sc-n ${done?'done':curr?'curr':''}">${done?'✓':n}</div><div class="sc-subj">${subj}</div></div>`;
-  document.getElementById('sc-sessions').innerHTML =
+    `<div class="sc-row"><div class="sc-n ${done?'done':curr?'curr':''}">${done?'\u2713':n}</div><div class="sc-subj">${escHtml(subj)}</div></div>`;
+  const sessEl = document.getElementById('sc-sessions');
+  if (sessEl) sessEl.innerHTML =
     mkRow(1,s1,TODAY_DONE.s1,!TODAY_DONE.s1) +
     mkRow(2,s2,TODAY_DONE.s2,TODAY_DONE.s1&&!TODAY_DONE.s2) +
     mkRow(3,s3,TODAY_DONE.s3,TODAY_DONE.s1&&TODAY_DONE.s2&&!TODAY_DONE.s3);
-  document.getElementById('sc-progress').innerHTML = [1,2,3].map(i =>
+  const progEl = document.getElementById('sc-progress');
+  if (progEl) progEl.innerHTML = [1,2,3].map(i =>
     `<div class="sp-dot ${TODAY_DONE['s'+i]?'done':''}"></div>`).join('');
   buildQuickStart(); updateProgressBar();
 }
 function quickStart() {
   checkTodayDone();
   const dow = new Date().getDay(), td = TIMETABLE[dow];
+  if (!td) return;
   const slots = [td.s1.subj, td.s2.subj, td.s3.subj];
   const keys  = ['s1','s2','s3'];
   let next = -1;
@@ -335,34 +395,38 @@ function quickStart() {
   beginSession();
 }
 
-// ===================== SCHEDULE OVERLAY (iOS-style) =====================
-let schedDragStart = null, schedDragEl = null;
+// ===================== SCHEDULE OVERLAY =====================
+let schedDragStart = null;
 function openSchedOv() {
   const dow  = new Date().getDay(), td = TIMETABLE[dow];
+  if (!td) return;
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  document.getElementById('sched-ov-title').textContent = `${days[dow]}'s Plan`;
+  const titleEl = document.getElementById('sched-ov-title');
+  if (titleEl) titleEl.textContent = `${days[dow]}'s Plan`;
   const show = isUnlocked;
   const mkRow = (n, subj, detail, done) =>
     `<div class="sched-ov-row">
-       <div class="sched-ov-n ${done?'done':''}">${done?'✓':n}</div>
+       <div class="sched-ov-n ${done?'done':''}">${done?'\u2713':n}</div>
        <div style="flex:1">
-         <div style="font-size:13px;font-weight:700;color:var(--text)">${subj}</div>
-         ${detail ? `<div style="font-size:11px;color:var(--hint);margin-top:3px;line-height:1.5">${detail}</div>` : ''}
+         <div style="font-size:13px;font-weight:700;color:var(--text)">${escHtml(subj)}</div>
+         ${detail ? `<div style="font-size:11px;color:var(--hint);margin-top:3px;line-height:1.5">${escHtml(detail)}</div>` : ''}
        </div>
      </div>`;
-  document.getElementById('sched-ov-body').innerHTML =
+  const bodyEl = document.getElementById('sched-ov-body');
+  if (bodyEl) bodyEl.innerHTML =
     mkRow(1, show?td.s1.subj:'Session 1', '', TODAY_DONE.s1) +
     mkRow(2, show?td.s2.subj:'Session 2', '', TODAY_DONE.s2) +
     mkRow(3, show?td.s3.subj:'Session 3', show?td.s3detail||'':'', TODAY_DONE.s3);
   const ov = document.getElementById('sched-ov');
+  if (!ov) return;
   ov.classList.add('open');
-  // Reset any dragged position
   const sheet = ov.querySelector('.sched-ios-sheet');
   if (sheet) { sheet.style.transform = ''; sheet.style.transition = ''; }
   initSchedDrag();
 }
 function closeSchedOv() {
   const ov = document.getElementById('sched-ov');
+  if (!ov) return;
   const sheet = ov.querySelector('.sched-ios-sheet');
   if (sheet) {
     sheet.style.transition = 'transform .3s cubic-bezier(.2,.8,.3,1)';
@@ -377,7 +441,9 @@ function closeSchedOv() {
   }
 }
 function initSchedDrag() {
-  const sheet = document.getElementById('sched-ov').querySelector('.sched-ios-sheet');
+  const ov = document.getElementById('sched-ov');
+  if (!ov) return;
+  const sheet = ov.querySelector('.sched-ios-sheet');
   if (!sheet || sheet._dragInited) return;
   sheet._dragInited = true;
   sheet.addEventListener('touchstart', e => {
@@ -390,16 +456,17 @@ function initSchedDrag() {
     if (delta > 0) sheet.style.transform = `translateY(${delta}px)`;
   }, {passive:true});
   sheet.addEventListener('touchend', e => {
-    const delta = e.changedTouches[0].clientY - schedDragStart;
+    const delta = e.changedTouches[0].clientY - (schedDragStart || 0);
     sheet.style.transition = 'transform .3s cubic-bezier(.2,.8,.3,1)';
     if (delta > 80) closeSchedOv();
-    else { sheet.style.transform = ''; }
+    else sheet.style.transform = '';
     schedDragStart = null;
   }, {passive:true});
 }
 function startScheduleMode() {
   closeSchedOv();
   const dow = new Date().getDay(), td = TIMETABLE[dow];
+  if (!td) return;
   checkTodayDone();
   const subj = isUnlocked ? (!TODAY_DONE.s1?td.s1.subj:!TODAY_DONE.s2?td.s2.subj:td.s3.subj) : 'General';
   S.subject = subj; S.type = 'schedule'; S.scheduleMode = true;
@@ -410,13 +477,15 @@ function startScheduleMode() {
 
 // ===================== SUBJECT CHIPS =====================
 function buildSubjChips() {
-  const chips = document.getElementById('subj-chips'); if (!chips) return;
+  const chips = document.getElementById('subj-chips');
+  if (!chips) return;
   const dow = new Date().getDay(), td = TIMETABLE[dow];
-  const todaySubjs = isUnlocked ? [td.s1.subj, td.s2.subj].filter((s,i,a) => a.indexOf(s)===i) : [];
+  const todaySubjs = (isUnlocked && td) ? [td.s1.subj, td.s2.subj].filter((s,i,a) => a.indexOf(s)===i) : [];
   const ordered = [...new Set([...todaySubjs, ...SUBJECTS.map(s=>s.name)])];
   chips.innerHTML = ordered.map(name => {
     const hi = todaySubjs.includes(name) && isUnlocked;
-    return `<span onclick="document.getElementById('subj').value='${name}'" style="padding:5px 12px;background:${hi?'var(--acc-l)':'var(--s1)'};border:1px solid ${hi?'rgba(16,152,247,.25)':'var(--border)'};border-radius:20px;font-size:12px;font-weight:${hi?700:500};cursor:pointer;color:${hi?'var(--acc-t)':'var(--muted)'};">${name}</span>`;
+    const safeN = escHtml(name);
+    return `<span onclick="document.getElementById('subj').value='${safeN}'" style="padding:5px 12px;background:${hi?'var(--acc-l)':'var(--s1)'};border:1px solid ${hi?'rgba(16,152,247,.25)':'var(--border)'};border-radius:20px;font-size:12px;font-weight:${hi?700:500};cursor:pointer;color:${hi?'var(--acc-t)':'var(--muted)'};transition:opacity .15s;display:inline-block;margin:2px 0">${safeN}</span>`;
   }).join('');
 }
 
@@ -424,33 +493,43 @@ function buildSubjChips() {
 function selMethod(el) {
   document.querySelectorAll('.method-card').forEach(c => c.classList.remove('sel'));
   el.classList.add('sel'); selM = el.dataset.m;
-  document.getElementById('custom-row').style.display = selM === 'custom' ? 'grid' : 'none';
+  const cr = document.getElementById('custom-row');
+  if (cr) cr.style.display = selM === 'custom' ? 'grid' : 'none';
   updateStartBtn();
 }
 
 // ===================== CONFIRM OVERLAY =====================
 function openConfirm(title, body, okLabel, okStyle, cb) {
   confirmCallback = cb;
-  document.getElementById('confirm-title').textContent = title;
-  document.getElementById('confirm-body').textContent = body;
+  const ct = document.getElementById('confirm-title');
+  const cb2 = document.getElementById('confirm-body');
   const btn = document.getElementById('confirm-ok');
-  btn.textContent = okLabel; btn.className = okStyle;
+  if (ct) ct.textContent = title;
+  if (cb2) cb2.textContent = body;
+  if (btn) { btn.textContent = okLabel; btn.className = okStyle; }
   document.getElementById('confirm-ov').classList.add('open');
 }
-function closeConfirm() { document.getElementById('confirm-ov').classList.remove('open'); confirmCallback = null; }
+function closeConfirm() {
+  document.getElementById('confirm-ov').classList.remove('open');
+  confirmCallback = null;
+}
 function doConfirm() { const cb = confirmCallback; closeConfirm(); if (cb) cb(); }
 
 // ===================== SESSION CONTROL =====================
-function normalizeSubj(s) { const k = s.trim().toLowerCase(); return SUBJ_MAP[k] || s.trim(); }
+function normalizeSubj(s) {
+  const k = s.trim().toLowerCase();
+  return SUBJ_MAP[k] || (s.trim().charAt(0).toUpperCase() + s.trim().slice(1));
+}
 function confirmSkip() {
   const next = S.phases[S.phaseIdx+1];
   const nn = next ? (next.t==='log'?'error log':next.t==='brk'?'break':'focus') : 'done';
   openConfirm('Skip phase?', `Jump to ${nn}.`, 'Skip', 'btn btn-secondary', () => {
-    clearInterval(S.ticker); stopBreathe(); dismissCheckin(); stopReminders(); enterPhase(S.phaseIdx+1);
+    clearInterval(S.ticker); stopBreathe(); dismissCheckin(); stopReminders();
+    enterPhase(S.phaseIdx+1);
   });
 }
 function confirmEnd() {
-  openConfirm('End session?','Progress will be saved.','End','btn btn-danger', () => {
+  openConfirm('End session?', 'Progress will be saved.', 'End', 'btn btn-danger', () => {
     clearInterval(S.ticker); stopReminders(); stopBreathe(); dismissCheckin(); releaseLock2();
     recordSession(); returnToHome(); buildScheduleCard();
   });
@@ -460,13 +539,14 @@ function startSession() {
   S.subject = raw ? normalizeSubj(raw) : 'General';
   S.type = selM; S.scheduleMode = false;
   if (selM === 'custom') {
-    const fm = parseInt(document.getElementById('cust-focus').value) || 45;
-    const bm = parseInt(document.getElementById('cust-break').value) || 0;
+    const fm = Math.max(5, Math.min(180, parseInt(document.getElementById('cust-focus').value) || 45));
+    const bm = Math.max(0, Math.min(60, parseInt(document.getElementById('cust-break').value) || 0));
     S.phases = [{t:'focus',d:fm*60,l:'Focus',s:`${fm} min`,sessionLabel:S.subject,method:'custom'}];
     if (bm > 0) S.phases.push({t:'brk',d:bm*60,l:'Break',s:`${bm} min`,sessionLabel:S.subject,method:'custom'});
     S.phases.push({t:'log',d:0,sessionLabel:S.subject,method:'custom'});
   } else {
     const m = METHODS[selM];
+    if (!m) return;
     S.phases = JSON.parse(JSON.stringify(m.phases)).map(p => ({...p, sessionLabel:S.subject, method:selM}));
   }
   beginSession();
@@ -474,10 +554,12 @@ function startSession() {
 function beginSession() {
   S.phaseIdx = 0; S.sessionN++; S.actualFocusSecs = 0;
   S.checkinScores = []; S.energy = 0; markCatSel = '';
-  enterPhase(0); if (CFG.notif) askNotif();
+  enterPhase(0);
+  if (CFG.notif) askNotif();
 }
 function enterPhase(idx) {
-  clearInterval(S.ticker); S.phaseIdx = idx;
+  clearInterval(S.ticker);
+  S.phaseIdx = idx;
   const ph = S.phases[idx];
   if (!ph) { sessionComplete(); return; }
   S.timeLeft = ph.d; S.totalTime = ph.d; S.paused = false;
@@ -502,44 +584,59 @@ function tick() {
   if (S.timeLeft === 0) { clearInterval(S.ticker); enterPhase(S.phaseIdx+1); }
 }
 function renderTimeDisplay() {
-  const ph = S.phases[S.phaseIdx]; if (!ph) return;
+  const ph = S.phases[S.phaseIdx];
+  if (!ph) return;
   const s = fmt(S.timeLeft);
   if (ph.t === 'brk') {
-    const el = document.getElementById('brk-time'); if (el) el.textContent = s;
+    const el = document.getElementById('brk-time');
+    if (el) el.textContent = s;
   } else {
-    const te = document.getElementById('t-time'); if (te) te.textContent = s;
+    const te = document.getElementById('t-time');
+    if (te) te.textContent = s;
     const ring = document.getElementById('ring');
-    if (ring && S.totalTime > 0) ring.style.strokeDashoffset = CIRC * (1 - S.timeLeft / S.totalTime);
+    if (ring && S.totalTime > 0) {
+      ring.style.strokeDashoffset = CIRC * (1 - S.timeLeft / S.totalTime);
+    }
   }
 }
 function togglePause() {
   S.paused = !S.paused;
-  ['btn-pause','brk-pause'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = S.paused?'Resume':'Pause'; });
+  ['btn-pause','brk-pause'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = S.paused ? 'Resume' : 'Pause';
+  });
 }
 function renderTimerScreen(ph) {
-  document.getElementById('phase-lbl').textContent = ph.l || 'Focus';
-  document.getElementById('t-sub').textContent     = ph.s || '';
-  document.getElementById('t-subj').textContent    = ph.sessionLabel || S.subject || 'Session';
-  document.getElementById('t-time').textContent    = fmt(ph.d);
-  document.getElementById('btn-pause').textContent = 'Pause';
-  document.getElementById('ring').style.strokeDashoffset = '0';
+  const setPh = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+  setPh('phase-lbl', ph.l || 'Focus');
+  setPh('t-sub', ph.s || '');
+  setPh('t-subj', ph.sessionLabel || S.subject || 'Session');
+  setPh('t-time', fmt(ph.d));
+  setPh('btn-pause', 'Pause');
+  const ring = document.getElementById('ring');
+  if (ring) ring.style.strokeDashoffset = '0';
   const m = METHODS[ph.method];
-  document.getElementById('timer-method-icon').textContent = m ? m.icon : '';
+  const iconEl = document.getElementById('timer-method-icon');
+  if (iconEl) iconEl.textContent = m ? m.icon : '';
   renderDots();
 }
 function renderBreakScreen(ph) {
-  document.getElementById('brk-lbl').textContent      = ph.l || 'Break';
-  document.getElementById('brk-time').textContent     = fmt(ph.d);
-  document.getElementById('brk-sublabel').textContent = ph.s || 'Hydrate, stretch, rest your eyes';
+  const setPh = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+  setPh('brk-lbl', ph.l || 'Break');
+  setPh('brk-time', fmt(ph.d));
+  setPh('brk-sublabel', ph.s || 'Hydrate, stretch, rest your eyes');
   const nxt = S.phases[S.phaseIdx+1];
-  document.getElementById('brk-next').textContent = nxt && nxt.t !== 'log' ? `Next: ${nxt.l}` : '';
-  document.getElementById('brk-pause').textContent = 'Pause';
+  setPh('brk-next', nxt && nxt.t !== 'log' ? `Next: ${nxt.l}` : '');
+  setPh('brk-pause', 'Pause');
 }
 function renderDots() {
-  const c = document.getElementById('pdots'); if (!c) return; c.innerHTML = '';
+  const c = document.getElementById('pdots');
+  if (!c) return;
+  c.innerHTML = '';
   const COL = {focus:'var(--acc)',brk:'var(--brk)',log:'var(--log)'};
   S.phases.forEach((p,i) => {
-    const d = document.createElement('div'); d.className = 'pdot';
+    const d = document.createElement('div');
+    d.className = 'pdot';
     if (i < S.phaseIdx) { d.style.background = 'var(--brk)'; d.classList.add('done'); }
     else if (i === S.phaseIdx) { d.style.background = COL[p.t]||'var(--acc)'; d.classList.add('active'); }
     c.appendChild(d);
@@ -552,14 +649,17 @@ const BRK_DUR  = [4000,2000,4000,2000];
 let brkStep = 0;
 function startBreathe() { stopBreathe(); brkStep = 0; nextBrk(); }
 function nextBrk() {
-  const el = document.getElementById('brk-breathe'); if (el) el.textContent = BRK_MSGS[brkStep%4];
+  const el = document.getElementById('brk-breathe');
+  if (el) el.textContent = BRK_MSGS[brkStep%4];
   S.breatheT = setTimeout(() => { brkStep++; nextBrk(); }, BRK_DUR[brkStep%4]);
 }
-function stopBreathe() { clearTimeout(S.breatheT); }
+function stopBreathe() { clearTimeout(S.breatheT); S.breatheT = null; }
 
 // ===================== WAKE LOCK =====================
 async function requestWakeLock() {
-  try { if ('wakeLock' in navigator) S.wakelock = await navigator.wakeLock.request('screen'); } catch(e) {}
+  try {
+    if ('wakeLock' in navigator) S.wakelock = await navigator.wakeLock.request('screen');
+  } catch(e) {}
 }
 function releaseLock2() {
   try { if (S.wakelock) { S.wakelock.release(); S.wakelock = null; } } catch(e) {}
@@ -568,70 +668,97 @@ function releaseLock2() {
 // ===================== LOG SCREEN =====================
 function showLogScreen(ph) {
   showTimerScreen('log-screen');
-  document.getElementById('log-header').textContent = ph.sessionLabel ? `${ph.sessionLabel} done` : 'Session complete';
-  document.getElementById('log-subj').value = (S.subject && S.subject !== 'General') ? S.subject : '';
-  ['log-topic','log-wrong','log-correct','log-avoid','log-question'].forEach(id => { const e = document.getElementById(id); if (e) e.value=''; });
-  ['log-got','log-total'].forEach(id => { const e = document.getElementById(id); if (e) e.value=''; });
-  document.querySelectorAll('.e-btn,.mark-cat-btn').forEach(b => b.classList.remove('sel','sel-app','sel-know','sel-term'));
-  const spaced = document.getElementById('tgl-spaced'); if (spaced) spaced.checked = false;
-  document.getElementById('mark-guidance').classList.remove('vis');
+  const hdr = document.getElementById('log-header');
+  if (hdr) hdr.textContent = ph.sessionLabel ? `${ph.sessionLabel} done` : 'Session complete';
+  const logSubjEl = document.getElementById('log-subj');
+  if (logSubjEl) logSubjEl.value = (S.subject && S.subject !== 'General') ? S.subject : '';
+  ['log-topic','log-wrong','log-correct','log-avoid','log-question'].forEach(id => {
+    const e = document.getElementById(id); if (e) e.value = '';
+  });
+  ['log-got','log-total'].forEach(id => {
+    const e = document.getElementById(id); if (e) e.value = '';
+  });
+  document.querySelectorAll('.e-btn,.mark-cat-btn').forEach(b =>
+    b.classList.remove('sel','sel-app','sel-know','sel-term'));
+  const spaced = document.getElementById('tgl-spaced');
+  if (spaced) spaced.checked = false;
+  const mg = document.getElementById('mark-guidance');
+  if (mg) mg.classList.remove('vis');
   const cb = document.getElementById('copy-btn');
-  cb.classList.remove('copied'); cb.innerHTML = '<span>Copy for Notion</span><span style="font-size:15px">📋</span>';
+  if (cb) { cb.classList.remove('copied'); cb.innerHTML = '<span>Copy for Notion</span><span style="font-size:15px">\uD83D\uDCCB</span>'; }
   markCatSel = ''; S.energy = 0;
-  tone('done'); notify('Session done','Log your errors.',true); releaseLock2();
+  tone('done'); notify('Session done', 'Log your errors.', true); releaseLock2();
 }
 function selEnergy(el) {
   document.querySelectorAll('.e-btn').forEach(b => b.classList.remove('sel'));
-  el.classList.add('sel'); S.energy = parseInt(el.dataset.e);
+  el.classList.add('sel'); S.energy = parseInt(el.dataset.e) || 0;
 }
 function selMarkCat(el, cat) {
   document.querySelectorAll('.mark-cat-btn').forEach(b => b.classList.remove('sel-app','sel-know','sel-term'));
   el.classList.add('sel-'+cat); markCatSel = cat;
   const guidance = {
-    app: '<strong>Application</strong>: You knew the content but did not connect it to the question context. Fix: more timed exam questions. Read the question twice before answering.',
-    know:'<strong>Knowledge gap</strong>: You could not recall a fact, process, or definition. Fix: add to flashcards today and review until automatic.',
-    term:'<strong>Terminology</strong>: You used the wrong word or missed a mark scheme term. Fix: study the mark scheme carefully. Highlight every term you would not have written.'
+    app:  '<strong>Application</strong>: You knew the content but did not connect it to the question context. Fix: more timed exam questions. Read the question twice before answering.',
+    know: '<strong>Knowledge gap</strong>: You could not recall a fact, process, or definition. Fix: add to flashcards today and review until automatic.',
+    term: '<strong>Terminology</strong>: You used the wrong word or missed a mark scheme term. Fix: study the mark scheme carefully. Highlight every term you would not have written.'
   };
   const g = document.getElementById('mark-guidance');
-  g.innerHTML = guidance[cat] || ''; g.classList.add('vis');
+  if (g) { g.innerHTML = guidance[cat] || ''; g.classList.add('vis'); }
 }
 function copyForNotion() {
   const now = new Date();
   const dateStr = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
-  const subj = document.getElementById('log-subj').value.trim() || S.subject;
-  const got  = document.getElementById('log-got').value.trim();
-  const tot  = document.getElementById('log-total').value.trim();
-  const row  = [
+  const subj    = (document.getElementById('log-subj').value.trim()) || S.subject;
+  const got     = document.getElementById('log-got').value.trim();
+  const tot     = document.getElementById('log-total').value.trim();
+  const catMap  = {app:'Application', know:'Knowledge', term:'Terminology'};
+  const row = [
     dateStr, subj,
     document.getElementById('log-topic').value.trim(),
     document.getElementById('log-question').value.trim(),
-    {'app':'Application','know':'Knowledge','term':'Terminology'}[markCatSel] || '',
+    catMap[markCatSel] || '',
     got && tot ? `${got}/${tot}` : '',
     document.getElementById('log-wrong').value.trim(),
     document.getElementById('log-correct').value.trim(),
     document.getElementById('log-avoid').value.trim()
   ].join('\t');
+  const btn = document.getElementById('copy-btn');
   if (navigator.clipboard) {
     navigator.clipboard.writeText(row).then(() => {
-      const btn = document.getElementById('copy-btn');
-      btn.classList.add('copied'); btn.innerHTML = '<span>Copied</span><span>✓</span>';
-      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '<span>Copy for Notion</span><span style="font-size:15px">📋</span>'; }, 2500);
-    }).catch(() => alert('Paste into Notion:\n\n'+row));
-  } else { alert('Paste into Notion:\n\n'+row); }
+      if (btn) {
+        btn.classList.add('copied');
+        btn.innerHTML = '<span>Copied</span><span>\u2713</span>';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<span>Copy for Notion</span><span style="font-size:15px">\uD83D\uDCCB</span>';
+        }, 2500);
+      }
+    }).catch(() => fallbackCopy(row));
+  } else {
+    fallbackCopy(row);
+  }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
 }
 function doneLog(skip) {
-  const logSubj = document.getElementById('log-subj').value.trim();
-  if (logSubj) S.subject = normalizeSubj(logSubj);
+  const logSubj = document.getElementById('log-subj');
+  if (logSubj && logSubj.value.trim()) S.subject = normalizeSubj(logSubj.value.trim());
   if (!skip) {
-    const topic = document.getElementById('log-topic').value.trim();
+    const topic  = document.getElementById('log-topic');
     const spaced = document.getElementById('tgl-spaced');
-    if (topic && spaced && spaced.checked) addToSR(topic, S.subject);
+    if (topic && topic.value.trim() && spaced && spaced.checked) {
+      addToSR(topic.value.trim(), S.subject);
+    }
   }
   recordSession(); stopBreathe(); releaseLock2();
   returnToHome(); refreshStats(); buildScheduleCard();
 }
 function sessionComplete() {
-  tone('done'); notify('All done!','Great work.',true);
+  tone('done'); notify('All done!', 'Great work.', true);
   recordSession(); releaseLock2(); returnToHome(); refreshStats(); buildScheduleCard();
 }
 
@@ -639,6 +766,7 @@ function sessionComplete() {
 function markScheduledDone() {
   checkTodayDone();
   const dow = new Date().getDay(), td = TIMETABLE[dow];
+  if (!td) return;
   const slots = ['s1','s2','s3'];
   const schSubjs = [td.s1.subj, td.s2.subj, td.s3.subj];
   for (let i = 0; i < 3; i++) {
@@ -658,13 +786,14 @@ function recordSession() {
   const today = new Date().toDateString();
   // Use actual elapsed focus seconds, not planned duration
   const focusMins = Math.max(1, Math.round(S.actualFocusSecs / 60));
-  STATS.total++;
-  STATS.mins = (STATS.mins||0) + focusMins;
+  STATS.total = (STATS.total || 0) + 1;
+  STATS.mins  = (STATS.mins  || 0) + focusMins;
+  if (!STATS.hist) STATS.hist = [];
   STATS.hist.unshift({
     date:    new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
     dateStr: today,
     subj:    S.subject,
-    method:  selM,
+    method:  S.type, // BUG FIX: was selM (global UI state), now uses actual session type
     mins:    focusMins,
     energy:  S.energy,
     markCat: markCatSel
@@ -676,20 +805,22 @@ function recordSession() {
 // ===================== REMINDERS =====================
 function startReminders(dur) {
   stopReminders();
-  if (CFG.eye)  S.eyeT  = setInterval(() => flash('b-eye',4000), 20*60*1000);
+  if (CFG.eye)   S.eyeT   = setInterval(() => flash('b-eye',4000), 20*60*1000);
   if (CFG.hydra) S.hydraT = setInterval(() => flash('b-hydra',4000), 45*60*1000);
   if (dur >= 25*60) S.gratT  = setTimeout(() => flash('b-gratitude',5000), 25*60*1000);
   if (dur >= 35*60) S.standT = setTimeout(() => flash('b-stand',5000), 35*60*1000);
 }
 function flash(id, ms) {
-  const el = document.getElementById(id); if (!el) return;
-  if (!document.getElementById('timer-screen').classList.contains('active')) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  const ts = document.getElementById('timer-screen');
+  if (!ts || !ts.classList.contains('active')) return;
   el.classList.add('show'); tone('soft');
   setTimeout(() => el.classList.remove('show'), ms);
 }
 function stopReminders() {
-  [S.eyeT, S.hydraT].forEach(t => { if (t!=null) clearInterval(t); });
-  [S.gratT, S.standT].forEach(t => { if (t!=null) clearTimeout(t); });
+  [S.eyeT, S.hydraT].forEach(t => { if (t != null) clearInterval(t); });
+  [S.gratT, S.standT].forEach(t => { if (t != null) clearTimeout(t); });
   S.eyeT = S.hydraT = S.gratT = S.standT = null;
 }
 function scheduleCheckin(rem) {
@@ -698,9 +829,11 @@ function scheduleCheckin(rem) {
   S.checkinT = setTimeout(showCheckin, (7 + Math.random()*5)*60*1000);
 }
 function showCheckin() {
-  if (!document.getElementById('timer-screen').classList.contains('active')) return;
+  const ts = document.getElementById('timer-screen');
+  if (!ts || !ts.classList.contains('active')) return;
   if (S.paused) { scheduleCheckin(S.timeLeft); return; }
-  document.getElementById('checkin-ov').classList.add('vis');
+  const co = document.getElementById('checkin-ov');
+  if (co) co.classList.add('vis');
   S.checkinDismissT = setTimeout(dismissCheckin, 15000);
 }
 function logCheckin(score, el) {
@@ -712,7 +845,8 @@ function logCheckin(score, el) {
 }
 function dismissCheckin() {
   clearTimeout(S.checkinDismissT);
-  document.getElementById('checkin-ov').classList.remove('vis');
+  const co = document.getElementById('checkin-ov');
+  if (co) co.classList.remove('vis');
   document.querySelectorAll('.checkin-opt').forEach(o => o.classList.remove('picked'));
   scheduleCheckin(S.timeLeft);
 }
@@ -728,58 +862,83 @@ function getHistInPeriod() {
     const ms = new Date(); ms.setDate(ms.getDate() - 30); ms.setHours(0,0,0,0);
     return hist.filter(h => h.dateStr && new Date(h.dateStr) >= ms);
   }
-  return hist; // 'all'
+  return hist;
 }
 function setPeriod(p, btn) {
   statPeriod = p;
   document.querySelectorAll('.stats-period-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const par = document.getElementById('stats-period');
+  if (!par) return;
   const btns = [...par.querySelectorAll('.stats-period-btn')];
   const idx = btns.indexOf(btn);
   const ind = document.getElementById('period-indicator');
-  if (ind) { ind.style.left = (2 + idx * btn.offsetWidth)+'px'; ind.style.width = btn.offsetWidth+'px'; }
-  const lblMap = {week:'THIS WEEK',month:'THIS MONTH',all:'ALL TIME'};
-  const el = document.getElementById('st-period-lbl'); if (el) el.textContent = lblMap[p]||'THIS WEEK';
+  if (ind && btn.offsetWidth) {
+    ind.style.left  = (2 + idx * btn.offsetWidth) + 'px';
+    ind.style.width = btn.offsetWidth + 'px';
+  }
+  const lblMap = {week:'THIS WEEK', month:'THIS MONTH', all:'ALL TIME'};
+  const el = document.getElementById('st-period-lbl');
+  if (el) el.textContent = lblMap[p] || 'THIS WEEK';
   const ctitle = document.getElementById('chart-title-lbl');
-  if (ctitle) ctitle.textContent = p==='week'?'This week (minutes)':p==='month'?'Last 30 days (minutes)':'All time (minutes)';
+  if (ctitle) ctitle.textContent =
+    p==='week'  ? 'This week (minutes)' :
+    p==='month' ? 'Last 30 days (minutes)' :
+    'All time (minutes)';
   refreshStats();
 }
 function initPeriodIndicator() {
-  const par = document.getElementById('stats-period'); if (!par) return;
+  const par = document.getElementById('stats-period');
+  if (!par) return;
   const btn = par.querySelector('.stats-period-btn.active');
   const ind = document.getElementById('period-indicator');
-  if (btn && ind) setTimeout(() => { ind.style.left = '2px'; ind.style.width = btn.offsetWidth+'px'; }, 100);
+  if (btn && ind) {
+    // Small delay ensures layout is complete
+    setTimeout(() => {
+      ind.style.left  = '2px';
+      ind.style.width = btn.offsetWidth + 'px';
+    }, 150);
+  }
 }
 function refreshStats() {
-  const today    = new Date().toDateString();
+  const today     = new Date().toDateString();
   const todayMins = (STATS.hist||[]).filter(h => h.dateStr===today).reduce((a,h) => a+(h.mins||0), 0);
   const periodHist = getHistInPeriod();
   const periodMins = periodHist.reduce((a,h) => a+(h.mins||0), 0);
   const periodCount = periodHist.length;
 
-  document.getElementById('st-today').textContent = todayMins || '0';
-  document.getElementById('st-week').textContent  = periodMins || '0';
-  document.getElementById('st-total').textContent = STATS.total || '0';
-  document.getElementById('st-mins').textContent  = STATS.mins  || '0';
+  const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+  set('st-today', todayMins || '0');
+  set('st-week',  periodMins || '0');
+  set('st-total', STATS.total || '0');
+  set('st-mins',  STATS.mins  || '0');
 
-  // Show session count as a subtitle on the period card
   const periodLbl = document.getElementById('st-period-lbl');
-  if (periodLbl) periodLbl.textContent = `${statPeriod.toUpperCase()} (${periodCount} session${periodCount!==1?'s':''})`;
+  if (periodLbl) periodLbl.textContent =
+    `${statPeriod.toUpperCase()} (${periodCount} session${periodCount!==1?'s':''})`;
 
   renderWeekChart(); renderSubjBars();
   if (isUnlocked) renderTargetVsAchieved();
 }
 function renderWeekChart() {
-  const canvas = document.getElementById('week-chart'); if (!canvas) return;
-  const dpr = window.devicePixelRatio || 1;
-  const W = canvas.offsetWidth || 300;
-  canvas.width = W*dpr; canvas.height = 90*dpr;
-  canvas.style.width = W+'px'; canvas.style.height = '90px';
-  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
-  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const canvas = document.getElementById('week-chart');
+  if (!canvas) return;
+  // Guard: canvas needs a rendered width
+  const W = canvas.offsetWidth;
+  if (!W) {
+    requestAnimationFrame(renderWeekChart);
+    return;
+  }
+  const dpr = Math.min(window.devicePixelRatio || 1, 3);
+  canvas.width  = W * dpr;
+  canvas.height = 90 * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = '90px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const days  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const today = new Date();
-  const data = [];
+  const data  = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(today); d.setDate(d.getDate()-i);
     const ds = d.toDateString();
@@ -787,16 +946,22 @@ function renderWeekChart() {
     data.push({label:days[d.getDay()], mins, today:i===0});
   }
   const maxMins = Math.max(...data.map(d => d.mins), 60);
-  const barW = (W-40)/7 - 6, chartH = 68;
+  const barW  = (W-40)/7 - 6;
+  const chartH = 68;
   ctx.clearRect(0,0,W,90);
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
   data.forEach((d,i) => {
-    const x = 20 + i*((W-40)/7);
+    const x    = 20 + i*((W-40)/7);
     const barH = d.mins > 0 ? (d.mins/maxMins)*chartH : 2;
-    const y = chartH - barH + 8;
+    const y    = chartH - barH + 8;
     ctx.beginPath(); ctx.roundRect(x, y, barW, barH, 3);
-    if (d.today && d.mins > 0) { const g = ctx.createLinearGradient(x,y,x,y+barH); g.addColorStop(0,'#6ecbfb'); g.addColorStop(1,'#1098f7'); ctx.fillStyle = g; }
-    else ctx.fillStyle = d.mins > 0 ? '#4a5c52' : (isDark?'#1c1f1f':'#d0d0ca');
+    if (d.today && d.mins > 0) {
+      const g = ctx.createLinearGradient(x,y,x,y+barH);
+      g.addColorStop(0,'#6ecbfb'); g.addColorStop(1,'#1098f7');
+      ctx.fillStyle = g;
+    } else {
+      ctx.fillStyle = d.mins > 0 ? '#4a5c52' : (isDark ? '#1c1f1f' : '#d0d0ca');
+    }
     ctx.fill();
     ctx.fillStyle = '#4a5c52';
     ctx.font = '600 9px Outfit,sans-serif'; ctx.textAlign = 'center';
@@ -809,27 +974,41 @@ function renderWeekChart() {
   });
 }
 function renderTargetVsAchieved() {
-  const el = document.getElementById('target-achieved'); if (!el) return;
+  const el = document.getElementById('target-achieved');
+  if (!el) return;
   const ws = new Date(); ws.setDate(ws.getDate()-ws.getDay()); ws.setHours(0,0,0,0);
   const achieved = {};
-  (STATS.hist||[]).forEach(h => { if (h.dateStr && new Date(h.dateStr) >= ws && h.subj) achieved[h.subj] = (achieved[h.subj]||0) + (h.mins||0); });
-  if (!Object.keys(achieved).length) { el.innerHTML = '<div style="font-size:13px;color:var(--hint);text-align:center;padding:6px">No sessions this week yet</div>'; return; }
+  (STATS.hist||[]).forEach(h => {
+    if (h.dateStr && new Date(h.dateStr) >= ws && h.subj) {
+      achieved[h.subj] = (achieved[h.subj]||0) + (h.mins||0);
+    }
+  });
+  if (!Object.keys(achieved).length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--hint);text-align:center;padding:6px">No sessions this week yet</div>';
+    return;
+  }
   el.innerHTML = SUBJECTS.map(s => {
-    const done = achieved[s.name] || 0, pct = Math.min(100, Math.round(done/s.weeklyMins*100)), met = done >= s.weeklyMins;
-    return `<div class="target-row"><div class="tr-top"><span class="tr-name">${s.name}</span><span class="tr-nums ${met?'met':''}">${done}/${s.weeklyMins}m${met?' ✓':''}</span></div><div class="tr-track"><div class="tr-fill ${met?'met':''}" style="width:${pct}%"></div></div></div>`;
+    const done = achieved[s.name] || 0;
+    const pct  = Math.min(100, Math.round(done/s.weeklyMins*100));
+    const met  = done >= s.weeklyMins;
+    return `<div class="target-row"><div class="tr-top"><span class="tr-name">${escHtml(s.name)}</span><span class="tr-nums ${met?'met':''}">${done}/${s.weeklyMins}m${met?' \u2713':''}</span></div><div class="tr-track"><div class="tr-fill ${met?'met':''}" style="width:${pct}%"></div></div></div>`;
   }).join('');
 }
 function renderSubjBars() {
-  const el = document.getElementById('subj-bars'); if (!el) return;
+  const el = document.getElementById('subj-bars');
+  if (!el) return;
   const mins = {};
-  (STATS.hist||[]).forEach(h => { if (h.subj) mins[h.subj] = (mins[h.subj]||0) + (h.mins||0); });
+  (STATS.hist||[]).forEach(h => {
+    if (h.subj) mins[h.subj] = (mins[h.subj]||0) + (h.mins||0);
+  });
   const sorted = Object.entries(mins).sort((a,b) => b[1]-a[1]).slice(0,8);
   if (!sorted.length) {
-    el.innerHTML = '<div class="stats-empty"><div class="stats-empty-icon">📚</div><div class="stats-empty-title">No sessions yet</div><div class="stats-empty-sub">Complete your first session and your breakdown will appear here.</div></div>';
+    el.innerHTML = '<div class="stats-empty"><div class="stats-empty-icon">\uD83D\uDCDA</div><div class="stats-empty-title">No sessions yet</div><div class="stats-empty-sub">Complete your first session and your breakdown will appear here.</div></div>';
     return;
   }
+  const maxVal = sorted[0][1];
   el.innerHTML = sorted.map(([subj,m]) =>
-    `<div class="subj-bar-row"><div class="subj-bar-lbl">${subj}</div><div class="subj-bar-track"><div class="subj-bar-fill" style="width:${(m/sorted[0][1]*100).toFixed(0)}%"></div></div><div class="subj-bar-n">${m}m</div></div>`
+    `<div class="subj-bar-row"><div class="subj-bar-lbl">${escHtml(subj)}</div><div class="subj-bar-track"><div class="subj-bar-fill" style="width:${(m/maxVal*100).toFixed(0)}%"></div></div><div class="subj-bar-n">${m}m</div></div>`
   ).join('');
 }
 
@@ -840,29 +1019,49 @@ function renderSpec() {
   const list  = document.getElementById('spec-list');
   const prog  = document.getElementById('spec-prog-row');
   if (!pills||!list||!prog) return;
+  // Ensure currentSpecSubj is valid
+  if (!SPEC[currentSpecSubj]) currentSpecSubj = Object.keys(SPEC)[0] || 'Maths';
   pills.innerHTML = Object.keys(SPEC).map(name =>
-    `<div class="spec-pill${name===currentSpecSubj?' act':''}" onclick="switchSpec('${name}')">${name}</div>`
+    `<div class="spec-pill${name===currentSpecSubj?' act':''}" onclick="switchSpec('${escHtml(name)}')">${escHtml(name)}</div>`
   ).join('');
   renderSpecContent(list, prog);
 }
 function switchSpec(name) {
+  if (!SPEC[name]) return;
   currentSpecSubj = name;
   document.querySelectorAll('.spec-pill').forEach(p => p.classList.toggle('act', p.textContent===name));
   renderSpecContent(document.getElementById('spec-list'), document.getElementById('spec-prog-row'));
 }
 function renderSpecContent(list, prog) {
   if (!list||!prog) return;
-  const specData = SPEC[currentSpecSubj], conf = SPEC_CONF[currentSpecSubj] || {};
-  if (!specData) { list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px;text-align:center">Spec points coming soon.</div>'; prog.innerHTML=''; return; }
-  let green=0,amber=0,red=0,none=0,totalIdx=0;
-  specData.sections.forEach(sec => { sec.points.forEach(() => { const c=conf[totalIdx++]; if(c==='green')green++;else if(c==='amber')amber++;else if(c==='red')red++;else none++; }); });
-  prog.innerHTML = `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#db4c40">${red}</div><div class="spec-prog-lbl">Red</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:#c9911a">${amber}</div><div class="spec-prog-lbl">Amber</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:#417b5a">${green}</div><div class="spec-prog-lbl">Green</div></div><div class="spec-prog-badge"><div class="spec-prog-n" style="color:var(--hint)">${none}</div><div class="spec-prog-lbl">Unrated</div></div>`;
+  const specData = SPEC[currentSpecSubj];
+  const conf = SPEC_CONF[currentSpecSubj] || {};
+  if (!specData) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px;text-align:center">Spec points coming soon.</div>';
+    prog.innerHTML = '';
+    return;
+  }
+  let green=0, amber=0, red=0, none=0, totalIdx=0;
+  specData.sections.forEach(sec => {
+    sec.points.forEach(() => {
+      const c = conf[totalIdx++];
+      if (c==='green') green++;
+      else if (c==='amber') amber++;
+      else if (c==='red') red++;
+      else none++;
+    });
+  });
+  prog.innerHTML =
+    `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#db4c40">${red}</div><div class="spec-prog-lbl">Red</div></div>` +
+    `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#c9911a">${amber}</div><div class="spec-prog-lbl">Amber</div></div>` +
+    `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#417b5a">${green}</div><div class="spec-prog-lbl">Green</div></div>` +
+    `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:var(--hint)">${none}</div><div class="spec-prog-lbl">Unrated</div></div>`;
   let idx=0, html='';
   specData.sections.forEach(sec => {
-    html += `<div class="spec-section-lbl">${sec.name}</div>`;
+    html += `<div class="spec-section-lbl">${escHtml(sec.name)}</div>`;
     sec.points.forEach(p => {
-      const c = conf[idx]||'';
-      html += `<div class="spec-point" onclick="cycleSpec(${idx},this)"><div class="spec-dot${c?' '+c:''}"></div><div class="spec-txt">${p}</div></div>`;
+      const c = conf[idx] || '';
+      html += `<div class="spec-point" onclick="cycleSpec(${idx},this)"><div class="spec-dot${c?' '+c:''}"></div><div class="spec-txt">${escHtml(p)}</div></div>`;
       idx++;
     });
   });
@@ -877,120 +1076,212 @@ function cycleSpec(idx, el) {
   else delete SPEC_CONF[currentSpecSubj][idx];
   saveSpec();
   const dot = el.querySelector('.spec-dot');
-  dot.className = 'spec-dot' + (next?' '+next:'');
+  if (dot) dot.className = 'spec-dot' + (next ? ' '+next : '');
+  // Update progress counts without re-rendering full list
   renderSpecContent(document.getElementById('spec-list'), document.getElementById('spec-prog-row'));
 }
-function initSpecDrag() {
-  const el = document.getElementById('spec-scroll-wrap'); if (!el) return;
-  let isDown=false, startX, scrollLeft;
-  el.addEventListener('mousedown', e => { isDown=true; startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft; });
-  el.addEventListener('mouseleave', () => isDown=false);
-  el.addEventListener('mouseup', () => isDown=false);
-  el.addEventListener('mousemove', e => { if(!isDown) return; e.preventDefault(); const x=e.pageX-el.offsetLeft; el.scrollLeft=scrollLeft-(x-startX); });
+
+// ===================== SPEC SCROLL (wheel + drag) =====================
+function initSpecScroll() {
+  const el = document.getElementById('spec-scroll-wrap');
+  if (!el || el._scrollInited) return;
+  el._scrollInited = true;
+
+  // Mouse wheel: convert vertical scroll to horizontal
+  el.addEventListener('wheel', e => {
+    // Only intercept primarily-vertical wheel events
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+      el.scrollLeft += e.deltaY * 0.8;
+    }
+  }, {passive: false});
+
+  // Mouse drag for desktop
+  let isDown = false, startX = 0, startScrollLeft = 0;
+  el.addEventListener('mousedown', e => {
+    isDown = true;
+    startX = e.pageX - el.offsetLeft;
+    startScrollLeft = el.scrollLeft;
+    el.style.cursor = 'grabbing';
+  });
+  el.addEventListener('mouseleave', () => { isDown = false; el.style.cursor = 'grab'; });
+  el.addEventListener('mouseup',    () => { isDown = false; el.style.cursor = 'grab'; });
+  el.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    el.scrollLeft = startScrollLeft - (x - startX);
+  });
+}
+
+// ===================== DESKTOP: SCROLL ANYWHERE =====================
+function initDesktopScroll() {
+  // Allow wheel anywhere on a screen to scroll its scroll-area
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.addEventListener('wheel', e => {
+      const scrollArea = screen.querySelector('.scroll-area');
+      if (!scrollArea) return;
+      // Only intercept if the target is NOT already inside the scroll area
+      if (!scrollArea.contains(e.target)) {
+        e.preventDefault();
+        scrollArea.scrollBy({top: e.deltaY, behavior: 'auto'});
+      }
+    }, {passive: false});
+  });
 }
 
 // ===================== RESOURCES =====================
 function renderResources() {
   if (!isUnlocked) return;
-  if (!resourcesBuilt) { renderNotionQuickLinks(); renderHowToRevise(); renderResSchedule(); resourcesBuilt=true; }
+  if (!resourcesBuilt) {
+    renderNotionQuickLinks(); renderHowToRevise(); renderResSchedule();
+    resourcesBuilt = true;
+  }
   renderExamList();
 }
 function renderNotionQuickLinks() {
-  const el = document.getElementById('notion-quicklinks'); if (!el) return;
+  const el = document.getElementById('notion-quicklinks');
+  if (!el) return;
   el.innerHTML = NOTION_PAGES.map(p =>
-    `<a class="notion-quick-link" href="${p.url}" target="_blank" rel="noopener"><span class="notion-quick-icon">${p.icon}</span><div style="flex:1"><div class="notion-quick-title">${p.title}</div><div class="notion-quick-sub">${p.sub}</div></div><span style="color:var(--hint);font-size:14px;margin-left:auto;flex-shrink:0">&#8250;</span></a>`
+    `<a class="notion-quick-link" href="${escHtml(p.url)}" target="_blank" rel="noopener noreferrer"><span class="notion-quick-icon">${p.icon}</span><div style="flex:1"><div class="notion-quick-title">${escHtml(p.title)}</div><div class="notion-quick-sub">${escHtml(p.sub)}</div></div><span style="color:var(--hint);font-size:14px;margin-left:auto;flex-shrink:0">\u203a</span></a>`
   ).join('');
 }
 function renderExamList() {
-  const el = document.getElementById('exam-list'); if (!el) return;
+  const el = document.getElementById('exam-list');
+  if (!el) return;
   const today = new Date(); today.setHours(0,0,0,0);
-  const upcoming = EXAMS.map(e => { const d=new Date(e.date); d.setHours(0,0,0,0); return {...e, days:Math.round((d-today)/86400000)}; }).filter(e => e.days >= -1).sort((a,b) => a.days-b.days).slice(0,8);
+  const upcoming = EXAMS
+    .map(e => { const d=new Date(e.date); d.setHours(0,0,0,0); return {...e, days:Math.round((d-today)/86400000)}; })
+    .filter(e => e.days >= -1)
+    .sort((a,b) => a.days-b.days)
+    .slice(0,8);
   el.innerHTML = upcoming.map(e => {
-    const cls = e.days===0?'today':e.days<=3?'soon':'';
-    const label = e.days===0?'TODAY':e.days<0?'Yest':`${e.days}`;
-    const sub = e.days<=0?'':e.days===1?'day':'days';
-    return `<div class="exam-row ${cls}"><div><div class="exam-name">${e.subj}</div><div class="exam-paper">${e.paper}, ${e.date.replace('2026-','').split('-').reverse().join('/')}</div></div><div style="text-align:right"><div class="exam-days">${label}</div><div class="exam-days-lbl">${sub}</div></div></div>`;
+    const cls   = e.days===0 ? 'today' : e.days<=3 ? 'soon' : '';
+    const label = e.days===0 ? 'TODAY' : e.days<0 ? 'Yest' : `${e.days}`;
+    const sub   = e.days<=0 ? '' : e.days===1 ? 'day' : 'days';
+    const [,mm,dd] = e.date.split('-');
+    return `<div class="exam-row ${cls}"><div><div class="exam-name">${escHtml(e.subj)}</div><div class="exam-paper">${escHtml(e.paper)}, ${dd}/${mm}</div></div><div style="text-align:right"><div class="exam-days">${label}</div><div class="exam-days-lbl">${sub}</div></div></div>`;
   }).join('');
 }
 function renderHowToRevise() {
-  const el = document.getElementById('how-to-revise'); if (!el) return;
+  const el = document.getElementById('how-to-revise');
+  if (!el) return;
   el.innerHTML = Object.entries(HOW_TO).map(([subj,tips]) => {
     const s = SUBJECTS.find(x => x.name===subj || x.name.startsWith(subj));
-    const examStr = s ? `<span class="acc-exam">${s.examDates}</span>` : '';
-    return `<div class="subj-accordion"><div class="acc-header" onclick="toggleAcc(this)"><span class="acc-title">${subj}</span><div style="display:flex;align-items:center;gap:6px">${examStr}<span class="acc-arrow">&#9660;</span></div></div><div class="acc-body"><div style="height:8px"></div>${tips.map(t => `<div class="acc-tip">${t}</div>`).join('')}</div></div>`;
+    const examStr = s ? `<span class="acc-exam">${escHtml(s.examDates)}</span>` : '';
+    return `<div class="subj-accordion"><div class="acc-header" onclick="toggleAcc(this)"><span class="acc-title">${escHtml(subj)}</span><div style="display:flex;align-items:center;gap:6px">${examStr}<span class="acc-arrow">\u25bc</span></div></div><div class="acc-body"><div style="height:8px"></div>${tips.map(t => `<div class="acc-tip">${t}</div>`).join('')}</div></div>`;
   }).join('');
 }
 function toggleAcc(h) {
-  const b = h.nextElementSibling, a = h.querySelector('.acc-arrow');
+  const b = h.nextElementSibling;
+  const a = h.querySelector('.acc-arrow');
   const open = b.classList.toggle('open');
   if (a) a.style.transform = open ? 'rotate(180deg)' : '';
 }
 function renderResSchedule() {
-  const el = document.getElementById('res-sched-table'); if (!el) return;
-  const dow = new Date().getDay(), days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const el = document.getElementById('res-sched-table');
+  if (!el) return;
+  const dow  = new Date().getDay();
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   let html = `<div class="sched-th-row"><div class="sched-th">Day</div><div class="sched-th">S1</div><div class="sched-th">S2</div><div class="sched-th">S3</div></div>`;
   [0,1,2,3,4,5,6].forEach(d => {
     const td = TIMETABLE[d];
-    html += `<div class="${d===dow?'sched-tr today-row':'sched-tr'}"><div class="sched-td day">${days[d]}</div><div class="sched-td">${td.s1.subj} <span style="color:var(--hint)">${td.s1.mins}m</span></div><div class="sched-td">${td.s2.subj} <span style="color:var(--hint)">${td.s2.mins}m</span></div><div class="sched-td">${td.s3.subj} <span style="color:var(--hint)">${td.s3.mins}m</span></div></div>`;
+    if (!td) return;
+    html += `<div class="${d===dow?'sched-tr today-row':'sched-tr'}"><div class="sched-td day">${days[d]}</div><div class="sched-td">${escHtml(td.s1.subj)} <span style="color:var(--hint)">${td.s1.mins}m</span></div><div class="sched-td">${escHtml(td.s2.subj)} <span style="color:var(--hint)">${td.s2.mins}m</span></div><div class="sched-td">${escHtml(td.s3.subj)} <span style="color:var(--hint)">${td.s3.mins}m</span></div></div>`;
   });
   el.innerHTML = html;
 }
 
 // ===================== SPACED REPETITION =====================
-function srDueItems() { const now=Date.now(); return SPACED.filter(i => i.nextReview && i.nextReview<=now); }
+function srDueItems() {
+  const now = Date.now();
+  return SPACED.filter(i => i.nextReview && i.nextReview <= now);
+}
 function buildSRCard() {
-  const due = srDueItems(), card = document.getElementById('sr-due-card');
+  const due  = srDueItems();
+  const card = document.getElementById('sr-due-card');
   if (!card) return;
-  if (!due.length) { card.style.display='none'; return; }
+  if (!due.length) { card.style.display = 'none'; return; }
   card.style.display = 'block';
-  document.getElementById('sr-due-count').textContent = due.length;
+  const countEl = document.getElementById('sr-due-count');
+  if (countEl) countEl.textContent = due.length;
   const preview = document.getElementById('sr-due-preview');
-  if (due.length===1) preview.textContent = `"${due[0].topic}" - ${due[0].subj}`;
-  else preview.textContent = `${due.map(d=>d.subj).filter((v,i,a)=>a.indexOf(v)===i).slice(0,3).join(', ')} - tap to review`;
+  if (preview) {
+    if (due.length === 1) preview.textContent = `"${due[0].topic}" - ${due[0].subj}`;
+    else {
+      const subjects = [...new Set(due.map(d => d.subj))].slice(0,3).join(', ');
+      preview.textContent = `${subjects} - tap to review`;
+    }
+  }
 }
 let srQueue=[], srIdx=0;
 function openSRReview() {
-  srQueue = srDueItems(); if (!srQueue.length) return;
-  srIdx = 0; document.getElementById('sr-ov').classList.add('open'); renderSRCard();
+  srQueue = srDueItems();
+  if (!srQueue.length) return;
+  srIdx = 0;
+  const ov = document.getElementById('sr-ov');
+  if (ov) ov.classList.add('open');
+  renderSRCard();
 }
-function closeSRReview() { document.getElementById('sr-ov').classList.remove('open'); buildSRCard(); }
+function closeSRReview() {
+  const ov = document.getElementById('sr-ov');
+  if (ov) ov.classList.remove('open');
+  buildSRCard();
+}
 function renderSRCard() {
   const item = srQueue[srIdx];
-  if (!item) { closeSRReview(); showToast('Review done','All caught up',true); buildSRCard(); return; }
-  document.getElementById('sr-topic').textContent = item.topic;
-  document.getElementById('sr-subj-lbl').textContent = item.subj + ' - ' + srIntervalLabel(item.interval||1);
+  if (!item) { closeSRReview(); showToast('Review done', 'All caught up', true); buildSRCard(); return; }
+  const topicEl = document.getElementById('sr-topic');
+  const subjEl  = document.getElementById('sr-subj-lbl');
+  const hintEl  = document.getElementById('sr-hint');
+  if (topicEl) topicEl.textContent = item.topic;
+  if (subjEl)  subjEl.textContent  = `${item.subj} - ${srIntervalLabel(item.interval||1)}`;
   const prog = document.getElementById('sr-prog');
-  prog.innerHTML = srQueue.map((_,i) => `<div class="sr-prog-dot${i<srIdx?' done':''}"></div>`).join('');
+  if (prog) prog.innerHTML = srQueue.map((_,i) =>
+    `<div class="sr-prog-dot${i<srIdx?' done':''}"></div>`).join('');
   const remaining = srQueue.length - srIdx;
-  document.getElementById('sr-hint').textContent = remaining===1 ? 'Last one' : remaining+' left';
+  if (hintEl) hintEl.textContent = remaining===1 ? 'Last one' : `${remaining} left`;
 }
 function srIntervalLabel(d) {
   if (d<=1) return 'Due today';
-  if (d<7) return `Next: ${d} days`;
-  if (d<30) return `Next: ${Math.round(d/7)} week${Math.round(d/7)>1?'s':''}`;
-  return `Next: ${Math.round(d/30)} month${Math.round(d/30)>1?'s':''}`;
+  if (d<7)  return `Next: ${d}d`;
+  if (d<30) return `Next: ${Math.round(d/7)}w`;
+  return `Next: ${Math.round(d/30)}mo`;
 }
 function srAnswer(remembered) {
-  const item = srQueue[srIdx]; if (!item) return;
-  const now = Date.now(), idx = SPACED.findIndex(i => i.id===item.id);
+  const item = srQueue[srIdx];
+  if (!item) return;
+  const now = Date.now();
+  const idx = SPACED.findIndex(i => i.id === item.id);
   if (idx < 0) { srIdx++; renderSRCard(); return; }
   if (remembered) {
     const ni = Math.min((item.interval||1)*2, 60);
-    SPACED[idx].interval = ni; SPACED[idx].streak = (item.streak||0)+1;
-    SPACED[idx].nextReview = now + ni*86400000;
-  } else { SPACED[idx].interval=1; SPACED[idx].streak=0; SPACED[idx].nextReview=now+86400000; }
-  SPACED[idx].lastReviewed = now; saveSpaced(); srIdx++; renderSRCard();
+    SPACED[idx].interval    = ni;
+    SPACED[idx].streak      = (item.streak||0) + 1;
+    SPACED[idx].nextReview  = now + ni*86400000;
+  } else {
+    SPACED[idx].interval   = 1;
+    SPACED[idx].streak     = 0;
+    SPACED[idx].nextReview = now + 86400000;
+  }
+  SPACED[idx].lastReviewed = now;
+  saveSpaced(); srIdx++; renderSRCard();
 }
 function addToSR(topic, subj) {
   const now = Date.now();
-  SPACED.push({id:now+'-'+Math.random().toString(36).slice(2), topic, subj, added:now, nextReview:now+14*86400000, interval:14, streak:0, lastReviewed:null});
+  SPACED.push({
+    id: `${now}-${Math.random().toString(36).slice(2)}`,
+    topic, subj, added: now,
+    nextReview: now + 14*86400000,
+    interval: 14, streak: 0, lastReviewed: null
+  });
   saveSpaced();
 }
 function migrateSRItems() {
   let changed = false;
   SPACED.forEach((item,i) => {
-    if (!item.id) { SPACED[i].id = Date.now()+'-'+i; changed=true; }
-    if (!item.nextReview) { SPACED[i].nextReview=Date.now(); SPACED[i].interval=1; SPACED[i].streak=0; changed=true; }
+    if (!item.id) { SPACED[i].id = `${Date.now()}-${i}`; changed = true; }
+    if (!item.nextReview) { SPACED[i].nextReview = Date.now(); SPACED[i].interval = 1; SPACED[i].streak = 0; changed = true; }
   });
   if (changed) saveSpaced();
 }
@@ -999,15 +1290,22 @@ function migrateSRItems() {
 document.addEventListener('keydown', e => {
   const ts = document.getElementById('timer-screen');
   const bs = document.getElementById('break-screen');
-  const active = ts.classList.contains('active') || bs.classList.contains('active');
-  if (!active) return;
+  if (!ts || !bs) return;
+  const onTimer = ts.classList.contains('active');
+  const onBreak = bs.classList.contains('active');
+  if (!onTimer && !onBreak) return;
+  // Ignore shortcuts when typing in inputs
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if (e.code === 'Space') { e.preventDefault(); togglePause(); }
-  if (e.code === 'KeyS' && ts.classList.contains('active')) confirmSkip();
+  if (e.code === 'KeyS' && onTimer) confirmSkip();
+  if (e.code === 'Escape') confirmEnd();
 });
 
 // ===================== DANGER ZONE =====================
 function toggleDanger(h) {
-  const b = document.getElementById('danger-body'), a = h.querySelector('.danger-arrow');
+  const b = document.getElementById('danger-body');
+  const a = h.querySelector('.danger-arrow');
+  if (!b) return;
   const open = b.classList.toggle('open');
   if (a) a.style.transform = open ? 'rotate(180deg)' : '';
 }
@@ -1020,6 +1318,12 @@ function injectManifest() {
     const url = URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));
     const l = document.createElement('link'); l.rel='manifest'; l.href=url; document.head.appendChild(l);
   } catch(e) {}
+}
+
+// ===================== SPEC HINT TEXT =====================
+function updateSpecHintText() {
+  const hint = document.querySelector('#spec-unlocked-view > div:first-child');
+  if (hint) hint.textContent = `${clickOrTap} a point to cycle: red \u2192 amber \u2192 green \u2192 unrated`;
 }
 
 // ===================== INIT =====================
@@ -1036,29 +1340,37 @@ function initApp() {
   buildSRCard();
   updateStartBtn();
   initPeriodIndicator();
-  initSpecDrag();
+  initSpecScroll();    // NEW: wheel + drag for spec pills
+  initDesktopScroll(); // NEW: scroll anywhere on desktop
+  updateSpecHintText();
   document.addEventListener('touchstart', () => unlockAudio(), {once:true,passive:true});
-  document.addEventListener('click', () => unlockAudio(), {once:true});
+  document.addEventListener('click',      () => unlockAudio(), {once:true});
+  // Add CSS for shake animation
+  if (!document.getElementById('shake-style')) {
+    const style = document.createElement('style');
+    style.id = 'shake-style';
+    style.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+    document.head.appendChild(style);
+  }
   setTimeout(() => {
     const loader = document.getElementById('app-loader');
     if (loader) { loader.classList.add('gone'); setTimeout(() => loader.remove(), 500); }
   }, 600);
 }
 
-// Entry point: check Firebase auth or go directly
+// Entry point
 if (window.FIREBASE_ENABLED && window.firebaseAuth) {
   window.firebaseAuth.onAuthStateChanged(async user => {
     if (user) {
       currentUser = user;
-      loadFromLocalStorage(); // fast load from cache
-      await loadFromFirestore(user.uid); // then sync from cloud
+      loadFromLocalStorage();
+      await loadFromFirestore(user.uid);
       initApp();
     } else {
       window.location.href = 'auth.html';
     }
   });
 } else {
-  // localStorage-only mode
   loadFromLocalStorage();
   initApp();
 }
