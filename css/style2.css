@@ -1,11 +1,12 @@
 /* css/style2.css - continuation of style.css */
 
-/* ===== TOAST (continued) ===== */
+/* ===== TOAST (icon/text/close) ===== */
 .toast-icon{color:var(--brk);background:rgba(255,255,255,.05);padding:6px;border-radius:8px;flex-shrink:0}
-.toast-text{flex:1}
-.toast-title{font-size:13px;font-weight:700}
-.toast-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.toast-close{color:var(--hint);background:none;border:none;cursor:pointer;padding:4px;border-radius:6px}
+.toast-text{flex:1;min-width:0}
+.toast-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast-sub{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast-close{color:var(--hint);background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;flex-shrink:0;transition:color .15s}
+.toast-close:hover{color:var(--text)}
 
 /* ===== SPACED REPETITION OVERLAY ===== */
 .sr-ov{display:none;position:fixed;inset:0;z-index:210;align-items:flex-end;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -18,13 +19,14 @@
 .sr-topic{font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px;line-height:1.4}
 .sr-subj{font-size:12px;color:var(--muted);margin-bottom:20px}
 .sr-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sr-btn{padding:14px;border:none;border-radius:var(--r-lg);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.sr-btn{padding:14px;border:none;border-radius:var(--r-lg);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s}
 .sr-btn.nope{background:var(--red-l);color:var(--red);border:1px solid rgba(219,76,64,.2)}
 .sr-btn.got{background:var(--brk-l);color:var(--brk);border:1px solid rgba(65,123,90,.3)}
+.sr-btn:hover{opacity:.85}
 .sr-btn:active{transform:scale(.97)}
 .sr-card-hint{font-size:11px;color:var(--hint);margin-top:8px;text-align:center}
 
-/* ===== THEME TOGGLE (inline in settings) ===== */
+/* ===== THEME TOGGLE ===== */
 .theme-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px}
 .theme-toggle-label{font-size:14px;font-weight:500}
 .theme-switch-sm{--toggle-size:16px;--container-width:4.4em;--container-height:2em;--container-radius:6.25em;--container-light-bg:#4a90d9;--container-night-bg:#1D1F2C;--circle-container-diameter:2.6em;--sun-moon-diameter:1.65em;--sun-bg:#ECCA2F;--moon-bg:#C4C9D1;--spot-color:#959DB1;--circle-container-offset:calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);--stars-color:#fff;--clouds-color:#F3FDFF;--back-clouds-color:#AACADF;--transition:.5s cubic-bezier(0,-.02,.4,1.25);--circle-transition:.3s cubic-bezier(0,-.02,.35,1.17);flex-shrink:0}
