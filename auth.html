@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" id="tcm" content="#131515">
-<title>Revision — Sign in</title>
+<meta name="theme-color" id="tcm" content="#0e1010">
+<title>Solus — Sign in</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style2.css">
-<!-- Firebase SDKs (only loaded, not initialised until firebase-config.js) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -21,7 +20,7 @@
 <div class="app-bg"><div class="pattern-bg"></div></div>
 
 <div class="auth-card">
-  <div class="auth-logo">Revision<span>.</span></div>
+  <div class="auth-logo">Solus<span>.</span></div>
   <div class="auth-sub">Your personal revision timer</div>
 
   <div class="auth-tabs">
@@ -69,7 +68,7 @@
       <label for="signup-confirm">Confirm password</label>
       <input type="password" id="signup-confirm" placeholder="Repeat your password" autocomplete="new-password">
     </div>
-    <button class="auth-submit-btn" data-label="Create account" onclick="signUp()" style="margin-top:4px">Create account</button>
+    <button class="auth-submit-btn" data-label="Create account" onclick="signUp()" style="margin-top:6px">Create account</button>
     <div class="auth-divider">or</div>
     <button class="auth-google-btn" onclick="signInWithGoogle()">
       <svg class="auth-google-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
@@ -82,7 +81,6 @@
     </button>
   </div>
 
-  <!-- Skip if no Firebase -->
   <button class="auth-skip-btn" id="auth-skip-btn" onclick="skipAuth()" style="display:none">
     Continue without signing in
   </button>
@@ -90,17 +88,14 @@
 
 <script src="js/auth.js"></script>
 <script>
-  // Show skip button in localStorage-only mode
+  applyAuthTheme();
   if (!window.FIREBASE_ENABLED) {
     document.getElementById('auth-skip-btn').style.display = 'block';
     document.querySelector('.auth-tabs').style.display = 'none';
     document.getElementById('signin-panel').style.display = 'none';
-    document.getElementById('signup-panel').style.display = 'none';
-    document.querySelector('.auth-sub').textContent = 'Firebase not configured. Running in local mode.';
+    document.querySelector('.auth-sub').textContent = 'Running in local mode.';
   }
-  function skipAuth() {
-    window.location.href = 'index.html';
-  }
+  function skipAuth() { window.location.href = 'index.html'; }
 </script>
 </body>
 </html>
