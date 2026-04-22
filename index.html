@@ -5,15 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Revision">
-<meta name="theme-color" id="tcm" content="#131515">
-<title>Revision</title>
+<meta name="apple-mobile-web-app-title" content="Solus">
+<meta name="theme-color" id="tcm" content="#0e1010">
+<title>Solus</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style2.css">
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -21,98 +20,103 @@
 </head>
 <body>
 
-<!-- Desktop background card (visible only on wide screens) -->
 <div class="desktop-card"></div>
-
-<!-- Animated background -->
 <div class="app-bg"><div class="pattern-bg"></div></div>
 
 <!-- Loader -->
 <div id="app-loader">
   <svg class="loader-svg" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg>
-  <div class="loader-title">Revision</div>
+  <div class="loader-logo">Solus<span>.</span></div>
 </div>
 
-<!-- Toast notification -->
+<!-- Toast -->
 <div class="toast" id="toast">
   <div class="toast-icon">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
   </div>
   <div class="toast-text">
     <div class="toast-title" id="toast-title">Done</div>
     <div class="toast-sub" id="toast-sub"></div>
   </div>
-  <button class="toast-close" onclick="hideToast()">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+  <button class="toast-close" onclick="hideToast()" aria-label="Dismiss">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
   </button>
 </div>
 
-<!-- Settings backdrop -->
+<!-- Settings backdrop (full-screen, below clip wrap) -->
 <div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings()"></div>
 
-<!-- Settings panel -->
-<div class="settings-panel" id="settings-panel">
-  <div class="settings-panel-head">
-    <span class="settings-panel-title">Settings</span>
-    <button class="settings-close" onclick="closeSettings()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
-    </button>
-  </div>
+<!-- Card clip wrap: constrains settings panel on desktop -->
+<div class="card-clip-wrap">
+  <div class="settings-panel" id="settings-panel">
+    <div class="settings-panel-head">
+      <span class="settings-panel-title">Settings</span>
+      <button class="settings-close" onclick="closeSettings()" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
 
-  <div class="settings-section-lbl">Appearance</div>
-  <div class="settings-wrap">
-    <div class="theme-toggle-row">
-      <span class="theme-toggle-label">Light mode</span>
-      <label class="theme-switch-sm" title="Toggle light/dark">
-        <input type="checkbox" class="ts-chk theme-chk" onchange="toggleThemeFromSettings(this)">
-        <div class="ts-container">
-          <div class="ts-clouds"></div>
-          <div class="ts-stars">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545Z" fill="currentColor"/></svg>
+    <div class="settings-section-lbl">Appearance</div>
+    <div class="settings-wrap">
+      <div class="theme-toggle-row">
+        <span class="theme-toggle-label">Light mode</span>
+        <label class="theme-switch-sm">
+          <input type="checkbox" class="ts-chk theme-chk" onchange="toggleThemeFromSettings(this)">
+          <div class="ts-container">
+            <div class="ts-clouds"></div>
+            <div class="ts-stars"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545Z" fill="currentColor"/></svg></div>
+            <div class="ts-circle"><div class="ts-sunmoon"><div class="ts-moon"><div class="ts-spot"></div><div class="ts-spot"></div><div class="ts-spot"></div></div></div></div>
           </div>
-          <div class="ts-circle"><div class="ts-sunmoon"><div class="ts-moon"><div class="ts-spot"></div><div class="ts-spot"></div><div class="ts-spot"></div></div></div></div>
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-section-lbl">Timer</div>
+    <div class="settings-wrap">
+      <div class="setting-row"><div><div class="sr-lbl">Sound chimes</div><div class="sr-desc">Audio at each phase transition</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-sound" onchange="toggleSetting(this,'sound')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-notif" onchange="toggleSetting(this,'notif')"><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-eye" onchange="toggleSetting(this,'eye')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-hydra" onchange="toggleSetting(this,'hydra')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Focus check-ins</div><div class="sr-desc">Prompt every 7–12 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label></div>
+    </div>
+
+    <div class="settings-section-lbl">Account</div>
+    <div class="settings-wrap" id="settings-account-section"></div>
+
+    <div class="settings-section-lbl">Data</div>
+    <div class="danger-zone" style="margin:0 16px">
+      <div class="danger-header" onclick="toggleDanger(this)">
+        <div class="danger-title">&#9888;&#xFE0F; Danger zone</div>
+        <span class="danger-arrow">&#9660;</span>
+      </div>
+      <div class="danger-body" id="danger-body">
+        <div style="font-size:12px;color:var(--red);margin-bottom:10px;line-height:1.55">Permanently deletes all session history, spec ratings, and spaced repetition data.</div>
+        <button class="clear-btn" onclick="confirmClearData()">Clear all data</button>
+      </div>
+    </div>
+
+    <div class="settings-section-lbl">Admin</div>
+    <div class="admin-section">
+      <div id="admin-unlock-section">
+        <div style="font-size:12px;color:var(--muted);line-height:1.6">Restricted access. Enables personal timetable, Notion links &amp; full schedule.</div>
+        <div class="admin-unlock-form">
+          <input type="password" class="tinput" id="admin-pw-input" placeholder="Password" autocomplete="off" onkeydown="if(event.key==='Enter')adminUnlock()">
+          <button class="admin-unlock-btn" onclick="adminUnlock()">Unlock</button>
         </div>
-      </label>
+        <div style="font-size:12px;color:var(--red);min-height:18px;margin-top:5px" id="admin-pw-error"></div>
+      </div>
+      <div id="admin-active-section" style="display:none">
+        <div class="admin-active-row">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--brk)">&#10003; Admin mode active</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Full access enabled</div>
+          </div>
+          <button class="admin-deactivate-btn" onclick="adminDeactivate()">Deactivate</button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="settings-section-lbl">Timer</div>
-  <div class="settings-wrap">
-    <div class="setting-row"><div><div class="sr-lbl">Sound chimes</div><div class="sr-desc">Audio at each phase transition</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-sound" onchange="toggleSetting(this,'sound')" checked><div class="slider"></div></label></div>
-    <div class="setting-row"><div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-notif" onchange="toggleSetting(this,'notif')"><div class="slider"></div></label></div>
-    <div class="setting-row"><div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-eye" onchange="toggleSetting(this,'eye')" checked><div class="slider"></div></label></div>
-    <div class="setting-row"><div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-hydra" onchange="toggleSetting(this,'hydra')" checked><div class="slider"></div></label></div>
-    <div class="setting-row"><div><div class="sr-lbl">Focus check-ins</div><div class="sr-desc">Prompt every 7 to 12 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label></div>
-  </div>
-
-  <div class="settings-section-lbl">Account</div>
-  <div class="settings-wrap" id="settings-account-section"></div>
-
-  <div class="settings-section-lbl">Data</div>
-  <div class="danger-zone" style="margin:0 16px 32px">
-    <div class="danger-header" onclick="toggleDanger(this)">
-      <div class="danger-title">&#9888; Danger zone</div>
-      <span class="danger-arrow">&#9660;</span>
-    </div>
-    <div class="danger-body" id="danger-body">
-      <div style="font-size:12px;color:var(--red);margin-bottom:10px;line-height:1.5">Permanently deletes all session history, spec confidence ratings, and spaced repetition data.</div>
-      <button class="clear-btn" onclick="confirmClearData()">Clear all data</button>
-    </div>
-  </div>
-</div>
-
-<!-- Personal mode lock overlay -->
-<div class="overlay" id="lock-ov" onclick="if(event.target===this)closeLock()">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <span class="lock-icon-big">&#128274;</span>
-    <div class="sheet-title" style="text-align:center">Personal mode</div>
-    <div class="sheet-body" style="text-align:center;font-size:13px">Unlock to see your timetable, schedule, resources and spec tracker.</div>
-    <input class="pin-input" type="password" id="pin-input" placeholder="Enter password" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()">
-    <div class="lock-error" id="lock-error"></div>
-    <button class="btn btn-primary" onclick="tryUnlock()">Unlock</button>
-    <div style="height:10px"></div>
-    <button class="btn-ghost" style="width:100%;padding:10px;text-align:center" onclick="closeLock()">Not now</button>
+    <div style="height:44px;flex-shrink:0"></div>
   </div>
 </div>
 
@@ -129,14 +133,14 @@
   </div>
 </div>
 
-<!-- Schedule overlay (iOS sheet style) -->
+<!-- Schedule overlay -->
 <div id="sched-ov" onclick="if(event.target===this)closeSchedOv()">
   <div class="sched-ios-sheet">
     <div class="sched-handle-bar"><span></span></div>
     <div class="sched-sheet-header">
       <div class="sched-sheet-title" id="sched-ov-title">Today's Plan</div>
       <button class="sheet-x-btn" onclick="closeSchedOv()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
       </button>
     </div>
     <div class="sched-sheet-body" id="sched-ov-body"></div>
@@ -150,7 +154,7 @@
 <div class="checkin-ov" id="checkin-ov">
   <div class="checkin-sheet">
     <div class="checkin-title">Focus check</div>
-    <div class="checkin-sub">How sharp are you right now?</div>
+    <div class="checkin-sub">How sharp are you feeling?</div>
     <div class="checkin-opts">
       <div class="checkin-opt" onclick="logCheckin(1,this)">&#128564;</div>
       <div class="checkin-opt" onclick="logCheckin(2,this)">&#128533;</div>
@@ -162,27 +166,41 @@
   </div>
 </div>
 
-<!-- HOME SCREEN -->
+<!-- Add Exam overlay -->
+<div class="overlay" id="add-exam-ov" onclick="if(event.target===this)closeAddExam()">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Add exam</div>
+    <div class="sheet-body">Track a custom exam and see how many days are left.</div>
+    <div class="lbl" style="margin-top:0">Subject</div>
+    <input class="tinput" id="add-exam-subj" type="text" placeholder="e.g. Chemistry" style="margin-bottom:12px">
+    <div class="lbl">Paper / Component</div>
+    <input class="tinput" id="add-exam-paper" type="text" placeholder="e.g. Paper 1" style="margin-bottom:12px">
+    <div class="lbl">Date</div>
+    <input class="tinput" id="add-exam-date" type="date" style="margin-bottom:18px;color-scheme:dark">
+    <div class="sheet-btns">
+      <button class="btn btn-primary" onclick="saveCustomExam()">Add exam</button>
+      <button class="btn btn-secondary" onclick="closeAddExam()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================== HOME SCREEN ================== -->
 <div class="screen tab-screen active" id="home-screen">
   <div class="screen-head">
     <div class="hdr">
-      <span class="app-name">Revision</span>
+      <span class="app-name">Solus<span>.</span></span>
       <div class="hdr-right">
         <div class="exam-chip" id="exam-chip"></div>
-        <button class="personal-btn" id="lock-btn" onclick="openLock()">
-          <span class="personal-btn-icon" id="lock-icon">&#128274;</span>
-          <span id="lock-label">Personal</span>
-        </button>
-        <button class="cog-btn" onclick="openSettings()" title="Settings">
+        <button class="cog-btn" onclick="openSettings()" aria-label="Settings">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
         </button>
       </div>
     </div>
-    <div style="height:3px;background:var(--s2);border-radius:2px;margin:0 0 4px;overflow:hidden">
-      <div id="session-progress-fill" style="height:100%;border-radius:2px;background:linear-gradient(90deg,var(--brk),#5aad7a);transition:width .6s cubic-bezier(.2,.8,.3,1);width:0%"></div>
-    </div>
+    <div class="session-progress-bar"><div id="session-progress-fill" class="session-progress-fill"></div></div>
   </div>
-  <div class="scroll-area" style="padding-top:8px">
+
+  <div class="scroll-area" style="padding-top:10px">
     <div class="quickstart" id="quickstart" onclick="quickStart()" style="display:none">
       <div>
         <div class="qs-label">Up next</div>
@@ -190,6 +208,7 @@
       </div>
       <button class="qs-btn" onclick="event.stopPropagation();quickStart()">Go &#8250;</button>
     </div>
+
     <div id="sr-due-card" style="display:none" class="sr-home-card" onclick="openSRReview()">
       <div class="sr-card-top">
         <span class="sr-card-title">Spaced repetition due</span>
@@ -197,7 +216,8 @@
       </div>
       <div class="sr-card-sub" id="sr-due-preview">Tap to review what needs refreshing today</div>
     </div>
-    <div style="margin-bottom:10px">
+
+    <div style="margin-bottom:12px">
       <div class="grad-card" onclick="openSchedOv()" style="cursor:pointer">
         <div class="grad-card-inner">
           <div class="sc-header">
@@ -206,14 +226,16 @@
           </div>
           <div class="sc-sessions" id="sc-sessions"></div>
           <div class="schedule-progress" id="sc-progress"></div>
-          <div class="sc-action"><span>View schedule</span><span style="font-size:16px">&#8250;</span></div>
+          <div class="sc-action"><span>View full schedule</span><span style="font-size:16px">&#8250;</span></div>
         </div>
       </div>
     </div>
+
     <div class="lbl-bold">Subject</div>
     <input class="tinput" id="subj" type="text" placeholder="e.g. Chemistry, Maths..." autocomplete="off" spellcheck="false">
     <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px" id="subj-chips"></div>
-    <div class="lbl-bold" style="margin-top:20px">Session method</div>
+
+    <div class="lbl-bold" style="margin-top:22px">Session method</div>
     <div class="method-grid">
       <div class="method-card" data-m="blurt" onclick="selMethod(this)"><span class="mc-icon">&#9999;&#65039;</span><div class="mc-name">Blurting</div><div class="mc-tag">Write from memory, check gaps</div><span class="mc-time">25 min</span></div>
       <div class="method-card sel" data-m="paper" onclick="selMethod(this)"><span class="mc-icon">&#128196;</span><div class="mc-name">Past Paper</div><div class="mc-tag">Strict timed exam conditions</div><span class="mc-time">50 + 5m break</span></div>
@@ -226,14 +248,15 @@
       <input class="tinput" id="cust-focus" type="number" min="5" max="180" placeholder="Focus (mins)">
       <input class="tinput" id="cust-break" type="number" min="0" max="60" placeholder="Break (0 = none)">
     </div>
-    <div style="height:16px"></div>
+    <div style="height:14px"></div>
   </div>
+
   <div class="screen-foot">
     <button class="btn-start-main" id="btn-start" onclick="startSession()">Start Session &middot; 55 min</button>
   </div>
 </div>
 
-<!-- TIMER SCREEN -->
+<!-- ================== TIMER SCREEN ================== -->
 <div class="screen full-screen" id="timer-screen">
   <div class="screen-head">
     <div class="t-top">
@@ -249,17 +272,17 @@
   <div class="scroll-area" style="display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden">
     <div class="ring-wrap">
       <svg class="ring-svg" viewBox="0 0 280 280">
-        <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1098f7"/><stop offset="100%" style="stop-color:#6ecbfb"/></linearGradient></defs>
+        <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1098f7"/><stop offset="100%" style="stop-color:#60c8fb"/></linearGradient></defs>
         <circle class="track" cx="140" cy="140" r="122"/>
         <circle class="prog" id="ring" cx="140" cy="140" r="122" stroke="url(#rg)" stroke-dasharray="766.55" stroke-dashoffset="0" transform="rotate(-90 140 140)"/>
-        <text id="t-time" x="140" y="128" font-size="46" font-weight="300" fill="#e8ebe8" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif" font-variant-numeric="tabular-nums">50:00</text>
-        <text id="t-sub"  x="140" y="158" font-size="11" fill="#7a8c82" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif">Focus</text>
-        <text id="t-subj" x="140" y="174" font-size="10" fill="#4a5c52" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif">Session</text>
+        <text id="t-time" x="140" y="126" font-size="46" font-weight="300" fill="#e2e8e2" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif" font-variant-numeric="tabular-nums">50:00</text>
+        <text id="t-sub"  x="140" y="158" font-size="11" fill="#6b7f74" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif">Focus</text>
+        <text id="t-subj" x="140" y="175" font-size="10" fill="#3a5044" text-anchor="middle" dominant-baseline="middle" font-family="Outfit,-apple-system,sans-serif">Session</text>
       </svg>
     </div>
   </div>
   <div class="screen-foot full-screen">
-    <div class="badges" id="badges" style="margin-bottom:8px">
+    <div class="badges" id="badges" style="margin-bottom:10px">
       <div class="badge" id="b-eye">&#128065;&#65039; Look 20 ft away for 20 sec</div>
       <div class="badge" id="b-hydra">&#128167; Drink some water</div>
       <div class="badge" id="b-gratitude">&#10024; Name one thing going well</div>
@@ -269,12 +292,12 @@
     <div class="t-ctrls">
       <button class="btn-c bc-pause" id="btn-pause" onclick="togglePause()">Pause</button>
       <button class="btn-c bc-skip" onclick="confirmSkip()">Skip</button>
-      <button class="btn-c bc-end"  onclick="confirmEnd()">End</button>
+      <button class="btn-c bc-end" onclick="confirmEnd()">End</button>
     </div>
   </div>
 </div>
 
-<!-- BREAK SCREEN -->
+<!-- ================== BREAK SCREEN ================== -->
 <div class="screen full-screen" id="break-screen">
   <div class="screen-head">
     <div class="brk-top">
@@ -283,16 +306,16 @@
     </div>
   </div>
   <div class="brk-hero">
-    <div style="font-size:15px;font-weight:700">Step away from the screen</div>
+    <div style="font-size:15px;font-weight:700;color:var(--text)">Step away from the screen</div>
     <div class="breathe-ring">
       <div style="text-align:center">
-        <div style="font-size:12px;color:var(--brk);font-weight:500" id="brk-breathe">Breathe in...</div>
+        <div style="font-size:12px;color:var(--brk);font-weight:600" id="brk-breathe">Breathe in...</div>
         <div style="font-size:10px;color:var(--hint);margin-top:3px">4-2-4-2 rhythm</div>
       </div>
     </div>
     <div class="brk-time" id="brk-time">05:00</div>
-    <div style="font-size:13px;color:var(--brk);font-weight:500" id="brk-sublabel">Hydrate, stretch, rest your eyes</div>
-    <div style="font-size:11px;color:var(--muted)" id="brk-next"></div>
+    <div style="font-size:13px;color:var(--brk);font-weight:500" id="brk-sublabel">Hydrate · stretch · rest your eyes</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px" id="brk-next"></div>
   </div>
   <div class="screen-foot full-screen">
     <div class="brk-ctrls">
@@ -302,13 +325,13 @@
   </div>
 </div>
 
-<!-- LOG SCREEN -->
+<!-- ================== LOG SCREEN ================== -->
 <div class="screen full-screen" id="log-screen">
   <div class="screen-head">
-    <div style="font-size:19px;font-weight:800;letter-spacing:-.5px;padding:6px 0 12px" id="log-header">Session complete</div>
+    <div style="font-size:20px;font-weight:800;letter-spacing:-.6px;padding:6px 0 14px" id="log-header">Session complete</div>
   </div>
   <div class="scroll-area">
-    <div class="log-intro"><p><strong>Log what tripped you up.</strong> Categorise by the 3 error types. Each has a different fix.</p></div>
+    <div class="log-intro"><p><strong>Log what tripped you up.</strong> Categorise by error type — each has a different fix.</p></div>
     <div class="lbl">Energy this session</div>
     <div class="energy-row">
       <div class="e-btn" data-e="1" onclick="selEnergy(this)">&#128564;</div>
@@ -323,7 +346,7 @@
     <input class="tinput" id="log-topic" type="text" placeholder="e.g. circle theorems, Le Chatelier's principle">
     <div class="lbl">Marks scored (optional)</div>
     <div class="marks-row">
-      <input class="marks-in" id="log-got"   type="number" min="0" max="99" placeholder="Got">
+      <input class="marks-in" id="log-got" type="number" min="0" max="99" placeholder="Got">
       <span class="marks-sep">/</span>
       <input class="marks-in" id="log-total" type="number" min="1" max="99" placeholder="Out of">
       <span class="marks-lbl" style="margin-left:6px">marks</span>
@@ -345,7 +368,7 @@
     <input class="tinput" id="log-question" type="text" placeholder="Exact question or task">
     <div class="spaced-row">
       <div>
-        <div style="font-size:13px;font-weight:500">Add to spaced repetition</div>
+        <div style="font-size:13px;font-weight:600">Add to spaced repetition</div>
         <div style="font-size:11px;color:var(--hint);margin-top:2px">Intervals: 14d &middot; 28d &middot; 60d max</div>
       </div>
       <label class="switch"><input type="checkbox" class="checkbox" id="tgl-spaced"><div class="slider"></div></label>
@@ -354,54 +377,61 @@
     <div style="height:10px"></div>
   </div>
   <div class="screen-foot full-screen">
-    <button class="btn btn-primary" style="background:linear-gradient(135deg,#c9911a,#e5a820);" onclick="doneLog()">Save and continue</button>
+    <button class="btn btn-primary" style="background:linear-gradient(135deg,#be8816,#d4a020);" onclick="doneLog()">Save &amp; continue</button>
     <button class="btn-skip-log" onclick="doneLog(true)">Skip error log</button>
   </div>
 </div>
 
-<!-- STATS SCREEN -->
+<!-- ================== STATS SCREEN ================== -->
 <div class="screen tab-screen" id="stats-screen">
   <div class="screen-head">
     <div class="hdr">
-      <span class="app-name">Stats</span>
-      <button class="cog-btn" onclick="openSettings()" title="Settings">
+      <span class="app-name">Stats<span>.</span></span>
+      <button class="cog-btn" onclick="openSettings()" aria-label="Settings">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
       </button>
     </div>
   </div>
-  <div class="scroll-area" style="padding-top:6px">
-    <div class="stats-period" id="stats-period">
-      <div class="stats-period-indicator" id="period-indicator"></div>
-      <button class="stats-period-btn active" onclick="setPeriod('week',this)">This week</button>
-      <button class="stats-period-btn" onclick="setPeriod('month',this)">This month</button>
-      <button class="stats-period-btn" onclick="setPeriod('all',this)">All time</button>
+  <div class="scroll-area" style="padding-top:8px">
+    <div class="period-tabs" id="stats-period">
+      <input type="radio" name="period-tab" id="pr-week" class="period-radio pr--1" checked onchange="setPeriod('week')">
+      <label class="period-lbl" for="pr-week">This week</label>
+      <input type="radio" name="period-tab" id="pr-month" class="period-radio pr--2" onchange="setPeriod('month')">
+      <label class="period-lbl" for="pr-month">This month</label>
+      <input type="radio" name="period-tab" id="pr-all" class="period-radio pr--3" onchange="setPeriod('all')">
+      <label class="period-lbl" for="pr-all">All time</label>
+      <div class="period-indicator"></div>
     </div>
+
     <div class="stats-grid">
-      <div class="scard highlight"><div class="scard-lbl">TODAY</div><div class="scard-val" id="st-today">0</div><div class="scard-unit">minutes</div></div>
-      <div class="scard"><div class="scard-lbl" id="st-period-lbl">THIS WEEK</div><div class="scard-val" id="st-week">0</div><div class="scard-unit">minutes</div></div>
-      <div class="scard"><div class="scard-lbl">SESSIONS</div><div class="scard-val" id="st-total">0</div><div class="scard-unit">all time</div></div>
-      <div class="scard"><div class="scard-lbl">TOTAL</div><div class="scard-val" id="st-mins">0</div><div class="scard-unit">minutes</div></div>
+      <div class="scard highlight"><div class="scard-lbl">Today</div><div class="scard-val" id="st-today">0</div><div class="scard-unit">minutes</div></div>
+      <div class="scard"><div class="scard-lbl" id="st-period-lbl">This week</div><div class="scard-val" id="st-week">0</div><div class="scard-unit">minutes</div></div>
+      <div class="scard"><div class="scard-lbl">Sessions</div><div class="scard-val" id="st-total">0</div><div class="scard-unit">all time</div></div>
+      <div class="scard"><div class="scard-lbl">Total</div><div class="scard-val" id="st-mins">0</div><div class="scard-unit">minutes</div></div>
     </div>
+
     <div class="chart-wrap">
       <div class="chart-title" id="chart-title-lbl">This week (minutes)</div>
       <canvas class="chart" id="week-chart" height="90"></canvas>
     </div>
+
     <div class="lbl" id="targets-lbl" style="display:none">Weekly targets</div>
-    <div class="scard" style="display:none;padding:14px;border-radius:var(--r)" id="target-achieved"></div>
+    <div class="scard" style="display:none;padding:16px" id="target-achieved"></div>
+
     <div class="lbl">Subject breakdown</div>
-    <div class="scard" style="padding:14px;border-radius:var(--r)" id="subj-bars">
-      <div class="stats-empty"><div class="stats-empty-icon">&#128218;</div><div class="stats-empty-title">No sessions yet</div><div class="stats-empty-sub">Complete your first session and your breakdown will appear here.</div></div>
+    <div class="scard" style="padding:16px" id="subj-bars">
+      <div class="stats-empty"><div class="stats-empty-icon">&#128202;</div><div class="stats-empty-title">No sessions yet</div><div class="stats-empty-sub">Your subject breakdown will appear here after your first session.</div></div>
     </div>
     <div style="height:8px"></div>
   </div>
 </div>
 
-<!-- SPEC SCREEN -->
+<!-- ================== SPEC SCREEN ================== -->
 <div class="screen tab-screen" id="spec-screen">
   <div class="screen-head">
     <div class="hdr">
-      <span class="app-name">Spec</span>
-      <button class="cog-btn" onclick="openSettings()" title="Settings">
+      <span class="app-name">Spec<span>.</span></span>
+      <button class="cog-btn" onclick="openSettings()" aria-label="Settings">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
       </button>
     </div>
@@ -409,17 +439,16 @@
   <div class="scroll-area" style="padding-top:4px">
     <div id="spec-lock-view" class="res-lock">
       <div class="res-lock-icon">&#127919;</div>
-      <div class="res-lock-title">Spec tracker is locked</div>
-      <div class="res-lock-sub">Unlock personal mode to track your spec confidence and see your progress across every subject.</div>
-      <button class="btn btn-primary" style="max-width:240px" onclick="openLock()">Unlock</button>
+      <div class="res-lock-title">Spec tracker</div>
+      <div class="res-lock-sub">Sign in to track your spec confidence and progress across every subject.</div>
     </div>
     <div id="spec-unlocked-view" style="display:none">
-      <div style="font-size:12px;color:var(--muted);font-weight:500;margin-bottom:12px;line-height:1.5">Tap a point to cycle: <span style="color:var(--red)">red</span> &rarr; <span style="color:var(--log)">amber</span> &rarr; <span style="color:var(--brk)">green</span> &rarr; unrated</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Tap a point to cycle: <span style="color:var(--red)">red</span> &rarr; <span style="color:var(--log)">amber</span> &rarr; <span style="color:var(--brk)">green</span> &rarr; unrated</div>
       <div class="spec-legend">
         <div class="spec-leg-item"><div class="spec-leg-dot" style="background:var(--s3)"></div>Not rated</div>
-        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#db4c40"></div>Red - urgent</div>
-        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#c9911a"></div>Amber - shaky</div>
-        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#417b5a"></div>Green - solid</div>
+        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#cc4038"></div>Red</div>
+        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#be8816"></div>Amber</div>
+        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#3c7250"></div>Green</div>
       </div>
       <div class="spec-subj-scroll" id="spec-scroll-wrap"><div class="spec-pills" id="spec-pills"></div></div>
       <div class="spec-prog-row" id="spec-prog-row"></div>
@@ -429,37 +458,30 @@
   </div>
 </div>
 
-<!-- RESOURCES SCREEN -->
+<!-- ================== RESOURCES SCREEN ================== -->
 <div class="screen tab-screen" id="resources-screen">
   <div class="screen-head">
     <div class="hdr">
-      <span class="app-name">Resources</span>
-      <button class="cog-btn" onclick="openSettings()" title="Settings">
+      <span class="app-name">Resources<span>.</span></span>
+      <button class="cog-btn" onclick="openSettings()" aria-label="Settings">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
       </button>
     </div>
   </div>
   <div class="scroll-area" style="padding-top:4px">
-    <div id="res-lock-view" class="res-lock">
-      <div class="res-lock-icon">&#128272;</div>
-      <div class="res-lock-title">Resources are locked</div>
-      <div class="res-lock-sub">Unlock personal mode to access your revision sites, Notion notes, exam dates, and subject guides.</div>
-      <button class="btn btn-primary" style="max-width:240px" onclick="openLock()">Unlock</button>
-    </div>
-    <div id="res-unlocked-view" style="display:none">
+    <!-- Admin-only view -->
+    <div id="res-admin-view" style="display:none">
       <div class="lbl">Your Notion</div>
       <div id="notion-quicklinks"></div>
-      <div class="lbl">Upcoming exams</div>
-      <div class="exam-list" id="exam-list"></div>
       <div class="lbl">Revision sites</div>
-      <div class="site-cat-lbl" style="margin-top:0">Flashcards and recall</div>
+      <div class="site-cat-lbl" style="margin-top:0">Flashcards &amp; recall</div>
       <div class="site-grid">
         <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-maths-resources" target="_blank"><div class="site-name">Quizlet: Maths</div><div class="site-desc">Formula recall, exam prompts</div></a>
         <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-biology-resources" target="_blank"><div class="site-name">Quizlet: Sciences</div><div class="site-desc">Processes, keywords, diagrams</div></a>
         <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-english-literature-resources" target="_blank"><div class="site-name">Quizlet: English</div><div class="site-desc">Literature, past paper Qs</div></a>
         <a class="site-card" href="https://quizlet.com/gb/content/ocr-gcse-computer-science-resources" target="_blank"><div class="site-name">Quizlet: CS</div><div class="site-desc">OCR definitions, processes</div></a>
       </div>
-      <div class="site-cat-lbl">Learn and reteach</div>
+      <div class="site-cat-lbl">Learn &amp; reteach</div>
       <div class="site-grid">
         <a class="site-card" href="https://app.senecalearning.com/dashboard" target="_blank"><div class="site-name">Seneca</div><div class="site-desc">New content quickly</div></a>
         <a class="site-card" href="https://www.cognitoresources.org/" target="_blank"><div class="site-name">Cognito</div><div class="site-desc">Clear science explanations</div></a>
@@ -477,36 +499,64 @@
       <div id="how-to-revise"></div>
       <div class="lbl">Weekly schedule</div>
       <div class="sched-table-wrap" id="res-sched-table"></div>
-      <div style="height:20px"></div>
     </div>
+    <!-- User-accessible exam tracker (all logged-in users) -->
+    <div id="res-exam-section">
+      <div class="lbl">Upcoming exams</div>
+      <div class="exam-list" id="exam-list"></div>
+      <button class="add-exam-btn" onclick="openAddExam()">&#43; Add exam</button>
+    </div>
+    <div style="height:20px"></div>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
+<!-- ================== BOTTOM NAV ================== -->
 <nav class="bottom-nav" id="bottom-nav">
-  <button class="nav-btn active" id="nav-home"      onclick="showTab('home')"><span class="nav-icon">&#128218;</span><span class="nav-lbl">Home</span></button>
-  <button class="nav-btn"        id="nav-stats"     onclick="showTab('stats')"><span class="nav-icon">&#128202;</span><span class="nav-lbl">Stats</span></button>
-  <button class="nav-btn"        id="nav-spec"      onclick="showTab('spec')"><span class="nav-icon">&#127919;</span><span class="nav-lbl">Spec</span></button>
-  <button class="nav-btn"        id="nav-resources" onclick="showTab('resources')"><span class="nav-icon">&#128279;</span><span class="nav-lbl">Resources</span></button>
+  <div class="nav-tabs">
+    <input type="radio" name="nav-tab" id="nr-home" class="nav-radio nr--1" checked onchange="showTab('home')">
+    <label class="nav-tab-lbl" for="nr-home">
+      <span class="nav-icon">&#128218;</span>
+      <span class="nav-text">Home</span>
+    </label>
+
+    <input type="radio" name="nav-tab" id="nr-stats" class="nav-radio nr--2" onchange="showTab('stats')">
+    <label class="nav-tab-lbl" for="nr-stats">
+      <span class="nav-icon">&#128202;</span>
+      <span class="nav-text">Stats</span>
+    </label>
+
+    <input type="radio" name="nav-tab" id="nr-spec" class="nav-radio nr--3" onchange="showTab('spec')">
+    <label class="nav-tab-lbl" for="nr-spec">
+      <span class="nav-icon">&#127919;</span>
+      <span class="nav-text">Spec</span>
+    </label>
+
+    <input type="radio" name="nav-tab" id="nr-res" class="nav-radio nr--4" onchange="showTab('resources')">
+    <label class="nav-tab-lbl" for="nr-res">
+      <span class="nav-icon">&#128279;</span>
+      <span class="nav-text">Resources</span>
+    </label>
+
+    <div class="nav-indicator"></div>
+  </div>
 </nav>
 
-<!-- Spaced repetition review overlay -->
+<!-- SR review overlay -->
 <div class="sr-ov" id="sr-ov" onclick="if(event.target===this)closeSRReview()">
   <div class="sr-sheet">
     <div class="sr-handle"></div>
-    <div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--hint);margin-bottom:12px">Review</div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--hint);margin-bottom:12px">Review</div>
     <div class="sr-progress" id="sr-prog"></div>
     <div class="sr-topic" id="sr-topic"></div>
     <div class="sr-subj" id="sr-subj-lbl"></div>
     <div class="sr-btns">
       <button class="sr-btn nope" onclick="srAnswer(false)">Not yet</button>
-      <button class="sr-btn got"  onclick="srAnswer(true)">Got it &#10003;</button>
+      <button class="sr-btn got" onclick="srAnswer(true)">Got it &#10003;</button>
     </div>
     <div class="sr-card-hint" id="sr-hint"></div>
   </div>
 </div>
 
-<!-- Scripts -->
 <script src="js/data.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/app.js"></script>
