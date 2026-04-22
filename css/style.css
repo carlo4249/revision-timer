@@ -23,26 +23,69 @@
 }
 html,body{background:var(--bg);color:var(--text);font-family:'Outfit',-apple-system,sans-serif;height:100dvh;overflow:hidden;-webkit-font-smoothing:antialiased;overscroll-behavior:none;transition:background .3s,color .3s}
 .desktop-card{display:none}
+
+/* ===== DESKTOP LAYOUT ===== */
 @media(min-width:1024px){
   body{display:flex;align-items:center;justify-content:center;background:var(--s0)}
-  .desktop-card{display:block;position:fixed;left:50%;top:0;transform:translateX(-50%);width:var(--card-w);height:100dvh;background:var(--bg);border-left:1px solid var(--border);border-right:1px solid var(--border);z-index:0;box-shadow:0 0 80px rgba(0,0,0,.25);pointer-events:none}
-  .screen,.bottom-nav{max-width:var(--card-w)}
-  .bottom-nav{left:50%;right:auto;transform:translateX(-50%);width:var(--card-w);border-left:1px solid var(--border);border-right:1px solid var(--border)}
-  #home-screen .screen-foot{left:50%;right:auto;transform:translateX(-50%);width:var(--card-w);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+
+  /* Visual card frame */
+  .desktop-card{
+    display:block;position:fixed;left:50%;top:0;
+    transform:translateX(-50%);
+    width:var(--card-w);height:100dvh;
+    background:var(--bg);
+    border-left:1px solid var(--border);border-right:1px solid var(--border);
+    z-index:0;box-shadow:0 0 80px rgba(0,0,0,.25);pointer-events:none
+  }
+
+  /* FIX: screens must have explicit width so they fill the card */
+  .screen{width:var(--card-w);max-width:var(--card-w)}
+  .bottom-nav{max-width:var(--card-w)}
+
+  .bottom-nav{
+    left:50%;right:auto;
+    transform:translateX(-50%);
+    width:var(--card-w);
+    border-left:1px solid var(--border);border-right:1px solid var(--border)
+  }
+  #home-screen .screen-foot{
+    left:50%;right:auto;
+    transform:translateX(-50%);
+    width:var(--card-w);
+    border-left:1px solid var(--border);border-right:1px solid var(--border)
+  }
   .checkin-ov{left:50%;right:auto;transform:translateX(-50%) translateY(100%);width:var(--card-w)}
   .checkin-ov.vis{transform:translateX(-50%) translateY(0)}
   .overlay .sheet{max-width:700px}
   .sched-ios-sheet,.sr-sheet{max-width:var(--card-w);margin:0 auto}
-  .settings-panel{max-width:340px}
+
+  /*
+   * FIX: Settings panel desktop positioning.
+   *
+   * Base CSS uses right:-320px (closed) / right:0 (open) which on wide viewports
+   * puts the open panel at the far RIGHT edge of the browser -- nowhere near the
+   * centered card.
+   *
+   * Override: pin the panel to the card's right interior edge using left + transform.
+   * Closed: translateX(321px) pushes it just off the right edge of the card (hidden).
+   * Open:   translateX(0)     slides it back into view over the card's right portion.
+   *
+   * Also override the transition from `right` to `transform` so the animation works.
+   */
+  .settings-panel{
+    right:auto;
+    left:calc(50% + var(--card-w)/2 - 320px);
+    max-width:320px;
+    transform:translateX(321px);
+    transition:transform .35s cubic-bezier(.2,.8,.3,1)
+  }
+  .settings-panel.open{transform:translateX(0)}
 }
-/* Wider at 1400px */
-@media(min-width:1400px){
-  :root{--card-w:860px}
-}
-/* Even wider at 1700px */
-@media(min-width:1700px){
-  :root{--card-w:960px}
-}
+
+/* Wider breakpoints just change the card width variable */
+@media(min-width:1400px){:root{--card-w:860px}}
+@media(min-width:1700px){:root{--card-w:960px}}
+
 .app-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .pattern-bg{width:100%;height:100%;overflow:hidden;background:repeating-linear-gradient(135deg,#232526 0px,#232526 60px,#23252699 70px,#414345 130px);opacity:.04}
 [data-theme="light"] .pattern-bg{background:repeating-linear-gradient(135deg,#c8c8c3 0px,#c8c8c3 60px,#c8c8c399 70px,#b8b8b3 130px);opacity:.08}
@@ -88,12 +131,9 @@ html,body{background:var(--bg);color:var(--text);font-family:'Outfit',-apple-sys
 .cog-btn{background:none;border:none;cursor:pointer;color:var(--muted);padding:6px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:color .2s,background .2s}
 .cog-btn:hover,.cog-btn:active{color:var(--text);background:var(--s2)}
 .settings-backdrop{display:none;position:fixed;inset:0;z-index:240;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+/* Base (mobile) settings panel */
 .settings-panel{position:fixed;top:0;right:-320px;width:320px;height:100dvh;background:var(--s1);border-left:1px solid var(--border);z-index:250;transition:right .35s cubic-bezier(.2,.8,.3,1);overflow-y:auto;display:flex;flex-direction:column}
 .settings-panel.open{right:0}
-@media(min-width:1024px){
-  .settings-panel{right:auto;left:calc(50% + var(--card-w)/2 - 320px + 1px);transform:none}
-  .settings-panel.open{right:auto;left:calc(50% + var(--card-w)/2 - 320px + 1px)}
-}
 .settings-panel-head{display:flex;align-items:center;justify-content:space-between;padding:max(var(--sat),18px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
 .settings-panel-title{font-size:18px;font-weight:800;letter-spacing:-.4px}
 .settings-close{background:none;border:none;cursor:pointer;color:var(--muted);padding:6px;border-radius:10px;display:flex;align-items:center;transition:color .2s}
