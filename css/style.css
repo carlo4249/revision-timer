@@ -53,13 +53,15 @@ html,body{
   }
   .screen{width:var(--card-w);max-width:var(--card-w)}
   .bottom-nav{
-    left:50%;right:auto;transform:translateX(-50%);
+    left:calc(50% - var(--card-w) / 2);
+    right:auto;
     width:var(--card-w);
     border-left:1px solid var(--border);
     border-right:1px solid var(--border)
   }
   #home-screen .screen-foot{
-    left:50%;right:auto;transform:translateX(-50%);
+    left:calc(50% - var(--card-w) / 2);
+    right:auto;
     width:var(--card-w);
     border-left:1px solid var(--border);
     border-right:1px solid var(--border)
