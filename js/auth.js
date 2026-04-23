@@ -1,101 +1,163 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" id="tcm" content="#0e1010">
-<title>Solus — Sign in</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/style2.css">
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase-config.js"></script>
-</head>
-<body class="auth-page">
+// js/auth.js -- Solus authentication
 
-<div class="app-bg"><div class="pattern-bg"></div></div>
+function applyAuthTheme() {
+  let t = 'dark';
+  try { t = localStorage.getItem('rv_theme') || 'dark'; } catch(e) {}
+  document.documentElement.setAttribute('data-theme', t);
+  const tcm = document.getElementById('tcm');
+  if (tcm) tcm.content = t === 'dark' ? '#0e1010' : '#f2f2ed';
+}
 
-<div class="auth-card">
-  <div class="auth-logo">Solus<span>.</span></div>
-  <div class="auth-sub">Your personal revision timer</div>
-
-  <div class="auth-tabs">
-    <button class="auth-tab active" id="tab-signin" onclick="switchMode('signin')">Sign in</button>
-    <button class="auth-tab" id="tab-signup" onclick="switchMode('signup')">Sign up</button>
-  </div>
-
-  <div id="auth-error" class="auth-error"></div>
-
-  <!-- SIGN IN -->
-  <div id="signin-panel">
-    <div class="auth-field">
-      <label for="signin-email">Email</label>
-      <input type="email" id="signin-email" placeholder="you@example.com" autocomplete="email">
-    </div>
-    <div class="auth-field">
-      <label for="signin-password">Password</label>
-      <input type="password" id="signin-password" placeholder="Your password" autocomplete="current-password">
-    </div>
-    <button class="auth-forgot" onclick="resetPassword()">Forgot password?</button>
-    <button class="auth-submit-btn" data-label="Sign in" onclick="signIn()">Sign in</button>
-    <div class="auth-divider">or</div>
-    <button class="auth-google-btn" onclick="signInWithGoogle()">
-      <svg class="auth-google-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
-        <path d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
-        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-      </svg>
-      Continue with Google
-    </button>
-  </div>
-
-  <!-- SIGN UP -->
-  <div id="signup-panel" style="display:none">
-    <div class="auth-field">
-      <label for="signup-email">Email</label>
-      <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email">
-    </div>
-    <div class="auth-field">
-      <label for="signup-password">Password</label>
-      <input type="password" id="signup-password" placeholder="At least 6 characters" autocomplete="new-password">
-    </div>
-    <div class="auth-field">
-      <label for="signup-confirm">Confirm password</label>
-      <input type="password" id="signup-confirm" placeholder="Repeat your password" autocomplete="new-password">
-    </div>
-    <button class="auth-submit-btn" data-label="Create account" onclick="signUp()" style="margin-top:6px">Create account</button>
-    <div class="auth-divider">or</div>
-    <button class="auth-google-btn" onclick="signInWithGoogle()">
-      <svg class="auth-google-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
-        <path d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
-        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-      </svg>
-      Continue with Google
-    </button>
-  </div>
-
-  <button class="auth-skip-btn" id="auth-skip-btn" onclick="skipAuth()" style="display:none">
-    Continue without signing in
-  </button>
-</div>
-
-<script src="js/auth.js"></script>
-<script>
-  applyAuthTheme();
-  if (!window.FIREBASE_ENABLED) {
-    document.getElementById('auth-skip-btn').style.display = 'block';
-    document.querySelector('.auth-tabs').style.display = 'none';
-    document.getElementById('signin-panel').style.display = 'none';
-    document.querySelector('.auth-sub').textContent = 'Running in local mode.';
+function switchMode(mode) {
+  const signinPanel = document.getElementById('signin-panel');
+  const signupPanel = document.getElementById('signup-panel');
+  const tabSignin   = document.getElementById('tab-signin');
+  const tabSignup   = document.getElementById('tab-signup');
+  if (mode === 'signin') {
+    if (signinPanel) signinPanel.style.display = 'block';
+    if (signupPanel) signupPanel.style.display = 'none';
+    if (tabSignin)   tabSignin.classList.add('active');
+    if (tabSignup)   tabSignup.classList.remove('active');
+  } else {
+    if (signinPanel) signinPanel.style.display = 'none';
+    if (signupPanel) signupPanel.style.display = 'block';
+    if (tabSignin)   tabSignin.classList.remove('active');
+    if (tabSignup)   tabSignup.classList.add('active');
   }
-  function skipAuth() { window.location.href = 'index.html'; }
-</script>
-</body>
-</html>
+  clearAuthError();
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  if (el) { el.textContent = msg; el.classList.add('show'); }
+}
+
+function clearAuthError() {
+  const el = document.getElementById('auth-error');
+  if (el) { el.textContent = ''; el.classList.remove('show'); }
+}
+
+function setLoading(btn, loading) {
+  if (!btn) return;
+  if (loading) {
+    btn._label = btn.textContent;
+    btn.textContent = 'Please wait...';
+    btn.disabled = true;
+  } else {
+    btn.textContent = btn._label || btn.dataset.label || 'Submit';
+    btn.disabled = false;
+  }
+}
+
+async function signIn() {
+  clearAuthError();
+  if (!window.FIREBASE_ENABLED || !window.firebaseAuth) {
+    window.location.href = 'index.html';
+    return;
+  }
+  const emailEl = document.getElementById('signin-email');
+  const passEl  = document.getElementById('signin-password');
+  const btn     = document.querySelector('#signin-panel .auth-submit-btn');
+  const email   = emailEl ? emailEl.value.trim() : '';
+  const pass    = passEl  ? passEl.value : '';
+  if (!email || !pass) { showAuthError('Please enter your email and password.'); return; }
+  setLoading(btn, true);
+  try {
+    await window.firebaseAuth.signInWithEmailAndPassword(email, pass);
+    window.location.href = 'index.html';
+  } catch(e) {
+    setLoading(btn, false);
+    const msgs = {
+      'auth/user-not-found':      'No account with that email.',
+      'auth/wrong-password':      'Incorrect password.',
+      'auth/invalid-email':       'Invalid email address.',
+      'auth/too-many-requests':   'Too many attempts. Try again later.',
+      'auth/user-disabled':       'This account has been disabled.',
+      'auth/invalid-credential':  'Email or password is incorrect.'
+    };
+    showAuthError(msgs[e.code] || 'Sign in failed. Please try again.');
+  }
+}
+
+async function signUp() {
+  clearAuthError();
+  if (!window.FIREBASE_ENABLED || !window.firebaseAuth) {
+    window.location.href = 'index.html';
+    return;
+  }
+  const emailEl   = document.getElementById('signup-email');
+  const passEl    = document.getElementById('signup-password');
+  const confirmEl = document.getElementById('signup-confirm');
+  const btn       = document.querySelector('#signup-panel .auth-submit-btn');
+  const email   = emailEl   ? emailEl.value.trim() : '';
+  const pass    = passEl    ? passEl.value : '';
+  const confirm = confirmEl ? confirmEl.value : '';
+  if (!email || !pass) { showAuthError('Please enter your email and password.'); return; }
+  if (pass.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
+  if (pass !== confirm) { showAuthError('Passwords do not match.'); return; }
+  setLoading(btn, true);
+  try {
+    await window.firebaseAuth.createUserWithEmailAndPassword(email, pass);
+    window.location.href = 'index.html';
+  } catch(e) {
+    setLoading(btn, false);
+    const msgs = {
+      'auth/email-already-in-use': 'An account already exists with this email.',
+      'auth/invalid-email':        'Invalid email address.',
+      'auth/weak-password':        'Password is too weak.'
+    };
+    showAuthError(msgs[e.code] || 'Sign up failed. Please try again.');
+  }
+}
+
+async function signInWithGoogle() {
+  clearAuthError();
+  if (!window.FIREBASE_ENABLED || !window.firebaseAuth) {
+    window.location.href = 'index.html';
+    return;
+  }
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await window.firebaseAuth.signInWithPopup(provider);
+    window.location.href = 'index.html';
+  } catch(e) {
+    if (e.code === 'auth/popup-closed-by-user') return;
+    showAuthError('Google sign-in failed. Please try again.');
+  }
+}
+
+async function resetPassword() {
+  clearAuthError();
+  if (!window.FIREBASE_ENABLED || !window.firebaseAuth) {
+    showAuthError('Password reset is not available in local mode.');
+    return;
+  }
+  const emailEl = document.getElementById('signin-email');
+  const email   = emailEl ? emailEl.value.trim() : '';
+  if (!email) { showAuthError('Enter your email above, then tap Forgot password.'); return; }
+  try {
+    await window.firebaseAuth.sendPasswordResetEmail(email);
+    const el = document.getElementById('auth-error');
+    if (el) {
+      el.style.background  = 'var(--brk-l)';
+      el.style.borderColor = 'rgba(60,114,80,.2)';
+      el.style.color       = 'var(--brk)';
+      el.textContent = 'Reset email sent. Check your inbox.';
+      el.classList.add('show');
+    }
+  } catch(e) {
+    showAuthError('Could not send reset email. Check the address and try again.');
+  }
+}
+
+// Add enter-key support to all inputs
+document.addEventListener('DOMContentLoaded', () => {
+  const signinInputs = document.querySelectorAll('#signin-panel input');
+  signinInputs.forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') signIn(); });
+  });
+  const signupInputs = document.querySelectorAll('#signup-panel input');
+  signupInputs.forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') signUp(); });
+  });
+});
