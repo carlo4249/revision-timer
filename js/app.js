@@ -1,4 +1,4 @@
-// js/app.js — Solus
+// js/app.js -- Solus
 
 if (!CanvasRenderingContext2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
@@ -67,6 +67,29 @@ function applyTheme(t) {
   const tcm = el('tcm');
   if (tcm) tcm.content = t==='dark' ? '#0e1010' : '#f2f2ed';
   document.querySelectorAll('.theme-chk').forEach(c => { c.checked = (t==='light'); });
+}
+
+// ===================== NAV INDICATOR =====================
+const NAV_ORDER = ['home','stats','spec','resources'];
+
+function updateNavIndicator(name) {
+  const indicator = document.querySelector('.nav-indicator');
+  if (!indicator) return;
+  const idx = NAV_ORDER.indexOf(name);
+  if (idx < 0) return;
+  const labels = document.querySelectorAll('.nav-tab-lbl');
+  if (!labels[idx]) return;
+  const lbl = labels[idx];
+  // Position indicator to match the active label
+  const navTabs = lbl.closest('.nav-tabs');
+  if (!navTabs) return;
+  const navRect  = navTabs.getBoundingClientRect();
+  const lblRect  = lbl.getBoundingClientRect();
+  indicator.style.left  = (lblRect.left - navRect.left) + 'px';
+  indicator.style.width = lblRect.width + 'px';
+
+  // Update active-tab class
+  labels.forEach((l, i) => l.classList.toggle('active-tab', i === idx));
 }
 
 // ===================== SETTINGS =====================
@@ -169,13 +192,11 @@ function updateAdminContentUI() {
   const tl = el('targets-lbl');
   if (ta) ta.style.display = isAdmin ? 'block' : 'none';
   if (tl) tl.style.display = isAdmin ? 'block' : 'none';
-  // Spec: available to all signed-in users
   const hasUser = !!(currentUser || !window.FIREBASE_ENABLED);
   const specLock   = el('spec-lock-view');
   const specUnlock = el('spec-unlocked-view');
   if (specLock)   specLock.style.display   = hasUser ? 'none'  : 'flex';
   if (specUnlock) specUnlock.style.display = hasUser ? 'block' : 'none';
-  // Resources: admin section only for Daniel
   const resAdmin = el('res-admin-view');
   if (resAdmin) resAdmin.style.display = isAdmin ? 'block' : 'none';
   if (isAdmin && activeTab === 'spec')      renderSpec();
@@ -248,23 +269,48 @@ const TAB_RADIO = { home:'nr-home', stats:'nr-stats', spec:'nr-spec', resources:
 
 function showTab(name) {
   activeTab = name;
-  ['home','stats','spec','resources'].forEach(t => {
-    const s = el(t+'-screen');
-    if (s) s.classList.toggle('active', t===name);
+  // Hide ALL screens first (including timer/break/log)
+  ['home-screen','stats-screen','spec-screen','resources-screen',
+   'timer-screen','break-screen','log-screen'].forEach(sid => {
+    const e = el(sid);
+    if (e) e.classList.remove('active');
   });
+  // Show only the target tab screen
+  const target = el(name + '-screen');
+  if (target) target.classList.add('active');
+
   const radioId = TAB_RADIO[name];
   if (radioId) { const r = el(radioId); if (r && !r.checked) r.checked = true; }
   const nav = el('bottom-nav'); if (nav) nav.classList.remove('hidden');
+
+  // Update nav indicator after layout settles
+  requestAnimationFrame(() => updateNavIndicator(name));
+
   if (name==='stats')     refreshStats();
   if (name==='spec')      renderSpec();
   if (name==='resources') renderResources();
 }
+
 function showTimerScreen(id) {
   ['home-screen','stats-screen','spec-screen','resources-screen','timer-screen','break-screen','log-screen']
     .forEach(sid => { const e = el(sid); if (e) e.classList.toggle('active', sid===id); });
   const nav = el('bottom-nav'); if (nav) nav.classList.add('hidden');
 }
-function returnToHome() { showTab(activeTab||'home'); }
+
+function returnToHome() {
+  // Fully stop and reset session state
+  clearInterval(S.ticker);
+  S.ticker = null;
+  stopReminders();
+  stopBreathe();
+  dismissCheckin();
+  releaseLock2();
+  // Explicitly hide all timer-related screens before showing home
+  ['timer-screen','break-screen','log-screen'].forEach(sid => {
+    const e = el(sid); if (e) e.classList.remove('active');
+  });
+  showTab(activeTab || 'home');
+}
 
 function applySettings() {
   if (!CFG) return;
@@ -298,7 +344,7 @@ function updateExamChip() {
     .sort((a,b) => a.days - b.days);
   if (!upcoming.length) { chip.classList.remove('visible'); return; }
   const next = upcoming[0];
-  chip.textContent = `${next.subj} · ${next.days===0 ? 'Today!' : next.days+'d'}`;
+  chip.textContent = `${next.subj} ${next.days===0 ? 'Today!' : next.days+'d'}`;
   chip.classList.add('visible');
 }
 
@@ -319,7 +365,7 @@ function updateProgressBar() {
 function updateStartBtn() {
   const btn = el('btn-start'); if (!btn) return;
   const d = { blurt:'25 min', paper:'55 min', flash:'30 min', teach:'35 min', practise:'55 min', custom:'Custom' };
-  btn.textContent = 'Start Session · '+(d[selM]||'Go');
+  btn.textContent = 'Start Session - '+(d[selM]||'Go');
 }
 function buildQuickStart() {
   checkTodayDone();
@@ -494,14 +540,18 @@ function confirmSkip() {
   const next = S.phases[S.phaseIdx+1];
   const nn = next ? (next.t==='log'?'error log':next.t==='brk'?'break':'focus') : 'done';
   openConfirm('Skip phase?',`Jump to ${nn}.`,'Skip','btn btn-secondary', () => {
-    clearInterval(S.ticker); stopBreathe(); dismissCheckin(); stopReminders();
+    clearInterval(S.ticker); S.ticker = null;
+    stopBreathe(); dismissCheckin(); stopReminders();
     enterPhase(S.phaseIdx+1);
   });
 }
 function confirmEnd() {
   openConfirm('End session?','Progress will be saved.','End','btn btn-danger', () => {
-    clearInterval(S.ticker); stopReminders(); stopBreathe(); dismissCheckin(); releaseLock2();
-    recordSession(); returnToHome(); buildScheduleCard();
+    clearInterval(S.ticker); S.ticker = null;
+    stopReminders(); stopBreathe(); dismissCheckin(); releaseLock2();
+    recordSession();
+    returnToHome();
+    buildScheduleCard();
   });
 }
 function startSession() {
@@ -528,7 +578,8 @@ function beginSession() {
   if (CFG && CFG.notif) askNotif();
 }
 function enterPhase(idx) {
-  clearInterval(S.ticker); S.phaseIdx=idx;
+  clearInterval(S.ticker); S.ticker = null;
+  S.phaseIdx=idx;
   const ph = S.phases[idx];
   if (!ph) { sessionComplete(); return; }
   S.timeLeft=ph.d; S.totalTime=ph.d; S.paused=false;
@@ -546,7 +597,7 @@ function tick() {
   if (ph && ph.t==='focus') S.actualFocusSecs++;
   renderTimeDisplay();
   if (S.timeLeft===60) tone('warn');
-  if (S.timeLeft===0)  { clearInterval(S.ticker); enterPhase(S.phaseIdx+1); }
+  if (S.timeLeft===0)  { clearInterval(S.ticker); S.ticker = null; enterPhase(S.phaseIdx+1); }
 }
 function renderTimeDisplay() {
   const ph = S.phases[S.phaseIdx]; if (!ph) return;
@@ -579,7 +630,7 @@ function renderTimerScreen(ph) {
 function renderBreakScreen(ph) {
   setText('brk-lbl',      ph.l||'Break');
   setText('brk-time',     fmt(ph.d));
-  setText('brk-sublabel', ph.s||'Hydrate · stretch · rest your eyes');
+  setText('brk-sublabel', ph.s||'Hydrate, stretch, rest your eyes');
   const nxt = S.phases[S.phaseIdx+1];
   setText('brk-next', nxt&&nxt.t!=='log' ? `Next: ${nxt.l}` : '');
   setText('brk-pause', 'Pause');
@@ -627,7 +678,7 @@ function showLogScreen(ph) {
   const spaced=el('tgl-spaced'); if (spaced) spaced.checked=false;
   const mg=el('mark-guidance'); if (mg) mg.classList.remove('vis');
   const cb=el('copy-btn');
-  if (cb) { cb.classList.remove('copied'); cb.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">📋</span>'; }
+  if (cb) { cb.classList.remove('copied'); cb.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">&#128203;</span>'; }
   markCatSel=''; S.energy=0;
   tone('done'); notify('Session done','Log your errors.',true); releaseLock2();
 }
@@ -639,8 +690,8 @@ function selMarkCat(btn, cat) {
   document.querySelectorAll('.mark-cat-btn').forEach(b=>b.classList.remove('sel-app','sel-know','sel-term'));
   btn.classList.add('sel-'+cat); markCatSel=cat;
   const guidance={
-    app: '<strong>Application</strong>: You knew the content but missed the connection. Fix: more timed exam Qs. Read each question twice.',
-    know:'<strong>Knowledge gap</strong>: You couldn\'t recall a fact or process. Fix: add to flashcards today and drill until automatic.',
+    app: '<strong>Application</strong>: You knew the content but missed the connection. Fix: more timed exam questions. Read each question twice.',
+    know:'<strong>Knowledge gap</strong>: You could not recall a fact or process. Fix: add to flashcards today and drill until automatic.',
     term:'<strong>Terminology</strong>: Wrong word or missed a mark scheme term. Fix: study the mark scheme and highlight every term you missed.'
   };
   const g=el('mark-guidance');
@@ -662,7 +713,7 @@ function copyForNotion() {
   const cb=el('copy-btn');
   if (navigator.clipboard) {
     navigator.clipboard.writeText(row).then(()=>{
-      if (cb) { cb.classList.add('copied'); cb.innerHTML='<span>Copied</span><span>✓</span>'; setTimeout(()=>{ cb.classList.remove('copied'); cb.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">📋</span>'; },2500); }
+      if (cb) { cb.classList.add('copied'); cb.innerHTML='<span>Copied</span><span>&#10003;</span>'; setTimeout(()=>{ cb.classList.remove('copied'); cb.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">&#128203;</span>'; },2500); }
     }).catch(()=>fallbackCopy(row));
   } else { fallbackCopy(row); }
 }
@@ -867,7 +918,7 @@ function renderSubjBars() {
   const hist=Array.isArray(STATS.hist)?STATS.hist:[];
   hist.forEach(h=>{if(h.subj)mins[h.subj]=(mins[h.subj]||0)+(h.mins||0);});
   const sorted=Object.entries(mins).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  if (!sorted.length) { bars.innerHTML='<div class="stats-empty"><div class="stats-empty-icon">📊</div><div class="stats-empty-title">No sessions yet</div><div class="stats-empty-sub">Your subject breakdown appears here after your first session.</div></div>'; return; }
+  if (!sorted.length) { bars.innerHTML='<div class="stats-empty"><div class="stats-empty-icon">&#128202;</div><div class="stats-empty-title">No sessions yet</div><div class="stats-empty-sub">Your subject breakdown appears here after your first session.</div></div>'; return; }
   const maxVal=sorted[0][1];
   bars.innerHTML=sorted.map(([subj,m])=>
     `<div class="subj-bar-row"><div class="subj-bar-lbl">${escHtml(subj)}</div><div class="subj-bar-track"><div class="subj-bar-fill" style="width:${(m/maxVal*100).toFixed(0)}%"></div></div><div class="subj-bar-n">${m}m</div></div>`
@@ -897,11 +948,19 @@ function renderSpecContent(list, prog) {
   if (!specData) { list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:12px;text-align:center">Spec data coming soon.</div>'; prog.innerHTML=''; return; }
   let green=0,amber=0,red=0,none=0,totalIdx=0;
   specData.sections.forEach(sec=>{sec.points.forEach(()=>{const c=conf[totalIdx++];if(c==='green')green++;else if(c==='amber')amber++;else if(c==='red')red++;else none++;});});
-  prog.innerHTML=
+
+  // Show exam board badge if available
+  const boardBadge = specData.examBoard
+    ? `<div class="spec-exam-board-badge">${escHtml(specData.examBoard)}</div>`
+    : '';
+
+  prog.innerHTML = boardBadge +
+    `<div style="display:flex;gap:8px;margin-bottom:14px">` +
     `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#cc4038">${red}</div><div class="spec-prog-lbl">Red</div></div>`+
     `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#be8816">${amber}</div><div class="spec-prog-lbl">Amber</div></div>`+
     `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:#3c7250">${green}</div><div class="spec-prog-lbl">Green</div></div>`+
-    `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:var(--hint)">${none}</div><div class="spec-prog-lbl">Unrated</div></div>`;
+    `<div class="spec-prog-badge"><div class="spec-prog-n" style="color:var(--hint)">${none}</div><div class="spec-prog-lbl">Unrated</div></div>`+
+    `</div>`;
   let idx=0,html='';
   specData.sections.forEach(sec=>{
     html+=`<div class="spec-section-lbl">${escHtml(sec.name)}</div>`;
@@ -937,8 +996,56 @@ function initSpecScroll() {
 // ===================== RESOURCES =====================
 function renderResources() {
   renderExamList();
+  buildPublicResources();
   if (!isAdmin) return;
   if (!resourcesBuilt) { renderNotionQuickLinks(); renderHowToRevise(); renderResSchedule(); resourcesBuilt=true; }
+}
+function buildPublicResources() {
+  // Public resources are always built
+  const pubWrap = el('res-public-view');
+  if (!pubWrap || pubWrap._built) return;
+  pubWrap._built = true;
+  pubWrap.innerHTML = `
+    <div class="lbl">Free revision sites</div>
+    <div class="site-cat-lbl" style="margin-top:0">Practice &amp; papers</div>
+    <div class="site-grid">
+      <a class="site-card" href="https://www.physicsandmathstutor.com/" target="_blank"><div class="site-name">Physics &amp; Maths Tutor</div><div class="site-desc">Past papers and mark schemes for all subjects</div><div class="site-tag">All subjects</div></a>
+      <a class="site-card" href="https://www.savemyexams.com/" target="_blank"><div class="site-name">Save My Exams</div><div class="site-desc">Topic questions and model answers</div></a>
+      <a class="site-card" href="https://corbettmaths.com/5-a-day/" target="_blank"><div class="site-name">Corbett 5-a-day</div><div class="site-desc">Daily maths practice by grade</div><div class="site-tag">Daily habit</div></a>
+      <a class="site-card" href="https://www.mathsgenie.co.uk/" target="_blank"><div class="site-name">Maths Genie</div><div class="site-desc">Graded topic questions with answers</div></a>
+    </div>
+    <div class="site-cat-lbl">Learn &amp; understand</div>
+    <div class="site-grid">
+      <a class="site-card" href="https://app.senecalearning.com/dashboard" target="_blank"><div class="site-name">Seneca</div><div class="site-desc">Adaptive learning for all GCSE subjects</div><div class="site-tag">Free</div></a>
+      <a class="site-card" href="https://www.bbc.co.uk/bitesize/levels/z98jmp3" target="_blank"><div class="site-name">BBC Bitesize GCSE</div><div class="site-desc">Topic summaries, quizzes, and videos</div><div class="site-tag">Free</div></a>
+      <a class="site-card" href="https://www.cognitoresources.org/" target="_blank"><div class="site-name">Cognito</div><div class="site-desc">Short science video explanations</div></a>
+      <a class="site-card" href="https://members.gcsepod.com/pupils/dashboard" target="_blank"><div class="site-name">GCSE Pod</div><div class="site-desc">Bite-size video podcasts per topic</div></a>
+    </div>
+    <div class="site-cat-lbl">Flashcards &amp; recall</div>
+    <div class="site-grid">
+      <a class="site-card" href="https://quizlet.com/gb" target="_blank"><div class="site-name">Quizlet</div><div class="site-desc">Pre-made flashcard sets for every topic</div></a>
+      <a class="site-card" href="https://www.anki.app/decks" target="_blank"><div class="site-name">AnkiWeb</div><div class="site-desc">Spaced repetition flashcard system</div><div class="site-tag">Best for SR</div></a>
+      <a class="site-card" href="https://www.getrevising.co.uk/" target="_blank"><div class="site-name">Get Revising</div><div class="site-desc">Mindmaps, flashcards and revision timetables</div></a>
+      <a class="site-card" href="https://www.freescience.info/gcse.php" target="_blank"><div class="site-name">Free Science</div><div class="site-desc">Notes and worksheets for GCSE sciences</div></a>
+    </div>
+    <div class="site-cat-lbl">Science specific</div>
+    <div class="site-grid">
+      <a class="site-card" href="https://www.youtube.com/@Freesciencelessons" target="_blank"><div class="site-name">Free Science Lessons</div><div class="site-desc">Full course YouTube videos (Grades 7-11)</div></a>
+      <a class="site-card" href="https://www.youtube.com/@BioNinja" target="_blank"><div class="site-name">BioNinja</div><div class="site-desc">Biology diagrams and notes</div></a>
+      <a class="site-card" href="https://www.chemguide.co.uk/" target="_blank"><div class="site-name">ChemGuide</div><div class="site-desc">Chemistry A-Level and GCSE explanations</div></a>
+      <a class="site-card" href="https://www.physbot.co.uk/" target="_blank"><div class="site-name">Physbot</div><div class="site-desc">Physics revision videos and resources</div></a>
+    </div>
+    <div class="site-cat-lbl">English &amp; Humanities</div>
+    <div class="site-grid">
+      <a class="site-card" href="https://litcharts.com/" target="_blank"><div class="site-name">LitCharts</div><div class="site-desc">Literature guides, themes and quotes</div></a>
+      <a class="site-card" href="https://www.sparknotes.com/" target="_blank"><div class="site-name">SparkNotes</div><div class="site-desc">Text summaries and analysis</div></a>
+      <a class="site-card" href="https://www.internetgeography.net/" target="_blank"><div class="site-name">Internet Geography</div><div class="site-desc">GCSE Geography case studies and notes</div></a>
+      <a class="site-card" href="https://www.tutor2u.net/" target="_blank"><div class="site-name">Tutor2u</div><div class="site-desc">Business, Geography, Psychology notes</div></a>
+    </div>
+    <div class="lbl" style="margin-top:20px">My revision timetable</div>
+    <div id="timetable-builder"></div>
+  `;
+  buildTimetableWidget();
 }
 function renderNotionQuickLinks() {
   const wrap=el('notion-quicklinks'); if (!wrap) return;
@@ -946,14 +1053,13 @@ function renderNotionQuickLinks() {
     `<a class="notion-quick-link" href="${escHtml(p.url)}" target="_blank" rel="noopener noreferrer">
        <span class="notion-quick-icon">${p.icon}</span>
        <div style="flex:1"><div class="notion-quick-title">${escHtml(p.title)}</div><div class="notion-quick-sub">${escHtml(p.sub)}</div></div>
-       <span style="color:var(--hint);font-size:14px;margin-left:auto;flex-shrink:0">›</span>
+       <span style="color:var(--hint);font-size:14px;margin-left:auto;flex-shrink:0">&#8250;</span>
      </a>`
   ).join('');
 }
 function renderExamList() {
   const wrap=el('exam-list'); if (!wrap) return;
   const today=new Date(); today.setHours(0,0,0,0);
-  // Merge built-in (admin only) + user-added exams
   let allExams = [];
   if (isAdmin) allExams = [...EXAMS];
   try {
@@ -967,7 +1073,6 @@ function renderExamList() {
     wrap.innerHTML='<div style="font-size:13px;color:var(--muted);padding:14px 0;text-align:center">No upcoming exams. Add one below.</div>';
     return;
   }
-  const [,mm,dd]=upcoming[0].date?upcoming[0].date.split('-'):['','',''];
   wrap.innerHTML=upcoming.map(e=>{
     const [,eMM,eDD]=e.date?e.date.split('-'):['','',''];
     const cls=e.days===0?'today':e.days<=3?'soon':'';
@@ -987,7 +1092,7 @@ function renderHowToRevise() {
     return `<div class="subj-accordion">
       <div class="acc-header" onclick="toggleAcc(this)">
         <span class="acc-title">${escHtml(subj)}</span>
-        <div style="display:flex;align-items:center;gap:6px">${examStr}<span class="acc-arrow">▼</span></div>
+        <div style="display:flex;align-items:center;gap:6px">${examStr}<span class="acc-arrow">&#9660;</span></div>
       </div>
       <div class="acc-body"><div style="height:8px"></div>${tips.map(t=>`<div class="acc-tip">${t}</div>`).join('')}</div>
     </div>`;
@@ -1013,6 +1118,86 @@ function renderResSchedule() {
     </div>`;
   });
   wrap.innerHTML=html;
+}
+
+// ===================== TIMETABLE BUILDER =====================
+const TT_DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const TT_SESSIONS = ['Session 1','Session 2','Session 3'];
+let userTimetable = null;
+
+function loadUserTimetable() {
+  try { userTimetable = JSON.parse(localStorage.getItem('rv_user_tt') || 'null'); } catch(e) { userTimetable = null; }
+  if (!userTimetable) {
+    userTimetable = {};
+    TT_DAYS.forEach(d => {
+      userTimetable[d] = TT_SESSIONS.map(() => ({ subj:'', mins:60 }));
+    });
+  }
+}
+function saveUserTimetable() {
+  try { localStorage.setItem('rv_user_tt', JSON.stringify(userTimetable)); } catch(e) {}
+}
+function buildTimetableWidget() {
+  const wrap = el('timetable-builder'); if (!wrap) return;
+  loadUserTimetable();
+  wrap.innerHTML = `
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;background:var(--s0);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px">
+      Build your own weekly revision timetable. Enter subjects and time for each session, then save.
+    </div>
+    <div id="tt-days-wrap"></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="saveTimetableWidget()">Save timetable</button>
+  `;
+  renderTTDays();
+}
+function renderTTDays() {
+  const wrap = el('tt-days-wrap'); if (!wrap) return;
+  wrap.innerHTML = TT_DAYS.map((day, di) => {
+    const sessions = userTimetable[day] || [];
+    const sessionRows = TT_SESSIONS.map((_, si) => {
+      const s = sessions[si] || { subj:'', mins:60 };
+      return `<div class="tt-session-row">
+        <div class="tt-session-lbl">S${si+1}</div>
+        <input class="tt-input" type="text" placeholder="Subject..." value="${escHtml(s.subj)}"
+          oninput="updateTT('${day}',${si},'subj',this.value)">
+        <input class="tt-input tt-mins-input" type="number" min="10" max="180" value="${s.mins||60}"
+          oninput="updateTT('${day}',${si},'mins',parseInt(this.value)||60)">
+        <span style="font-size:11px;color:var(--hint);flex-shrink:0">min</span>
+      </div>`;
+    }).join('');
+    const hasSessions = sessions.some(s => s && s.subj);
+    const summary = hasSessions ? sessions.filter(s=>s&&s.subj).map(s=>s.subj).join(', ') : 'Add subjects';
+    return `<div class="tt-day-block">
+      <div class="tt-day-head" onclick="toggleTTDay('tt-body-${di}', this)">
+        <span class="tt-day-name">${day}</span>
+        <span class="tt-day-summary" id="tt-summary-${di}">${escHtml(summary)}</span>
+      </div>
+      <div class="tt-day-body" id="tt-body-${di}" style="display:none">${sessionRows}</div>
+    </div>`;
+  }).join('');
+}
+function toggleTTDay(bodyId, headEl) {
+  const body = el(bodyId); if (!body) return;
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'flex' : 'none';
+}
+function updateTT(day, sessionIdx, field, value) {
+  if (!userTimetable[day]) userTimetable[day] = TT_SESSIONS.map(() => ({ subj:'', mins:60 }));
+  if (!userTimetable[day][sessionIdx]) userTimetable[day][sessionIdx] = { subj:'', mins:60 };
+  userTimetable[day][sessionIdx][field] = value;
+  // Update summary text
+  const di = TT_DAYS.indexOf(day);
+  if (di >= 0) {
+    const summaryEl = el(`tt-summary-${di}`);
+    if (summaryEl) {
+      const sessions = userTimetable[day];
+      const summary = sessions.filter(s=>s&&s.subj).map(s=>s.subj).join(', ') || 'Add subjects';
+      summaryEl.textContent = summary;
+    }
+  }
+}
+function saveTimetableWidget() {
+  saveUserTimetable();
+  showToast('Timetable saved', 'Your schedule has been saved');
 }
 
 // ===================== SPACED REPETITION =====================
@@ -1131,6 +1316,11 @@ function initDesktopScroll() {
   });
 }
 
+// ===================== WINDOW RESIZE =====================
+window.addEventListener('resize', () => {
+  requestAnimationFrame(() => updateNavIndicator(activeTab));
+});
+
 // ===================== INIT =====================
 function initApp() {
   applyTheme();
@@ -1149,6 +1339,8 @@ function initApp() {
   initDesktopScroll();
   document.addEventListener('touchstart', ()=>unlockAudio(), {once:true,passive:true});
   document.addEventListener('click',      ()=>unlockAudio(), {once:true});
+  // Initialise nav indicator after render
+  requestAnimationFrame(() => updateNavIndicator('home'));
   setTimeout(()=>{
     const loader=el('app-loader');
     if (loader) { loader.classList.add('gone'); setTimeout(()=>loader.remove(),500); }
