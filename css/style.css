@@ -53,15 +53,17 @@ html,body{
   }
   .screen{width:var(--card-w);max-width:var(--card-w)}
   .bottom-nav{
-    left:calc(50% - var(--card-w) / 2);
+    left:50%;
     right:auto;
+    transform:translateX(-50%);
     width:var(--card-w);
     border-left:1px solid var(--border);
     border-right:1px solid var(--border)
   }
   #home-screen .screen-foot{
-    left:calc(50% - var(--card-w) / 2);
+    left:50%;
     right:auto;
+    transform:translateX(-50%);
     width:var(--card-w);
     border-left:1px solid var(--border);
     border-right:1px solid var(--border)
@@ -90,7 +92,7 @@ html,body{
 @media(min-width:1400px){:root{--card-w:840px}}
 @media(min-width:1700px){:root{--card-w:940px}}
 
-/* ===== CARD CLIP WRAP — clips settings panel to card ===== */
+/* ===== CARD CLIP WRAP ===== */
 .card-clip-wrap{
   position:fixed;top:0;left:0;right:0;bottom:0;
   z-index:230;pointer-events:none;overflow:hidden;
@@ -105,9 +107,9 @@ html,body{
 }
 .settings-backdrop.open{display:block}
 
-/* ===== SETTINGS PANEL — absolute inside card-clip-wrap ===== */
+/* ===== SETTINGS PANEL — slides in from the RIGHT ===== */
 .settings-panel{
-  position:absolute;top:0;right:-320px;
+  position:absolute;top:0;right:-340px;
   width:320px;height:100%;
   background:var(--s1);
   border-left:1px solid var(--border);
@@ -223,7 +225,7 @@ html,body{
 }
 .full-screen .screen-foot{padding-bottom:calc(var(--sab)+14px)}
 
-/* ===== BOTTOM NAV — iOS-style pill tab ===== */
+/* ===== BOTTOM NAV — centred pill tab bar ===== */
 .bottom-nav{
   position:fixed;bottom:0;left:0;right:0;z-index:100;
   background:var(--s0);
@@ -238,10 +240,13 @@ html,body{
   height:46px;background:var(--s2);border-radius:12px;padding:3px;
 }
 
+/* JS positions the indicator — this is just a fallback default */
 .nav-indicator{
-  position:absolute;width:calc(25% - 5px);height:40px;
-  background:var(--s0);border-radius:9px;top:3px;left:3px;z-index:1;
-  transition:left .22s cubic-bezier(.22,.8,.3,1);
+  position:absolute;height:40px;
+  background:var(--s0);border-radius:9px;top:3px;left:3px;
+  z-index:1;
+  width:calc(25% - 1px);
+  transition:left .22s cubic-bezier(.22,.8,.3,1),width .22s cubic-bezier(.22,.8,.3,1);
   box-shadow:var(--shadow-sm);pointer-events:none;
 }
 [data-theme="light"] .nav-indicator{
@@ -260,26 +265,8 @@ html,body{
 .nav-tab-lbl:active{opacity:.7}
 .nav-icon{font-size:17px;line-height:1;transition:transform .2s}
 .nav-text{font-size:9.5px;font-weight:700;letter-spacing:.2px;color:var(--muted);transition:color .2s}
-
-/* Indicator positions (4 tabs) */
-.nr--1:checked ~ .nav-indicator{left:3px}
-.nr--2:checked ~ .nav-indicator{left:calc(25% + 3px)}
-.nr--3:checked ~ .nav-indicator{left:calc(50% + 3px)}
-.nr--4:checked ~ .nav-indicator{left:calc(75% + 3px)}
-
-/* Active label */
-.nr--1:checked + .nav-tab-lbl .nav-text{color:var(--acc)}
-.nr--2:checked + .nav-tab-lbl .nav-text{color:var(--acc)}
-.nr--3:checked + .nav-tab-lbl .nav-text{color:var(--acc)}
-.nr--4:checked + .nav-tab-lbl .nav-text{color:var(--acc)}
-.nr--1:checked + .nav-tab-lbl .nav-icon{transform:scale(1.08)}
-.nr--2:checked + .nav-tab-lbl .nav-icon{transform:scale(1.08)}
-.nr--3:checked + .nav-tab-lbl .nav-icon{transform:scale(1.08)}
-.nr--4:checked + .nav-tab-lbl .nav-icon{transform:scale(1.08)}
-[data-theme="light"] .nr--1:checked + .nav-tab-lbl .nav-text{color:var(--acc)}
-[data-theme="light"] .nr--2:checked + .nav-tab-lbl .nav-text{color:var(--acc)}
-[data-theme="light"] .nr--3:checked + .nav-tab-lbl .nav-text{color:var(--acc)}
-[data-theme="light"] .nr--4:checked + .nav-tab-lbl .nav-text{color:var(--acc)}
+.nav-tab-lbl.active-tab .nav-text{color:var(--acc)}
+.nav-tab-lbl.active-tab .nav-icon{transform:scale(1.08)}
 
 /* ===== PERIOD TABS (Stats) ===== */
 .period-tabs{
@@ -719,6 +706,12 @@ canvas.chart{width:100%;display:block}
 .spec-prog-n{font-size:20px;font-weight:800;letter-spacing:-1px;line-height:1}
 .spec-prog-lbl{font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
 .spec-section-lbl{font-size:10px;font-weight:700;color:var(--hint);letter-spacing:.8px;text-transform:uppercase;margin:14px 0 7px;padding-left:2px}
+.spec-exam-board-badge{
+  display:inline-flex;align-items:center;
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;
+  color:var(--muted);margin-bottom:10px;letter-spacing:.3px;
+}
 
 /* ===== RESOURCES ===== */
 .res-lock{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center}
@@ -794,6 +787,31 @@ canvas.chart{width:100%;display:block}
   cursor:pointer;transition:all .15s;margin-top:8px;
 }
 .add-exam-btn:hover{background:var(--s2);border-color:rgba(160,192,170,.18);color:var(--text)}
+
+/* ===== TIMETABLE BUILDER ===== */
+.tt-day-block{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;margin-bottom:8px;
+}
+.tt-day-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:var(--s2);cursor:pointer;
+}
+.tt-day-name{font-size:13px;font-weight:700}
+.tt-day-summary{font-size:11px;color:var(--muted)}
+.tt-day-body{padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.tt-session-row{display:flex;align-items:center;gap:8px}
+.tt-session-lbl{font-size:11px;font-weight:700;color:var(--hint);width:26px;flex-shrink:0}
+.tt-input{
+  flex:1;height:38px;padding:8px 11px;
+  border-radius:8px;border:1.5px solid var(--border);
+  outline:none;background:var(--s0);color:var(--text);
+  font-family:inherit;font-size:13px;
+  transition:border-color .2s;
+}
+.tt-input:focus{border-color:rgba(16,152,247,.4)}
+.tt-input::placeholder{color:var(--hint)}
+.tt-mins-input{width:60px;flex:none;text-align:center}
 
 /* ===== OVERLAYS ===== */
 .overlay{
