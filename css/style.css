@@ -38,7 +38,7 @@ html,body{
 
 /* ===== DESKTOP LAYOUT ===== */
 @media(min-width:1024px){
-  body{display:flex;align-items:center;justify-content:center;background:var(--s0)}
+  body{background:var(--s0)}
   [data-theme="light"] body{background:#e4e4df}
   .desktop-card{
     display:block;position:fixed;left:50%;top:0;
@@ -51,7 +51,7 @@ html,body{
     box-shadow:0 0 120px rgba(0,0,0,.4),0 0 40px rgba(0,0,0,.2);
     pointer-events:none
   }
-  .screen{width:var(--card-w);max-width:var(--card-w)}
+  .screen{width:var(--card-w);max-width:var(--card-w);margin:0 auto}
   .bottom-nav{
     left:50%;
     right:auto;
@@ -110,7 +110,6 @@ html,body{
 /* ===== SETTINGS PANEL -- slides in from the RIGHT ===== */
 .settings-panel{
   position:absolute;
-  /* Start off-screen to the RIGHT */
   top:0;
   right:0;
   transform:translateX(100%);
@@ -232,7 +231,7 @@ html,body{
 }
 .full-screen .screen-foot{padding-bottom:calc(var(--sab)+14px)}
 
-/* ===== BOTTOM NAV -- centred pill tab bar ===== */
+/* ===== BOTTOM NAV ===== */
 .bottom-nav{
   position:fixed;bottom:0;left:0;right:0;z-index:100;
   background:var(--s0);
@@ -245,16 +244,13 @@ html,body{
 .nav-tabs{
   position:relative;display:flex;flex-direction:row;align-items:center;
   height:46px;background:var(--s2);border-radius:12px;padding:3px;
-  /* ensure tabs fill full width evenly */
   width:100%;
 }
 
-/* Nav indicator: JS positions it using left/width, matching active label */
 .nav-indicator{
   position:absolute;height:40px;
   background:var(--s0);border-radius:9px;top:3px;left:3px;
   z-index:1;
-  /* default: 25% width for 4 tabs */
   width:calc(25% - 1.5px);
   transition:left .22s cubic-bezier(.22,.8,.3,1),width .22s cubic-bezier(.22,.8,.3,1);
   box-shadow:var(--shadow-sm);pointer-events:none;
@@ -271,7 +267,6 @@ html,body{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   cursor:pointer;border-radius:9px;user-select:none;-webkit-user-select:none;
   transition:opacity .2s;
-  /* ensure even spacing */
   min-width:0;
 }
 .nav-tab-lbl:active{opacity:.7}
