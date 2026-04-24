@@ -24,7 +24,6 @@ function lsGet(key, fallback) {
     const raw = localStorage.getItem(key);
     if (raw === null) return fallback;
     const parsed = JSON.parse(raw);
-    // Guard against null stored as JSON
     return parsed !== null ? parsed : fallback;
   } catch (e) {
     return fallback;
@@ -35,7 +34,7 @@ function lsSet(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
-    console.warn('[Revision] localStorage write failed:', e.message);
+    console.warn('[Solus] localStorage write failed:', e.message);
   }
 }
 
@@ -47,7 +46,6 @@ function loadFromLocalStorage() {
   TODAY_DONE = { ...DEFAULT_TODAY_DONE, ...lsGet(LS_KEYS.todayDone, {}) };
   SPEC_CONF  = lsGet(LS_KEYS.spec,      {});
 
-  // Ensure arrays are arrays (guard against corrupted storage)
   if (!Array.isArray(SPACED))    SPACED = [];
   if (!Array.isArray(STATS.hist)) STATS.hist = [];
 }
@@ -83,8 +81,8 @@ function syncDocToFirestore() {
         spec:      SPEC_CONF,
         updatedAt: Date.now()
       })
-      .catch(e => console.warn('[Revision] Firestore write error:', e.message));
-  }, 1500); // batch rapid saves into one write
+      .catch(e => console.warn('[Solus] Firestore write error:', e.message));
+  }, 1500);
 }
 
 // -- Firestore: load all data for a user --
@@ -100,19 +98,16 @@ async function loadFromFirestore(uid) {
     if (d.todayDone) TODAY_DONE = { ...DEFAULT_TODAY_DONE, ...d.todayDone };
     if (d.spec)      SPEC_CONF  = d.spec;
 
-    // Ensure arrays are valid after merge
     if (!Array.isArray(SPACED))    SPACED = [];
     if (!Array.isArray(STATS.hist)) STATS.hist = [];
 
-    // Mirror to localStorage for instant access on next load
     lsSet(LS_KEYS.cfg,       CFG);
     lsSet(LS_KEYS.stats,     STATS);
     lsSet(LS_KEYS.spaced,    SPACED);
     lsSet(LS_KEYS.todayDone, TODAY_DONE);
     lsSet(LS_KEYS.spec,      SPEC_CONF);
   } catch (e) {
-    console.warn('[Revision] Firestore read error:', e.message);
-    // Fall back to whatever is already in localStorage
+    console.warn('[Solus] Firestore read error:', e.message);
     loadFromLocalStorage();
   }
 }
