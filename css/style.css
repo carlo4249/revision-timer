@@ -1,4 +1,4 @@
-/* css/style.css — Solus v2 Production */
+/* css/style.css -- Solus v2 Production */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --bg:#0e1010;--s0:#131616;--s1:#191c1c;--s2:#202424;--s3:#2a2e2e;
@@ -107,20 +107,27 @@ html,body{
 }
 .settings-backdrop.open{display:block}
 
-/* ===== SETTINGS PANEL — slides in from the RIGHT ===== */
+/* ===== SETTINGS PANEL -- slides in from the RIGHT ===== */
 .settings-panel{
-  position:absolute;top:0;right:-340px;
-  width:320px;height:100%;
+  position:absolute;
+  /* Start off-screen to the RIGHT */
+  top:0;
+  right:0;
+  transform:translateX(100%);
+  width:min(320px, 88vw);
+  height:100%;
   background:var(--s1);
   border-left:1px solid var(--border);
   z-index:1;
-  transition:right .35s cubic-bezier(.22,.8,.3,1);
+  transition:transform .35s cubic-bezier(.22,.8,.3,1);
   overflow-y:auto;overflow-x:hidden;
   display:flex;flex-direction:column;
   pointer-events:auto;
   box-shadow:var(--shadow-lg);
 }
-.settings-panel.open{right:0}
+.settings-panel.open{
+  transform:translateX(0);
+}
 .settings-panel::-webkit-scrollbar{width:3px}
 .settings-panel::-webkit-scrollbar-track{background:transparent}
 .settings-panel::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
@@ -225,7 +232,7 @@ html,body{
 }
 .full-screen .screen-foot{padding-bottom:calc(var(--sab)+14px)}
 
-/* ===== BOTTOM NAV — centred pill tab bar ===== */
+/* ===== BOTTOM NAV -- centred pill tab bar ===== */
 .bottom-nav{
   position:fixed;bottom:0;left:0;right:0;z-index:100;
   background:var(--s0);
@@ -238,14 +245,17 @@ html,body{
 .nav-tabs{
   position:relative;display:flex;flex-direction:row;align-items:center;
   height:46px;background:var(--s2);border-radius:12px;padding:3px;
+  /* ensure tabs fill full width evenly */
+  width:100%;
 }
 
-/* JS positions the indicator — this is just a fallback default */
+/* Nav indicator: JS positions it using left/width, matching active label */
 .nav-indicator{
   position:absolute;height:40px;
   background:var(--s0);border-radius:9px;top:3px;left:3px;
   z-index:1;
-  width:calc(25% - 1px);
+  /* default: 25% width for 4 tabs */
+  width:calc(25% - 1.5px);
   transition:left .22s cubic-bezier(.22,.8,.3,1),width .22s cubic-bezier(.22,.8,.3,1);
   box-shadow:var(--shadow-sm);pointer-events:none;
 }
@@ -261,6 +271,8 @@ html,body{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   cursor:pointer;border-radius:9px;user-select:none;-webkit-user-select:none;
   transition:opacity .2s;
+  /* ensure even spacing */
+  min-width:0;
 }
 .nav-tab-lbl:active{opacity:.7}
 .nav-icon{font-size:17px;line-height:1;transition:transform .2s}
@@ -394,7 +406,7 @@ html,body{
 .session-progress-bar{height:2px;background:var(--s2);border-radius:2px;margin:0 0 6px;overflow:hidden}
 .session-progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--brk),#5aad7a);transition:width .7s cubic-bezier(.22,.8,.3,1);width:0%}
 
-/* ===== HOME — QUICKSTART ===== */
+/* ===== HOME -- QUICKSTART ===== */
 .quickstart{
   background:linear-gradient(135deg,var(--s1),var(--s2));
   border:1px solid var(--border);border-radius:var(--r-lg);
@@ -701,7 +713,7 @@ canvas.chart{width:100%;display:block}
 .spec-legend{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .spec-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
 .spec-leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.spec-prog-row{display:flex;gap:8px;margin-bottom:14px}
+.spec-prog-row{margin-bottom:14px}
 .spec-prog-badge{flex:1;background:var(--s1);border-radius:var(--r);padding:10px 8px;text-align:center;border:1px solid var(--border)}
 .spec-prog-n{font-size:20px;font-weight:800;letter-spacing:-1px;line-height:1}
 .spec-prog-lbl{font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
@@ -710,7 +722,8 @@ canvas.chart{width:100%;display:block}
   display:inline-flex;align-items:center;
   background:var(--s2);border:1px solid var(--border);
   border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;
-  color:var(--muted);margin-bottom:10px;letter-spacing:.3px;
+  color:var(--muted);margin-bottom:12px;letter-spacing:.3px;
+  flex-wrap:wrap;
 }
 
 /* ===== RESOURCES ===== */
@@ -796,22 +809,23 @@ canvas.chart{width:100%;display:block}
 .tt-day-head{
   display:flex;align-items:center;justify-content:space-between;
   padding:10px 14px;background:var(--s2);cursor:pointer;
+  user-select:none;-webkit-user-select:none;
 }
 .tt-day-name{font-size:13px;font-weight:700}
-.tt-day-summary{font-size:11px;color:var(--muted)}
+.tt-day-summary{font-size:11px;color:var(--muted);max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tt-day-body{padding:10px 14px;display:flex;flex-direction:column;gap:8px}
-.tt-session-row{display:flex;align-items:center;gap:8px}
-.tt-session-lbl{font-size:11px;font-weight:700;color:var(--hint);width:26px;flex-shrink:0}
+.tt-session-row{display:flex;align-items:center;gap:6px}
+.tt-session-lbl{font-size:11px;font-weight:700;color:var(--hint);width:22px;flex-shrink:0}
 .tt-input{
   flex:1;height:38px;padding:8px 11px;
   border-radius:8px;border:1.5px solid var(--border);
   outline:none;background:var(--s0);color:var(--text);
   font-family:inherit;font-size:13px;
-  transition:border-color .2s;
+  transition:border-color .2s;min-width:0;
 }
 .tt-input:focus{border-color:rgba(16,152,247,.4)}
 .tt-input::placeholder{color:var(--hint)}
-.tt-mins-input{width:60px;flex:none;text-align:center}
+.tt-mins-input{width:54px;flex:none;text-align:center}
 
 /* ===== OVERLAYS ===== */
 .overlay{
