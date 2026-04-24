@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" id="tcm" content="#0e1010">
-<title>Solus — Sign in</title>
+<title>Solus - Sign in</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
   <div class="auth-logo">Solus<span>.</span></div>
   <div class="auth-sub">Your personal revision timer</div>
 
-  <div class="auth-tabs">
+  <div class="auth-tabs" id="auth-tabs-wrap">
     <button class="auth-tab active" id="tab-signin" onclick="switchMode('signin')">Sign in</button>
     <button class="auth-tab" id="tab-signup" onclick="switchMode('signup')">Sign up</button>
   </div>
@@ -81,7 +81,7 @@
     </button>
   </div>
 
-  <button class="auth-skip-btn" id="auth-skip-btn" onclick="skipAuth()" style="display:none">
+  <button class="auth-skip-btn" id="auth-skip-btn" onclick="window.location.href='index.html'" style="display:none">
     Continue without signing in
   </button>
 </div>
@@ -91,11 +91,10 @@
   applyAuthTheme();
   if (!window.FIREBASE_ENABLED) {
     document.getElementById('auth-skip-btn').style.display = 'block';
-    document.querySelector('.auth-tabs').style.display = 'none';
+    document.getElementById('auth-tabs-wrap').style.display = 'none';
     document.getElementById('signin-panel').style.display = 'none';
     document.querySelector('.auth-sub').textContent = 'Running in local mode.';
   }
-  function skipAuth() { window.location.href = 'index.html'; }
 </script>
 </body>
 </html>
