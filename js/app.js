@@ -50,14 +50,30 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// Format spec text: superscripts, chemical subscripts, arrows, degrees
+function fmtSpec(txt) {
+  // Superscripts: x^2, x^(-1), x^(1/3)
+  txt = txt.replace(/\^(\([^)]*\)|[-\w\/]+)/g, (_,e) => `<sup>${e.replace(/[()]/g,'')}</sup>`);
+  // Chemical/formula subscripts: capital letter optionally followed by one lowercase, then digits
+  txt = txt.replace(/([A-Z][a-z]?)(\d+)/g, '$1<sub>$2</sub>');
+  // Reaction arrows (after HTML-escaping, --> becomes --&gt;)
+  txt = txt.replace(/--&gt;/g, '→');
+  txt = txt.replace(/&lt;--&gt;/g, '⇌');
+  // Degrees C
+  txt = txt.replace(/(\d+)\s*degrees?\s*[Cc]/g, '$1°C');
+  return txt;
+}
+
 function fmt(secs) {
   const m = Math.floor(Math.abs(secs)/60), s = Math.abs(secs)%60;
   return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
 // ===================== THEME =====================
+// FIX: checked = dark mode (moon icon), unchecked = light mode (sun icon)
 function toggleThemeFromSettings(checkbox) {
-  const t = checkbox.checked ? 'light' : 'dark';
+  const t = checkbox.checked ? 'dark' : 'light';
   applyTheme(t);
   try { localStorage.setItem('rv_theme', t); } catch(e) {}
 }
@@ -66,7 +82,8 @@ function applyTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
   const tcm = el('tcm');
   if (tcm) tcm.content = t==='dark' ? '#0e1010' : '#f2f2ed';
-  document.querySelectorAll('.theme-chk').forEach(c => { c.checked = (t==='light'); });
+  // checked = dark mode (shows moon), unchecked = light mode (shows sun)
+  document.querySelectorAll('.theme-chk').forEach(c => { c.checked = (t==='dark'); });
 }
 
 // ===================== NAV INDICATOR =====================
@@ -80,15 +97,12 @@ function updateNavIndicator(name) {
   const labels = document.querySelectorAll('.nav-tab-lbl');
   if (!labels[idx]) return;
   const lbl = labels[idx];
-  // Position indicator to match the active label
   const navTabs = lbl.closest('.nav-tabs');
   if (!navTabs) return;
   const navRect  = navTabs.getBoundingClientRect();
   const lblRect  = lbl.getBoundingClientRect();
   indicator.style.left  = (lblRect.left - navRect.left) + 'px';
   indicator.style.width = lblRect.width + 'px';
-
-  // Update active-tab class
   labels.forEach((l, i) => l.classList.toggle('active-tab', i === idx));
 }
 
@@ -124,12 +138,12 @@ function updateSettingsAccountUI() {
         <div class="sr-desc" style="word-break:break-all">${escHtml(name)}</div>
       </div>
       <div class="setting-row">
-        <button class="btn btn-secondary" style="width:100%;font-size:13px" onclick="signOutUser()">Sign out</button>
+        <button class="btn btn-secondary" style="width:100%;font-size:13px;background:var(--s2);border:1.5px solid var(--border)" onclick="signOutUser()">Sign out</button>
       </div>`;
   } else {
     section.innerHTML = `
       <div class="setting-row">
-        <button class="btn btn-secondary" style="width:100%;font-size:13px" onclick="window.location.href='auth.html'">Sign in to sync</button>
+        <button class="btn btn-secondary" style="width:100%;font-size:13px;background:var(--s2);border:1.5px solid var(--border)" onclick="window.location.href='auth.html'">Sign in to sync</button>
       </div>`;
   }
 }
@@ -183,7 +197,7 @@ function syncAdminUI() {
   if (pw)  pw.value = '';
   if (err) err.textContent = '';
   const t = document.documentElement.getAttribute('data-theme')||'dark';
-  document.querySelectorAll('.theme-chk').forEach(c => { c.checked = (t==='light'); });
+  document.querySelectorAll('.theme-chk').forEach(c => { c.checked = (t==='dark'); });
 }
 function updateAdminContentUI() {
   updateExamChip();
@@ -269,13 +283,11 @@ const TAB_RADIO = { home:'nr-home', stats:'nr-stats', spec:'nr-spec', resources:
 
 function showTab(name) {
   activeTab = name;
-  // Hide ALL screens first (including timer/break/log)
   ['home-screen','stats-screen','spec-screen','resources-screen',
    'timer-screen','break-screen','log-screen'].forEach(sid => {
     const e = el(sid);
     if (e) e.classList.remove('active');
   });
-  // Show only the target tab screen
   const target = el(name + '-screen');
   if (target) target.classList.add('active');
 
@@ -283,7 +295,6 @@ function showTab(name) {
   if (radioId) { const r = el(radioId); if (r && !r.checked) r.checked = true; }
   const nav = el('bottom-nav'); if (nav) nav.classList.remove('hidden');
 
-  // Update nav indicator after layout settles
   requestAnimationFrame(() => updateNavIndicator(name));
 
   if (name==='stats')     refreshStats();
@@ -298,14 +309,12 @@ function showTimerScreen(id) {
 }
 
 function returnToHome() {
-  // Fully stop and reset session state
   clearInterval(S.ticker);
   S.ticker = null;
   stopReminders();
   stopBreathe();
   dismissCheckin();
   releaseLock2();
-  // Explicitly hide all timer-related screens before showing home
   ['timer-screen','break-screen','log-screen'].forEach(sid => {
     const e = el(sid); if (e) e.classList.remove('active');
   });
@@ -949,7 +958,6 @@ function renderSpecContent(list, prog) {
   let green=0,amber=0,red=0,none=0,totalIdx=0;
   specData.sections.forEach(sec=>{sec.points.forEach(()=>{const c=conf[totalIdx++];if(c==='green')green++;else if(c==='amber')amber++;else if(c==='red')red++;else none++;});});
 
-  // Show exam board badge if available
   const boardBadge = specData.examBoard
     ? `<div class="spec-exam-board-badge">${escHtml(specData.examBoard)}</div>`
     : '';
@@ -966,7 +974,8 @@ function renderSpecContent(list, prog) {
     html+=`<div class="spec-section-lbl">${escHtml(sec.name)}</div>`;
     sec.points.forEach(p=>{
       const c=conf[idx]||'';
-      html+=`<div class="spec-point" onclick="cycleSpec(${idx},this)"><div class="spec-dot${c?' '+c:''}"></div><div class="spec-txt">${escHtml(p)}</div></div>`;
+      // FIX: use fmtSpec to render math/chem notation properly
+      html+=`<div class="spec-point" onclick="cycleSpec(${idx},this)"><div class="spec-dot${c?' '+c:''}"></div><div class="spec-txt">${fmtSpec(escHtml(p))}</div></div>`;
       idx++;
     });
   });
@@ -1001,7 +1010,6 @@ function renderResources() {
   if (!resourcesBuilt) { renderNotionQuickLinks(); renderHowToRevise(); renderResSchedule(); resourcesBuilt=true; }
 }
 function buildPublicResources() {
-  // Public resources are always built
   const pubWrap = el('res-public-view');
   if (!pubWrap || pubWrap._built) return;
   pubWrap._built = true;
@@ -1184,7 +1192,6 @@ function updateTT(day, sessionIdx, field, value) {
   if (!userTimetable[day]) userTimetable[day] = TT_SESSIONS.map(() => ({ subj:'', mins:60 }));
   if (!userTimetable[day][sessionIdx]) userTimetable[day][sessionIdx] = { subj:'', mins:60 };
   userTimetable[day][sessionIdx][field] = value;
-  // Update summary text
   const di = TT_DAYS.indexOf(day);
   if (di >= 0) {
     const summaryEl = el(`tt-summary-${di}`);
@@ -1286,13 +1293,6 @@ document.addEventListener('keydown', e => {
   if (e.code==='Escape') confirmEnd();
 });
 
-// ===================== DANGER ZONE =====================
-function toggleDanger(h) {
-  const b=el('danger-body'), a=h.querySelector('.danger-arrow'); if (!b) return;
-  const open=b.classList.toggle('open');
-  if (a) a.style.transform=open?'rotate(180deg)':'';
-}
-
 // ===================== MANIFEST =====================
 function injectManifest() {
   try {
@@ -1339,7 +1339,6 @@ function initApp() {
   initDesktopScroll();
   document.addEventListener('touchstart', ()=>unlockAudio(), {once:true,passive:true});
   document.addEventListener('click',      ()=>unlockAudio(), {once:true});
-  // Initialise nav indicator after render
   requestAnimationFrame(() => updateNavIndicator('home'));
   setTimeout(()=>{
     const loader=el('app-loader');
