@@ -148,48 +148,49 @@ const HOW_TO = {
 
 // ===================== SPEC DATA =====================
 // Each subject has: examBoard, sections[{name, points[]}]
+// No em dashes used anywhere. Use colons, commas, or plain hyphens instead.
 
 const SPEC = {
   'Maths':{
     examBoard:'Edexcel GCSE Mathematics (1MA1)',
     sections:[
       {name:'Number',points:[
-        'N7: Laws of indices including fractional indices (x to the power 1/3) and negative indices',
-        'N8: Calculate with surds, simplify surd expressions, rationalise denominators',
-        'N10: Convert between recurring decimals and fractions; prove using algebra',
-        'N16: Upper and lower bounds in calculations; error intervals'
+        'N7: Laws of indices including fractional indices (x^(1/3)) and negative indices (x^(-n))',
+        'N8: Calculate with surds, simplify surd expressions, rationalise denominators (multiply by conjugate)',
+        'N10: Convert between recurring decimals and fractions; prove the conversion using algebra',
+        'N16: Upper and lower bounds in calculations; write error intervals using inequality notation'
       ]},
       {name:'Algebra',points:[
-        'A4: Factorise ax\u00b2 + bx + c; difference of two squares; grouping',
-        'A6: Algebraic proof -- show expressions are equivalent or always odd/even/multiple',
-        'A11: Complete the square to find turning points; form a(x + p)\u00b2 + q',
-        'A12: Sketch exponential functions and trigonometric functions sin x, cos x, tan x',
-        'A13: Sketch transformations: f(x + a), f(ax), af(x), f(x) + a',
-        'A15: Estimate gradient of curve at a point using tangent; area under a graph',
-        'A16: Equation of a circle x\u00b2 + y\u00b2 = r\u00b2; find equation of tangent at a given point',
-        'A18: Solve quadratics by factorising, completing the square, and quadratic formula',
+        'A4: Factorise ax^2 + bx + c fully; difference of two squares; factorising by grouping',
+        'A6: Algebraic proof: show expressions are equivalent, or always odd, even, or a multiple',
+        'A11: Complete the square to find turning points; write in the form a(x + p)^2 + q',
+        'A12: Sketch exponential functions y = k^x and trigonometric functions sin x, cos x, tan x',
+        'A13: Sketch graph transformations: f(x + a), f(ax), af(x), f(x) + a and describe each',
+        'A15: Estimate the gradient of a curve at a point using a tangent; interpret area under a graph',
+        'A16: Equation of a circle x^2 + y^2 = r^2; find the equation of a tangent at a given point',
+        'A18: Solve quadratics by factorising, completing the square, and the quadratic formula',
         'A19: Solve linear and quadratic simultaneous equations algebraically and graphically',
-        'A20: Use iteration to find approximate solutions to equations',
-        'A22: Quadratic inequalities; represent solution set on number line or graph',
-        'A25: nth term of quadratic sequences'
+        'A20: Use iteration with a given formula to find approximate solutions to equations',
+        'A22: Solve quadratic inequalities; represent the solution set on a number line or graph',
+        'A25: Find the nth term of a quadratic sequence'
       ]},
-      {name:'Ratio and Proportion',points:[
-        'R15: Gradient at a point on a curve represents instantaneous rate of change',
-        'R16: Set up and solve growth and decay equations using compound interest and iteration'
+      {name:'Ratio, Proportion and Rates of Change',points:[
+        'R15: Gradient at a point on a curve represents the instantaneous rate of change',
+        'R16: Set up and solve growth and decay problems using compound interest and iteration'
       ]},
       {name:'Geometry and Measures',points:[
-        'G7: Negative and fractional scale factor enlargements; centre of enlargement',
-        'G8: Describe combined transformations; identify invariant points',
-        'G10: Circle theorems: angle at centre, angles in same segment, cyclic quadrilateral, tangent-radius, alternate segment',
-        'G19: Similarity: ratio of lengths, areas (squared), and volumes (cubed)',
+        'G7: Enlargements with negative and fractional scale factors; identify the centre of enlargement',
+        'G8: Describe combined transformations; identify invariant points under a transformation',
+        'G10: Circle theorems: angle at centre, angles in same segment, cyclic quadrilateral, tangent-radius perpendicularity, alternate segment theorem',
+        'G19: Similarity: ratio of lengths, areas (squared ratio), and volumes (cubed ratio)',
         'G22: Sine rule and cosine rule to find unknown sides and angles in any triangle',
-        'G23: Area = (1/2)ab sin C for any triangle',
-        'G25: Vectors: column notation, magnitude, geometric proofs using vectors'
+        'G23: Area of a triangle using the formula: Area = (1/2) x ab x sin C',
+        'G25: Vectors: column notation, magnitude, geometric proofs using vector methods'
       ]},
       {name:'Statistics and Probability',points:[
-        'P9: Conditional probability using two-way tables, tree diagrams, Venn diagrams',
+        'P9: Conditional probability using two-way tables, tree diagrams, and Venn diagrams',
         'S3: Histograms with unequal class widths; frequency density = frequency / class width',
-        'S4: Box plots; quartiles and interquartile range; compare distributions'
+        'S4: Box plots; quartiles and interquartile range; compare distributions using median and IQR'
       ]}
     ]
   },
@@ -198,26 +199,26 @@ const SPEC = {
     examBoard:'AQA GCSE English Literature (8702) -- Closed Book',
     sections:[
       {name:'Paper 1: Shakespeare and 19th Century Novel (40%)',points:[
-        'Section A: One question on Shakespeare play -- extract then whole text response',
-        'Macbeth: Act 1 Sc 7 (ambition and guilt), Act 2 Sc 1-2 (dagger / murder), Act 3 Sc 4 (Banquo\'s ghost), Act 5 Sc 1 (sleepwalking)',
-        'Macbeth themes: ambition, power, guilt, gender, appearance vs reality, fate',
-        'Macbeth context: Jacobean society, divine right of kings, witchcraft, patriarchy, James I',
-        'Section B: One question on 19th century novel',
-        'A Christmas Carol: Scrooge transformation across all 5 staves',
-        'A Christmas Carol themes: redemption, poverty, social responsibility, family, Christmas',
-        'A Christmas Carol context: Victorian England, Industrial Revolution, New Poor Law (1834), workhouses'
+        'Section A: One question on your Shakespeare play; extract-based then whole-text response',
+        'Macbeth key scenes: Act 1 Sc 7 (ambition and guilt), Act 2 Sc 1-2 (dagger / murder), Act 3 Sc 4 (Banquo\'s ghost), Act 5 Sc 1 (sleepwalking)',
+        'Macbeth themes: ambition, power, guilt, gender roles, appearance vs reality, fate vs free will',
+        'Macbeth context: Jacobean society, divine right of kings, witchcraft beliefs, patriarchy, James I',
+        'Section B: One question on your 19th century novel',
+        'A Christmas Carol: Scrooge\'s transformation across all five Staves; key symbols (chains, candle, fire)',
+        'A Christmas Carol themes: redemption, poverty, social responsibility, family, the spirit of Christmas',
+        'A Christmas Carol context: Victorian England, Industrial Revolution, New Poor Law (1834), workhouses and debtors\' prisons'
       ]},
       {name:'Paper 2: Modern Texts and Poetry (60%)',points:[
-        'Section A: One essay from two choices on modern text',
-        'An Inspector Calls: themes of responsibility, social class, age, gender',
-        'An Inspector Calls context: 1912 setting written 1945; Priestley\'s socialist message about collective responsibility',
-        'Section B: Compare a named poem to one poem of your own choice from the cluster',
-        'Power and Conflict cluster: all 15 poems -- be ready to write on any of them',
-        'Section C: Analyse one unseen poem, then compare with a second unseen poem',
-        'AO1: Critical style, informed personal response, supported with textual quotation',
+        'Section A: One essay from two choices on your modern text',
+        'An Inspector Calls: themes of responsibility, social class, age, gender inequality',
+        'An Inspector Calls context: set in 1912 but written in 1945; Priestley\'s socialist message about collective moral responsibility',
+        'Section B: Compare a named poem to one poem of your choice from the anthology cluster',
+        'Power and Conflict cluster: all 15 poems; be prepared to write on any of them as either named or chosen',
+        'Section C: Analyse one unseen poem, then compare it with a second unseen poem',
+        'AO1: Critical personal response supported with precise quotation; avoid plot summary',
         'AO2: Analyse language, form, and structure using correct subject terminology',
-        'AO3: Context linked to effect -- one reference per paragraph is sufficient',
-        'AO4: Vocabulary, spelling, and punctuation (5% of total marks)'
+        'AO3: Context linked to meaning and effect; one reference per paragraph is sufficient',
+        'AO4: Vocabulary, spelling, and punctuation accuracy (worth 5% of total marks)'
       ]}
     ]
   },
@@ -226,184 +227,250 @@ const SPEC = {
     examBoard:'AQA GCSE English Language (8700) -- Unseen Texts',
     sections:[
       {name:'Paper 1: Explorations in Creative Reading and Writing (50%)',points:[
-        'Source: one literature fiction text (20th or 21st century)',
-        'Q1 (4 marks): list 4 true statements from a section of the source',
-        'Q2 (8 marks): comment on language using PETL -- Point, Evidence, Technique, effect Link',
+        'Source: one literature fiction text from the 20th or 21st century',
+        'Q1 (4 marks): list 4 true statements from a specified section of the source',
+        'Q2 (8 marks): comment on language using PETL: Point, Evidence, Technique, effect Link',
         'Q3 (8 marks): comment on structural features at whole-text level, not just sentence level',
-        'Q4 (20 marks): critically evaluate a given statement about the text with evidence',
-        'Q5 (40 marks): descriptive or narrative writing -- plan 5 min before writing; AO5 and AO6'
+        'Q4 (20 marks): critically evaluate a given statement about the text with evidence; use agree/disagree/both',
+        'Q5 (40 marks): descriptive or narrative writing; plan for 5 min before writing; AO5 and AO6 equally weighted'
       ]},
       {name:'Paper 2: Writers\' Viewpoints and Perspectives (50%)',points:[
         'Sources: one non-fiction and one literary non-fiction from different time periods',
         'Q1 (4 marks): identify 4 true statements across both sources',
-        'Q2 (8 marks): summarise and synthesise differences between sources',
-        'Q3 (12 marks): analyse language in one source',
-        'Q4 (16 marks): compare writers\' perspectives across both sources -- the mark separator',
-        'Q5 (40 marks): writing to present a viewpoint; specify audience, purpose, form',
-        'AO5 (30%): communicate clearly; adapt tone, style, and register for purpose and audience',
-        'AO6 (20% of total GCSE): vocabulary range, sentence structures, spelling, punctuation'
+        'Q2 (8 marks): summarise and synthesise differences between both sources',
+        'Q3 (12 marks): analyse language in one named source',
+        'Q4 (16 marks): compare writers\' perspectives and methods across both sources; the main mark separator',
+        'Q5 (40 marks): writing to present a viewpoint; specify your audience, purpose, and form clearly',
+        'AO5 (30% of marks): communicate clearly; adapt tone, style, and register for purpose and audience',
+        'AO6 (20% of total GCSE marks): vocabulary range, sentence variety, spelling, punctuation accuracy'
       ]}
     ]
   },
 
   'Biology':{
-    examBoard:'AQA GCSE Biology (8461) / Combined Science Trilogy (8464)',
+    examBoard:'Edexcel GCSE Biology (1BI0)',
     sections:[
-      {name:'Cell Biology',points:[
-        'Prokaryotic vs eukaryotic: size, nucleus, plasmids, cell wall material differences',
-        'Animal cell organelles: nucleus (DNA/protein), cytoplasm (reactions), cell membrane (control), mitochondria (ATP), ribosomes (protein synthesis)',
-        'Plant and algal cells: add cell wall (cellulose, support), chloroplasts (photosynthesis), permanent vacuole (turgor)',
-        'Mitosis: Prophase, Metaphase, Anaphase, Telophase -- produces 2 identical diploid cells for growth and repair',
-        'Required practical: light microscopy; magnification = image size / actual size; preparing slides',
-        'Diffusion: net movement of particles from high to low concentration; no energy needed',
-        'Osmosis: diffusion of water across partially permeable membrane from high to low water potential',
-        'Active transport: movement against concentration gradient; requires ATP; protein carriers'
+      {name:'Topic 1: Key Concepts in Biology',points:[
+        'Cell structure: nucleus (contains DNA), cytoplasm (site of reactions), cell membrane (controls entry/exit), mitochondria (aerobic respiration), ribosomes (protein synthesis)',
+        'Plant cells additionally have: cell wall (cellulose, provides support), chloroplasts (photosynthesis), permanent vacuole (maintains turgor pressure)',
+        'Prokaryotic cells: no membrane-bound nucleus; DNA is circular and in cytoplasm; smaller than eukaryotic cells; may have plasmids and flagella',
+        'Microscopy: magnification = image size / actual size; light microscopy for cells; electron microscopy for organelles',
+        'Mitosis: produces 2 genetically identical diploid daughter cells; used for growth, repair, and asexual reproduction',
+        'Diffusion: net movement of particles from high to low concentration; no energy required',
+        'Osmosis: diffusion of water molecules across a partially permeable membrane from high to low water potential',
+        'Active transport: movement against the concentration gradient; requires ATP energy and carrier proteins',
+        'Enzyme lock-and-key model: substrate fits the specific active site; enzyme is not consumed in the reaction',
+        'Effect of temperature on enzymes: increasing temperature raises rate until the optimum; beyond this the enzyme denatures',
+        'Effect of pH on enzymes: changes ionisation of the active site; each enzyme has an optimum pH range'
       ]},
-      {name:'Organisation',points:[
-        'Enzyme lock and key model: substrate fits active site; enzyme not consumed',
-        'Effect of temperature: increases rate until optimum then denatures (active site changes shape)',
-        'Effect of pH: changes charge on active site; each enzyme has an optimum pH',
-        'Digestive system: salivary glands (amylase), stomach (protease, HCl), small intestine (absorption), liver (bile), pancreas (all enzymes)',
-        'Heart: 4 chambers; right side pumps to lungs (pulmonary); left side pumps to body (systemic); valves prevent backflow',
-        'Blood vessels: arteries (thick wall, high pressure), veins (valves, low pressure), capillaries (one cell thick, exchange)',
-        'Blood: red cells (haemoglobin, no nucleus, biconcave), white cells (phagocytosis, antibodies), platelets (clotting), plasma (transport)',
-        'Lungs: alveoli (large surface area, moist, good blood supply, thin walls) for gas exchange'
+      {name:'Topic 2: Cells and Control',points:[
+        'Mitosis stages: Prophase (chromosomes condense), Metaphase (line up at equator), Anaphase (chromatids separate), Telophase (two nuclei form)',
+        'Cancer: uncontrolled mitosis caused by mutations; tumours may be benign (localised) or malignant (spread via blood)',
+        'Nervous system: receptor detects stimulus; sensory neurone sends impulse to CNS; motor neurone sends impulse to effector',
+        'Reflex arc: faster than conscious response because it bypasses the brain; spinal cord coordinates the reflex',
+        'Synapses: electrical impulse converted to chemical signal (neurotransmitter) which diffuses across the gap'
       ]},
-      {name:'Infection and Response',points:[
-        'Pathogens: bacteria (produce toxins), viruses (replicate inside cells), fungi, protists',
-        'Body defences: skin (barrier), mucus/cilia (trap pathogens), white blood cells (phagocytose or produce antibodies)',
-        'Antibodies: specific to antigen; lock-and-key; memory cells remain for future infection',
-        'Vaccines: introduce dead or weakened pathogen; stimulate antibody production; herd immunity',
-        'Antibiotics: kill bacteria by disrupting cell wall or metabolism; cannot kill viruses; antibiotic resistance'
+      {name:'Topic 3: Genetics',points:[
+        'DNA: double helix; complementary base pairs A-T and C-G; gene = section of DNA coding for a protein',
+        'Chromosomes: humans have 23 pairs (46 total); sex chromosomes XX (female) and XY (male)',
+        'Meiosis: produces 4 genetically different haploid gametes; two divisions; introduces variation through independent assortment and crossing over',
+        'Punnett squares: monohybrid crosses with dominant (capital letter) and recessive (lowercase) alleles',
+        'Sex-linked inheritance: gene carried on the X chromosome; males (XY) more likely to show recessive conditions',
+        'Mutation: a change in the DNA base sequence; can be caused by radiation or mutagenic chemicals'
       ]},
-      {name:'Bioenergetics',points:[
-        'Photosynthesis: 6CO\u2082 + 6H\u2082O + light energy \u2192 C\u2086H\u2081\u2082O\u2086 + 6O\u2082 (in chloroplasts)',
-        'Limiting factors for photosynthesis: light intensity, CO\u2082 concentration, temperature',
-        'Aerobic respiration: C\u2086H\u2081\u2082O\u2086 + 6O\u2082 \u2192 6CO\u2082 + 6H\u2082O + ATP (in mitochondria)',
-        'Anaerobic respiration in humans: glucose \u2192 lactic acid + ATP (small amount); causes oxygen debt',
-        'Anaerobic respiration in yeast: glucose \u2192 ethanol + CO\u2082 + ATP (fermentation)'
+      {name:'Topic 4: Natural Selection and Genetic Modification',points:[
+        'Natural selection: variation exists in a population; competition for resources; best adapted individuals survive and reproduce; favourable alleles become more common over generations',
+        'Speciation: populations become reproductively isolated; different selection pressures cause different adaptations; eventually cannot interbreed',
+        'Genetic engineering: a useful gene is cut from one organism\'s DNA using restriction enzymes and inserted into another organism\'s DNA using ligase enzymes',
+        'GM crops: can be made resistant to herbicides or pests; increases yield; ethical concerns about biodiversity and safety'
       ]},
-      {name:'Homeostasis and Response',points:[
-        'Nervous system: receptor \u2192 sensory neurone \u2192 CNS \u2192 motor neurone \u2192 effector',
-        'Reflex arc: faster than conscious response; synapses use neurotransmitters to pass signals',
-        'Blood glucose: rises after eating \u2192 insulin released by pancreas \u2192 glucose stored as glycogen in liver',
-        'Blood glucose too low: glucagon released \u2192 glycogen converted back to glucose',
-        'Type 1 diabetes: pancreas does not produce insulin; treated with insulin injections',
-        'Type 2 diabetes: cells stop responding to insulin; linked to obesity; treated with diet and exercise',
-        'Thermoregulation: hypothalamus monitors core temperature; vasodilation/vasoconstriction, sweating, shivering'
+      {name:'Topic 5: Health, Disease and the Immune System',points:[
+        'Pathogens: bacteria (produce toxins), viruses (replicate inside host cells), fungi, protists',
+        'Body defences: skin (physical barrier), mucus and cilia (trap and remove pathogens from airways), white blood cells',
+        'Phagocytosis: white blood cells engulf and digest pathogens',
+        'Antibodies: specific to a particular antigen; produced by lymphocytes; lock-and-key model; memory cells remain for future infection',
+        'Vaccines: introduce dead, weakened, or antigen fragments of a pathogen; stimulate antibody production and memory cell formation; herd immunity',
+        'Antibiotics: target bacterial cell walls or metabolism; cannot treat viral infections; antibiotic resistance develops through natural selection'
       ]},
-      {name:'Inheritance and Evolution',points:[
-        'DNA: double helix; base pairs A-T and C-G; gene = section of DNA coding for a protein',
-        'Chromosomes: humans have 23 pairs; sex chromosomes XX (female) XY (male)',
-        'Meiosis: produces 4 genetically different haploid gametes; introduces variation',
-        'Punnett squares: monohybrid cross with dominant and recessive alleles; sex-linked traits',
-        'Natural selection: variation \u2192 competition \u2192 survival of best adapted \u2192 reproduction \u2192 allele frequency changes'
+      {name:'Topic 6: Plant Structures and Functions',points:[
+        'Photosynthesis equation: 6CO2 + 6H2O + light energy --> C6H12O6 + 6O2 (in chloroplasts)',
+        'Limiting factors for photosynthesis: light intensity, carbon dioxide concentration, temperature; any one can limit rate even if others are high',
+        'Leaf structure: waxy cuticle (reduces water loss), palisade mesophyll (maximum light absorption), spongy mesophyll (gas exchange), guard cells (control stomatal opening)',
+        'Transpiration: evaporation and diffusion of water vapour from leaves through stomata; increased by high temperature, low humidity, high wind',
+        'Translocation: movement of sugars (sucrose) in phloem from leaves (source) to roots and other sinks'
+      ]},
+      {name:'Topic 7: Animal Coordination and Homeostasis',points:[
+        'Homeostasis: maintaining a stable internal environment despite external changes',
+        'Blood glucose regulation: rises after eating; insulin released by beta cells in pancreas; glucose taken up by cells and stored as glycogen in liver',
+        'Blood glucose too low: glucagon released by alpha cells; glycogen broken down to glucose (glycogenolysis)',
+        'Type 1 diabetes: autoimmune destruction of beta cells; no insulin produced; treated with insulin injections',
+        'Type 2 diabetes: body cells become resistant to insulin; linked to obesity; treated with diet, exercise, and medication',
+        'Thermoregulation: hypothalamus detects core temperature change; vasodilation and sweating to cool; vasoconstriction and shivering to warm',
+        'Hormonal system: slower than nervous system; uses hormones in blood; effects are longer lasting'
+      ]},
+      {name:'Topic 8: Exchange and Transport',points:[
+        'Alveoli adaptations: large surface area, moist lining, rich blood supply, one-cell-thick walls; maximise gas exchange efficiency',
+        'Heart structure: 4 chambers; right side pumps deoxygenated blood to lungs; left side pumps oxygenated blood to body',
+        'Blood vessels: arteries (thick muscular walls, high pressure), veins (large lumen, valves prevent backflow), capillaries (one-cell-thick wall, exchange site)',
+        'Blood components: red blood cells (haemoglobin, no nucleus, biconcave disc), white blood cells (immune response), platelets (clotting), plasma (transports dissolved substances)',
+        'Coronary heart disease: fatty deposits (plaques) in coronary arteries; reduces blood flow; treated with statins or stents'
+      ]},
+      {name:'Topic 9: Ecosystems and Material Cycles',points:[
+        'Food chains and webs: energy flows from producers to consumers; only about 10% transferred between trophic levels',
+        'Carbon cycle: photosynthesis removes CO2; respiration, decomposition, and combustion release CO2',
+        'Nitrogen cycle: nitrogen fixation by bacteria; nitrification; denitrification; decomposition releases ammonium ions',
+        'Biodiversity: variety of species in an ecosystem; high biodiversity increases stability and resilience',
+        'Human impacts: deforestation reduces carbon sinks and biodiversity; overfishing disrupts food webs; pollution harms organisms'
       ]}
     ]
   },
 
   'Chemistry':{
-    examBoard:'AQA GCSE Chemistry (8462) / Combined Science Trilogy (8464)',
+    examBoard:'Edexcel GCSE Chemistry (1CH0)',
     sections:[
-      {name:'Atomic Structure and the Periodic Table',points:[
-        'Atomic structure: protons (positive, nucleus), neutrons (neutral, nucleus), electrons (negative, shells)',
-        'Atomic number = number of protons; mass number = protons + neutrons; electron configuration',
-        'Isotopes: same number of protons, different neutrons; same chemical properties; relative atomic mass uses abundance',
-        'Ionic bonding: metal loses electrons, non-metal gains; forms giant ionic lattice; high melting point, conducts when molten',
-        'Covalent bonding: sharing electrons between non-metals; simple molecular (low mp) vs giant covalent (very high mp)',
-        'Metallic bonding: positive metal ions in sea of delocalised electrons; explains conductivity, malleability, high melting point'
+      {name:'Topic 1: Key Concepts in Chemistry',points:[
+        'Atomic structure: protons (positive, in nucleus), neutrons (neutral, in nucleus), electrons (negative, in shells around nucleus)',
+        'Atomic number = number of protons; mass number = protons + neutrons; electron configuration fills shells 2, 8, 8',
+        'Isotopes: same number of protons, different number of neutrons; same chemical properties; relative atomic mass accounts for isotope abundance',
+        'Ions: atoms that have lost or gained electrons; metal ions are positive (cations), non-metal ions are negative (anions)',
+        'Ionic bonding: metal loses electrons to non-metal; forms giant ionic lattice; high melting point, conducts electricity when molten or dissolved',
+        'Covalent bonding: sharing of electron pairs between non-metal atoms; simple molecular (low melting point) or giant covalent (very high melting point)',
+        'Metallic bonding: positive metal ions in a sea of delocalised electrons; explains electrical conductivity, malleability, and high melting point',
+        'Relative formula mass (Mr): sum of all relative atomic masses in the formula'
       ]},
-      {name:'Quantitative Chemistry',points:[
-        'Relative formula mass (M\u1D63): sum of all relative atomic masses in formula',
-        'Amount in moles = mass (g) / M\u1D63',
-        'Using moles in equations: mole ratio from balanced equation gives reacting amounts',
-        'Percentage yield = (actual yield / theoretical yield) \u00d7 100',
-        'Atom economy = (M\u1D63 of desired product / total M\u1D63 of all products) \u00d7 100',
-        'Concentration (mol/dm\u00b3) = moles / volume (dm\u00b3); convert cm\u00b3 by dividing by 1000',
-        'Titration: use volumes and concentration of known solution to find unknown concentration'
+      {name:'Topic 2: States of Matter and Mixtures',points:[
+        'States of matter: solid (fixed shape and volume), liquid (fixed volume, takes shape of container), gas (fills all available space)',
+        'Separating mixtures: filtration (insoluble solid from liquid), evaporation (soluble solid from solution), distillation (liquids with different boiling points), chromatography (dissolved substances)',
+        'Chromatography: Rf value = distance travelled by substance / distance travelled by solvent front',
+        'Purity: a pure substance has a sharp melting/boiling point; impurities broaden the melting point range'
       ]},
-      {name:'Chemical Changes',points:[
-        'Reactivity series (high to low): K, Na, Ca, Mg, Al, Zn, Fe, Sn, Pb, Cu',
-        'Displacement reactions: more reactive metal displaces less reactive from solution',
-        'Acids and bases: pH scale 1-14; neutralisation: acid + base \u2192 salt + water',
-        'Salt names: HCl makes chlorides; H\u2082SO\u2084 makes sulfates; HNO\u2083 makes nitrates',
-        'Electrolysis: ionic compound split by electricity; cathode (negative) -- reduction; anode (positive) -- oxidation',
-        'Electrolysis of aqueous solutions: discharge of ions depends on reactivity; hydrogen at cathode if metal is reactive'
+      {name:'Topic 3: Chemical Changes',points:[
+        'Reactivity series (most to least reactive): K, Na, Ca, Mg, Al, Zn, Fe, Sn, Pb, Cu',
+        'Displacement reactions: a more reactive metal displaces a less reactive metal from its salt solution',
+        'Acids and alkalis: pH scale 0-14; acids below 7, alkalis above 7; neutralisation: acid + base --> salt + water',
+        'Salt names: hydrochloric acid (HCl) makes chlorides; sulfuric acid (H2SO4) makes sulfates; nitric acid (HNO3) makes nitrates',
+        'Electrolysis: ionic compound split by direct electrical current; cathode is negative (reduction occurs); anode is positive (oxidation occurs)',
+        'Electrolysis of aqueous solutions: hydrogen produced at cathode if the metal is more reactive than hydrogen; oxygen produced at anode unless halide ions are present'
       ]},
-      {name:'Energy Changes',points:[
-        'Exothermic: energy released to surroundings; temperature rises; combustion, neutralisation, oxidation',
-        'Endothermic: energy absorbed from surroundings; temperature falls; thermal decomposition, dissolving ammonium nitrate',
-        'Bond energies: energy input to break bonds (endothermic); energy released making bonds (exothermic)',
-        'Overall energy change = energy to break bonds - energy released making bonds'
+      {name:'Topic 4: Extracting Metals and Equilibria',points:[
+        'Metal extraction: metals below carbon in the reactivity series are extracted by reduction with carbon (e.g. iron from iron ore in a blast furnace)',
+        'Electrolysis is used to extract metals more reactive than carbon (e.g. aluminium from aluminium oxide)',
+        'Dynamic equilibrium: in a closed system, forward and reverse reaction rates are equal; concentrations remain constant',
+        'Le Chatelier\'s principle: if conditions change, the equilibrium shifts to oppose the change',
+        'Haber process: N2 + 3H2 = 2NH3 (reversible); conditions: 450 degrees C, 200 atm, iron catalyst; compromise between rate and yield'
       ]},
-      {name:'Rates, Equilibrium and Organic Chemistry',points:[
-        'Rate-increasing factors: temperature (more energy), concentration (more collisions), surface area, catalyst (lowers activation energy), pressure (gases)',
-        'Collision theory: particles must collide with sufficient energy (activation energy) to react',
-        'Dynamic equilibrium: forward and reverse rates equal; closed system',
-        'Le Chatelier\'s principle: system opposes any change in conditions; increase temp \u2192 endothermic direction favoured',
-        'Haber process: N\u2082 + 3H\u2082 \u21cc 2NH\u2083; conditions: 450\u00b0C, 200 atm, iron catalyst; compromise between rate and yield',
-        'Alkanes: C\u2099H\u208a\u2082\u2099\u208a\u2082; saturated (single bonds only); combustion; substitution with halogens in UV',
-        'Alkenes: C\u2099H\u2082\u2099; unsaturated (one C=C double bond); addition reactions; bromine water decolourises (test for C=C)'
+      {name:'Topic 5: Separate Chemistry 1 (Chemistry only)',points:[
+        'Transition metals: d-block elements; form coloured compounds; can act as catalysts; variable oxidation states',
+        'Flame tests: Li (red), Na (yellow/orange), K (lilac), Ca (orange-red), Cu (green)',
+        'Precipitation reactions: mixing two solutions to form an insoluble precipitate; used to identify metal ions',
+        'Test for gases: hydrogen (burning splint - squeaky pop), oxygen (glowing splint relights), CO2 (limewater turns cloudy), chlorine (bleaches damp litmus paper)'
       ]},
-      {name:'Analysis and the Atmosphere',points:[
-        'Early atmosphere: mainly CO\u2082 and water vapour; N\u2082 built up; O\u2082 from photosynthesis',
-        'Greenhouse gases: CO\u2082, methane, water vapour; absorb and re-emit infrared radiation',
-        'Test for hydrogen: burning splint -- squeaky pop',
-        'Test for oxygen: glowing splint -- relights',
-        'Test for CO\u2082: limewater turns milky/cloudy',
-        'Test for chlorine: damp litmus paper -- bleaches white',
-        'Flame tests: Li (red), Na (yellow/orange), K (lilac), Ca (orange-red), Cu (green)'
+      {name:'Topic 6: Groups in the Periodic Table',points:[
+        'Group 1 (alkali metals): react vigorously with water producing hydrogen gas and a metal hydroxide; reactivity increases down the group',
+        'Group 7 (halogens): diatomic molecules; react with metals and non-metals; more reactive halogens displace less reactive ones from their salts',
+        'Group 0 (noble gases): full outer electron shells; unreactive; used in lighting and as inert atmospheres'
+      ]},
+      {name:'Topic 7: Rates of Reaction and Energy Changes',points:[
+        'Rate-increasing factors: higher temperature (more particles with activation energy), higher concentration (more frequent collisions), larger surface area, catalyst (provides alternative lower-energy pathway), higher pressure (gases only)',
+        'Collision theory: particles must collide with sufficient energy (at least the activation energy) in the correct orientation to react',
+        'Exothermic reactions: energy released to surroundings; temperature rises; examples include combustion, neutralisation, and oxidation',
+        'Endothermic reactions: energy absorbed from surroundings; temperature falls; examples include thermal decomposition and dissolving ammonium nitrate',
+        'Bond energies: energy must be supplied to break bonds (endothermic); energy is released when bonds form (exothermic)',
+        'Overall energy change = energy to break bonds in reactants - energy released making bonds in products'
+      ]},
+      {name:'Topic 8: Fuels and Earth Science',points:[
+        'Crude oil: mixture of hydrocarbons separated by fractional distillation based on boiling point differences',
+        'Alkanes: CnH(2n+2); saturated (single bonds only); complete combustion gives CO2 and H2O; incomplete gives CO or carbon (soot)',
+        'Alkenes: CnH2n; unsaturated (contain one C=C double bond); addition reactions with bromine water (decolourises) - test for C=C',
+        'Cracking: breaking long-chain alkanes into shorter alkanes and alkenes using high temperature and a catalyst',
+        'Atmosphere: early atmosphere was mainly CO2 and water vapour; nitrogen built up over time; oxygen increased due to photosynthesis',
+        'Greenhouse gases: CO2, methane, and water vapour trap infrared radiation re-emitted from Earth\'s surface; enhanced greenhouse effect causes global warming'
+      ]},
+      {name:'Topic 9: Separate Chemistry 2 (Chemistry only)',points:[
+        'Quantitative analysis: moles = mass / Mr; use mole ratios from balanced equations to find reacting masses',
+        'Percentage yield = (actual yield / theoretical yield) x 100',
+        'Atom economy = (Mr of desired product / sum of Mr of all products) x 100',
+        'Concentration (mol/dm3) = moles / volume in dm3; convert cm3 to dm3 by dividing by 1000',
+        'Titration: use known concentration of acid/alkali to find unknown concentration; calculate using n = c x v'
       ]}
     ]
   },
 
   'Physics':{
-    examBoard:'AQA GCSE Physics (8463) / Combined Science Trilogy (8464)',
+    examBoard:'Edexcel GCSE Physics (1PH0)',
     sections:[
-      {name:'Forces',points:[
-        'Newton\'s 1st Law: an object stays at rest or constant velocity unless a resultant force acts on it',
-        'Newton\'s 2nd Law: F = ma; resultant force (N) = mass (kg) \u00d7 acceleration (m/s\u00b2)',
-        'Newton\'s 3rd Law: every action has an equal and opposite reaction on a different object',
-        'Momentum: p = mv; unit kg m/s; conservation of momentum in closed systems',
-        'Stopping distance = thinking distance + braking distance; affected by speed, conditions, reaction time',
-        'Hooke\'s Law: F = ke; extension proportional to force up to elastic limit; spring constant k (N/m)'
+      {name:'Topic 1: Key Concepts in Physics',points:[
+        'SI units: length (m), mass (kg), time (s), current (A), temperature (K), amount of substance (mol)',
+        'Scalars have magnitude only (e.g. speed, mass, energy); vectors have magnitude and direction (e.g. velocity, force, acceleration)',
+        'Significant figures: give answers to an appropriate number of significant figures matching the data provided'
       ]},
-      {name:'Waves',points:[
-        'Wave equation: v = f\u03bb (wave speed = frequency \u00d7 wavelength)',
-        'Transverse waves: oscillation perpendicular to direction of travel (e.g. light, water)',
-        'Longitudinal waves: oscillation parallel to direction of travel (e.g. sound, compression waves)',
-        'Electromagnetic spectrum (low to high freq): radio, microwave, infrared, visible, UV, X-ray, gamma',
-        'All EM waves travel at 3 \u00d7 10\u2078 m/s in a vacuum; uses and hazards of each type',
-        'Sound: compression waves; speed in solids > liquids > gases; cannot travel through a vacuum'
+      {name:'Topic 2: Motion and Forces',points:[
+        'Speed = distance / time; acceleration = change in velocity / time taken (a = delta v / t)',
+        'Distance-time graphs: gradient = speed; velocity-time graphs: gradient = acceleration; area under graph = distance',
+        'Newton\'s First Law: an object remains at rest or constant velocity unless a resultant force acts on it',
+        'Newton\'s Second Law: F = ma; resultant force (N) = mass (kg) x acceleration (m/s^2)',
+        'Newton\'s Third Law: every action force has an equal and opposite reaction force on a different object',
+        'Momentum: p = mv (kg m/s); conservation of momentum applies in all closed system collisions',
+        'Stopping distance = thinking distance (reaction time) + braking distance; affected by speed, road conditions, tyre condition, reaction time',
+        'Hooke\'s Law: F = ke; extension is proportional to force up to the elastic limit; k is the spring constant (N/m)'
       ]},
-      {name:'Electricity',points:[
-        'V = IR (Ohm\'s Law); resistance in ohms (\u03a9); calculate voltage, current or resistance',
-        'Power: P = IV = I\u00b2R = V\u00b2/R; energy transferred E = Pt',
-        'Series circuits: same current everywhere; voltages add up; total resistance = sum of resistances',
-        'Parallel circuits: same voltage across each branch; currents add up; total resistance decreases',
-        'Mains electricity: 230 V AC, 50 Hz; live (brown), neutral (blue), earth (green/yellow)',
-        'Fuses and circuit breakers: fuse melts if current too high; protect cables from overheating'
+      {name:'Topic 3: Conservation of Energy',points:[
+        'Energy stores: kinetic (Ek = 1/2 mv^2), gravitational PE (Ep = mgh), elastic PE (Ee = 1/2 ke^2), thermal, chemical, nuclear',
+        'Conservation of energy: energy cannot be created or destroyed, only transferred between stores or dissipated',
+        'Efficiency = useful output energy / total input energy; express as a decimal or percentage; always less than or equal to 1',
+        'Power = energy transferred / time (P = E/t); unit is watts (W)'
       ]},
-      {name:'Magnetism and Electromagnetism',points:[
-        'Magnetic field lines: from N to S outside magnet; field around current-carrying wire is circular',
-        'Motor effect: current in magnetic field experiences a force; F = BIL',
+      {name:'Topic 4: Waves',points:[
+        'Wave equation: v = f x lambda (wave speed = frequency x wavelength)',
+        'Transverse waves: oscillation is perpendicular to the direction of energy transfer (e.g. light, water waves)',
+        'Longitudinal waves: oscillation is parallel to the direction of energy transfer (e.g. sound, ultrasound)',
+        'Electromagnetic spectrum (lowest to highest frequency): radio, microwave, infrared, visible light, ultraviolet, X-rays, gamma rays',
+        'All EM waves travel at 3 x 10^8 m/s in a vacuum; know uses and hazards of each type',
+        'Sound: produced by vibrations; cannot travel through a vacuum; travels faster in solids than liquids than gases',
+        'Reflection: angle of incidence = angle of reflection; both measured from the normal'
+      ]},
+      {name:'Topic 5: Light and the Electromagnetic Spectrum',points:[
+        'Refraction: change in wave speed when passing between media; bends towards normal when slowing down',
+        'Total internal reflection: occurs when angle of incidence exceeds the critical angle; used in optical fibres',
+        'Lenses: convex lens converges light; concave lens diverges light; real images can be projected; virtual images cannot',
+        'Visible light spectrum: red (longest wavelength) to violet (shortest wavelength); prism disperses white light'
+      ]},
+      {name:'Topic 6: Radioactivity',points:[
+        'Nuclear radiation types: alpha (2 protons + 2 neutrons, stopped by paper or few cm of air), beta (fast electron, stopped by aluminium), gamma (EM radiation, reduced by thick lead)',
+        'Half-life: time taken for the activity (or number of unstable nuclei) to halve; use to calculate remaining mass or activity',
+        'Nuclear fission: large nucleus absorbs a neutron and splits into two smaller nuclei plus neutrons and energy; chain reaction in reactors',
+        'Nuclear fusion: two small nuclei combine to form a larger nucleus releasing energy; occurs in stars; not yet used for power generation'
+      ]},
+      {name:'Topic 7: Astronomy',points:[
+        'Life cycle of stars: nebula --> protostar --> main sequence star --> red giant (small stars) or red supergiant (large stars)',
+        'Small stars end as a white dwarf then black dwarf; large stars end in a supernova then neutron star or black hole',
+        'Evidence for Big Bang: red-shift of light from distant galaxies (universe is expanding); cosmic microwave background radiation',
+        'Red-shift: light from galaxies moving away appears shifted towards longer wavelengths; more distant galaxies show greater red-shift'
+      ]},
+      {name:'Topic 8: Energy - Forces Doing Work',points:[
+        'Work done: W = F x d (joules); work done against friction is transferred to thermal energy stores',
+        'Gravitational PE: Ep = mgh; kinetic energy: Ek = 1/2 mv^2; these interconvert in free fall (assuming no air resistance)'
+      ]},
+      {name:'Topic 9: Forces and their Effects',points:[
+        'Resultant force: vector sum of all forces acting on an object; find by scale drawing or calculation',
+        'Turning moments: moment (Nm) = force (N) x perpendicular distance from pivot (m)',
+        'Principle of moments: for equilibrium, sum of clockwise moments = sum of anticlockwise moments',
+        'Pressure: P = F/A (Pa or N/m^2); pressure in fluids acts equally in all directions at a given depth'
+      ]},
+      {name:'Topic 10: Electricity and Circuits',points:[
+        'Ohm\'s Law: V = IR; current (A), voltage (V), resistance (ohms)',
+        'Series circuits: same current everywhere; voltages add up; total resistance = sum of individual resistances',
+        'Parallel circuits: same voltage across each branch; currents add up; total resistance is less than smallest individual resistance',
+        'Power: P = IV = I^2 x R = V^2 / R; energy transferred: E = P x t',
+        'Mains electricity: 230 V AC at 50 Hz in UK; live wire (brown), neutral wire (blue), earth wire (green-yellow)',
+        'Fuses and circuit breakers: protect circuits from excess current; fuse melts when current exceeds rating'
+      ]},
+      {name:'Topic 11: Magnetism and the Motor Effect',points:[
+        'Magnetic field lines: run from north to south pole outside the magnet; current-carrying wire has circular field lines',
+        'Motor effect: a current-carrying conductor in a magnetic field experiences a force; F = BIL',
         'Fleming\'s left-hand rule: thuMb = Motion, First finger = Field, seCond finger = Current',
-        'Electromagnetic induction: changing magnetic field induces an EMF; Faraday\'s law',
-        'Transformers: V\u209a/V\u209b = N\u209a/N\u209b; step-up increases voltage; step-down decreases; used in National Grid'
-      ]},
-      {name:'Particle Model and Atomic Structure',points:[
-        'Specific heat capacity: E = mc\u0394T; energy to raise 1 kg by 1\u00b0C',
-        'Specific latent heat: E = mL; energy for state change at constant temperature',
-        'Nuclear radiation: alpha (\u03b1, stopped by paper), beta (\u03b2, stopped by aluminium), gamma (\u03b3, reduced by lead)',
-        'Half-life: time for activity or number of unstable nuclei to halve; calculate remaining mass',
-        'Fission: large nucleus splits; chain reaction; releases energy in nuclear reactors'
-      ]},
-      {name:'Energy and Space',points:[
-        'Energy stores: kinetic (1/2 mv\u00b2), gravitational PE (mgh), elastic PE (1/2 ke\u00b2), thermal, chemical',
-        'Efficiency = useful output energy / total input energy; express as fraction or percentage; \u22641',
-        'Renewable sources: solar, wind, hydro, tidal, geothermal; no fuel cost; variable output',
-        'Life cycle of stars: nebula \u2192 protostar \u2192 main sequence \u2192 red giant \u2192 white dwarf (small stars) or supernova \u2192 neutron star / black hole (large stars)',
-        'Big Bang: universe started ~14 billion years ago; evidence from red-shift and cosmic microwave background radiation'
+        'Electromagnetic induction: a changing magnetic field induces an EMF in a conductor; Faraday\'s law',
+        'Transformers: Vp/Vs = Np/Ns; step-up increases voltage and decreases current; step-down does the reverse; used in National Grid to reduce energy loss'
       ]}
     ]
   },
@@ -411,52 +478,96 @@ const SPEC = {
   'Computer Science':{
     examBoard:'OCR GCSE Computer Science (J277)',
     sections:[
-      {name:'Algorithms',points:[
-        'Trace tables: track each variable through each iteration; show state after every line',
-        'Bubble sort: compare adjacent pairs, swap if wrong order; each pass bubbles largest to end; O(n\u00b2) worst case',
-        'Merge sort: divide array in half recursively; merge sorted halves; O(n log n) all cases',
-        'Linear search: check each element in turn; O(n) worst case; works on unsorted data',
-        'Binary search: sorted list only; check mid-point; discard half; repeat; O(log n)',
-        'Write pseudocode and code algorithms from scratch without reference materials'
+      {name:'1.1 Systems Architecture',points:[
+        'Von Neumann architecture: CPU contains ALU (arithmetic and logic operations), control unit (directs data flow), and registers',
+        'Key registers: Program Counter (address of next instruction), Memory Address Register (address being accessed), Memory Data Register (data being transferred), Accumulator (stores results)',
+        'Fetch-decode-execute cycle: PC sends address to MAR; instruction fetched into MDR; decoded by control unit; executed by ALU; PC incremented',
+        'CPU performance factors: clock speed (Hz, more cycles per second = faster), number of cores (parallel processing), cache size (L1 fastest but smallest, L3 largest but slowest)',
+        'Embedded systems: computers built into other devices for a specific purpose (e.g. washing machines, car engines)'
       ]},
-      {name:'Programming Fundamentals',points:[
-        'Variables and data types: integer, real/float, Boolean, string, character',
-        'Sequence, selection (if / elif / else), iteration (for and while loops)',
-        'Functions and procedures: parameters, return values, local vs global scope',
-        'String operations: length, substring/slicing, concatenation, upper/lower, find',
-        'File handling: open, read, write, close; append mode vs overwrite',
-        '1D and 2D arrays/lists: zero-indexed; traverse with loops; common operations'
+      {name:'1.2 Memory and Storage',points:[
+        'Primary storage: RAM (volatile, read/write, stores OS and running programs), ROM (non-volatile, stores boot instructions/BIOS)',
+        'Virtual memory: section of secondary storage used as overflow when RAM is full; much slower than RAM',
+        'Secondary storage types: HDD (magnetic, moving parts, cheap, slow, high capacity), SSD (flash memory, no moving parts, fast, more expensive)',
+        'Optical storage: CD/DVD/Blu-ray; portable but low capacity; used for media distribution',
+        'Units: 8 bits = 1 byte; 1 KB = 1024 bytes; 1 MB = 1024 KB; 1 GB = 1024 MB; 1 TB = 1024 GB'
       ]},
-      {name:'Data Representation',points:[
-        'Binary to denary and back: place values 128, 64, 32, 16, 8, 4, 2, 1',
-        'Binary to hex: split into nibbles (4 bits); hex digits 0-9 and A-F (10-15)',
-        'Binary addition: column addition; overflow error when result needs more bits than available',
-        'Two\'s complement: flip bits then add 1 to represent negative numbers',
-        'ASCII: 7-bit character encoding; 65 = A, 97 = a; Unicode extends to more languages',
-        'Images: pixels; bit depth determines colours per pixel (2^n); file size = width \u00d7 height \u00d7 bit depth',
-        'Sound: sample rate (samples per second) \u00d7 bit depth \u00d7 duration = file size in bits',
-        'Compression: lossy (removes data permanently, smaller) vs lossless (reversible, no quality loss); RLE and Huffman coding'
+      {name:'1.3 Computer Networks',points:[
+        'LAN (Local Area Network): covers a small geographic area; devices connected by cables or Wi-Fi; owned by one organisation',
+        'WAN (Wide Area Network): covers large geographic areas; uses leased infrastructure (e.g. internet)',
+        'Network topologies: star (all connected to central switch; failure of one node does not affect others), bus (shared backbone cable; single point of failure), mesh (every device connected to every other; high redundancy)',
+        'Network hardware: router (connects different networks and directs packets), switch (connects devices within a LAN), NIC (allows device to connect to a network)',
+        'Protocols: TCP/IP suite; TCP ensures reliable delivery; IP handles addressing and routing; HTTP/HTTPS for web; FTP for file transfer',
+        'Packet switching: data split into packets; each packet may take a different route; reassembled at destination'
       ]},
-      {name:'Hardware and Software',points:[
-        'Von Neumann architecture: CPU, ALU (arithmetic/logic), control unit, registers (PC, MAR, MDR, accumulator), buses (data, address, control)',
-        'Fetch-decode-execute cycle: PC holds address, MAR fetches from RAM, MDR holds data, decoded and executed',
-        'CPU performance factors: clock speed (Hz), number of cores, cache size (L1, L2, L3)',
-        'Primary storage: RAM (volatile, read/write, working memory), ROM (non-volatile, stores boot instructions)',
-        'Secondary storage: HDD (magnetic, cheap, slow), SSD (flash, fast, expensive), optical (portable), flash/USB',
-        'High-level vs low-level languages; compilers (whole program translated) vs interpreters (line by line)'
+      {name:'1.4 Network Security',points:[
+        'Threats: malware (viruses replicate and attach to files; worms self-replicate through networks; trojans disguise as legitimate software; ransomware encrypts files for payment)',
+        'Social engineering: phishing emails trick users into revealing credentials; pretexting creates false scenarios; shoulder surfing',
+        'Brute force attacks: systematically try all possible passwords; mitigated by account lockouts and strong passwords',
+        'SQL injection: malicious SQL code inserted through input fields to manipulate a database',
+        'DDoS (Distributed Denial of Service): overwhelm a server with traffic from many sources to make it unavailable',
+        'Security measures: firewalls (filter incoming and outgoing traffic), encryption (scrambles data so only authorised parties can read it), two-factor authentication, strong password policies, regular software updates'
       ]},
-      {name:'Networks and Security',points:[
-        'LAN (local area network) vs WAN (wide area network); topology: star (central switch), bus (shared cable), mesh (every device connected)',
-        'TCP/IP protocol stack: Application, Transport (TCP/UDP), Internet (IP), Link layers',
-        'IP addressing: IPv4 (32-bit, 4 octets) vs IPv6 (128-bit); packet switching routes data independently',
-        'Network threats: malware (viruses, worms, trojans), phishing (fraudulent emails), brute force (password guessing), SQL injection, DDoS',
-        'Security measures: firewall (block unauthorised traffic), encryption (scramble data), strong passwords, two-factor authentication, anti-malware'
+      {name:'1.5 Systems Software',points:[
+        'Operating system functions: memory management (allocates RAM to programs), process scheduling (decides which process runs when), file management (organises and controls access to files), device management (communicates with hardware via drivers)',
+        'Utility software: antivirus (detects and removes malware), disk defragmenter (reorganises fragmented files), compression (reduces file size)',
+        'High-level languages: human-readable; portable; need to be translated; examples include Python, Java, C++',
+        'Low-level languages: assembly language (uses mnemonics for machine code instructions); machine code (binary; directly executed by CPU)',
+        'Compilers: translate entire program before execution; faster execution; errors reported after full translation',
+        'Interpreters: translate and execute line by line; easier to debug; slower execution'
       ]},
-      {name:'Boolean Logic',points:[
-        'Logic gates from memory: AND (both inputs 1), OR (at least one input 1), NOT (inverts), NAND, NOR, XOR',
-        'Truth tables: construct for any gate or combination; one row per possible input combination',
-        'Boolean algebra: simplify expressions; De Morgan\'s Law: NOT(A AND B) = NOT A OR NOT B',
-        'Draw logic circuit from Boolean expression; write expression from circuit diagram'
+      {name:'2.1 Algorithms',points:[
+        'Decomposition: breaking a problem into smaller sub-problems that are easier to solve individually',
+        'Abstraction: removing unnecessary detail to focus on the essential features of a problem',
+        'Flowcharts: use standard symbols (oval for start/end, parallelogram for input/output, rectangle for process, diamond for decision)',
+        'Trace tables: track the value of each variable after every line or iteration of an algorithm; essential for Paper 2',
+        'Bubble sort: compare adjacent pairs; swap if in wrong order; repeat passes until no swaps needed; O(n^2) worst case',
+        'Merge sort: recursively divide array in half; merge sorted halves back together; O(n log n) in all cases',
+        'Linear search: check each element in turn from start; O(n) worst case; works on unsorted data',
+        'Binary search: sorted list only; compare with midpoint; discard the half that cannot contain the target; repeat; O(log n)',
+        'Write pseudocode and actual code for sorting and searching algorithms from memory without reference materials'
+      ]},
+      {name:'2.2 Programming Fundamentals',points:[
+        'Variables and constants: variables can change during execution; constants remain fixed; use meaningful names',
+        'Data types: integer (whole numbers), real/float (decimal numbers), Boolean (True/False), string (text), character (single character)',
+        'Sequence: instructions execute one after another in order',
+        'Selection: if/elif/else statements; choose which block of code to execute based on a condition',
+        'Iteration: for loops (fixed number of repetitions); while loops (repeat while condition is True)',
+        'Functions: named reusable blocks of code that return a value; procedures do not return a value',
+        'Parameters and return values: data passed into functions; return passes data back to the calling code',
+        'Local vs global scope: local variables exist only within the function; global variables can be accessed anywhere'
+      ]},
+      {name:'2.3 Producing Robust Programs',points:[
+        'Input validation: check data is the correct type, in range, and in the correct format before processing',
+        'Authentication: verify user identity using username/password or other methods before granting access',
+        'Testing: normal data (expected values), boundary data (at the edge of valid range), erroneous data (invalid input that should be rejected)',
+        'Syntax errors: break the rules of the programming language; prevent the program from running',
+        'Logic errors: program runs but produces incorrect output; harder to detect; use trace tables and debugging'
+      ]},
+      {name:'2.4 Boolean Logic',points:[
+        'Logic gates: AND (output is 1 only if both inputs are 1), OR (output is 1 if at least one input is 1), NOT (inverts the input)',
+        'NAND gate = NOT AND; NOR gate = NOT OR; XOR gate = output is 1 only if inputs are different',
+        'Truth tables: construct a complete truth table for any combination of gates; one row per possible combination of inputs',
+        'Boolean algebra: simplify expressions using identities; De Morgan\'s Law: NOT(A AND B) = NOT A OR NOT B',
+        'Draw a logic circuit from a Boolean expression and write an expression from a given circuit diagram'
+      ]},
+      {name:'2.5 Programming Languages and IDEs',points:[
+        'String operations: length (len), substring/slicing [start:end], concatenation (+), upper()/lower(), find/index',
+        'File handling: open() with mode \'r\' (read), \'w\' (write, overwrites), \'a\' (append); always close files after use',
+        '1D arrays/lists: zero-indexed; traverse with a for loop; common operations include append, remove, and sort',
+        '2D arrays: lists of lists; access element with array[row][col]; use nested loops to traverse',
+        'IDE features: editor (write code), run environment (execute code), debugger (step through code line by line), error messages'
+      ]},
+      {name:'2.6 Data Representation',points:[
+        'Binary to denary: place values 128, 64, 32, 16, 8, 4, 2, 1; add values where bit is 1',
+        'Denary to binary: repeatedly divide by 2 and record remainders from bottom to top',
+        'Binary to hexadecimal: split into nibbles (groups of 4 bits); convert each nibble; hex digits 0-9 and A(10)-F(15)',
+        'Binary addition: column addition; 0+0=0, 0+1=1, 1+1=10 (carry 1); overflow error when result exceeds available bits',
+        'Two\'s complement: flip all bits then add 1 to represent negative numbers in binary',
+        'ASCII: 7-bit encoding; 65 = A, 97 = a; Unicode uses more bits and covers all languages and symbols',
+        'Images: made of pixels; bit depth determines colours per pixel (2^n colours); file size = width x height x bit depth (in bits)',
+        'Sound: sample rate (samples per second) x bit depth x duration in seconds = file size in bits',
+        'Compression: lossy removes data permanently (smaller file, quality loss, e.g. MP3, JPEG); lossless is fully reversible (e.g. PNG, FLAC); run-length encoding and Huffman coding are lossless methods'
       ]}
     ]
   },
@@ -465,49 +576,67 @@ const SPEC = {
     examBoard:'Edexcel B GCSE Geography (1GB0)',
     sections:[
       {name:'Topic 1: Hazardous Earth',points:[
-        'Global atmospheric circulation: Hadley, Ferrel, Polar cells; creates trade winds and pressure belts',
-        'Ocean currents: redistribute heat; thermohaline circulation (deep ocean conveyor)',
-        'Natural climate change causes: Milankovitch cycles (orbital changes), volcanic eruptions, solar output variation',
-        'Evidence for climate change: ice cores (trapped air bubbles), tree rings, pollen records, historical documents',
-        'Human causes: burning fossil fuels releases CO\u2082; deforestation reduces carbon sink; enhanced greenhouse effect',
-        'Tropical cyclones: form over warm ocean (>26\u00b0C), spin due to Coriolis, bring extreme rainfall and storm surges',
-        'Plate boundaries: destructive (subduction, volcanoes and earthquakes), constructive (mid-ocean ridge, new crust), conservative (sliding past, earthquakes)',
-        'Compare earthquake/volcano impacts in high-income vs low-income countries: immediate and long-term'
+        'Global atmospheric circulation: Hadley cell (0-30 degrees), Ferrel cell (30-60 degrees), Polar cell (60-90 degrees); creates trade winds, westerlies, and polar easterlies',
+        'Natural climate change causes: Milankovitch cycles (changes in Earth\'s orbit and axial tilt), volcanic eruptions (ash and SO2 block sunlight), changes in solar output',
+        'Evidence for past climate change: ice cores (trapped air bubbles preserve ancient atmosphere), tree rings (width indicates growing conditions), pollen records, historical accounts',
+        'Human causes of current climate change: burning fossil fuels releases CO2; deforestation reduces carbon sinks; livestock farming produces methane; enhanced greenhouse effect',
+        'Tropical cyclones: form over warm ocean water (above 26 degrees C); spin due to Coriolis effect; bring strong winds, heavy rainfall, and storm surges; lose strength over land',
+        'Tectonic plates: constructive boundaries (plates move apart; new crust forms; mid-ocean ridges and shield volcanoes), destructive boundaries (plates move together; subduction creates explosive volcanoes and deep earthquakes), conservative boundaries (plates slide past each other; friction causes earthquakes)',
+        'Comparing hazard impacts: HICs have better prediction, preparation, infrastructure, and emergency response than LICs; primary and secondary impacts differ significantly'
       ]},
       {name:'Topic 2: Development Dynamics',points:[
-        'Measuring development: GDP per capita, HDI (composite -- income, health, education), Gini coefficient (inequality)',
-        'Causes of uneven development: colonial history, landlocked location, political instability, debt, trade rules',
-        'Emerging country case study: economic change since 1990, growth of middle class, FDI, inequality',
-        'Role of TNCs: bring investment and jobs but profits leave country; supply chains link HICs and LICs',
-        'Top-down vs bottom-up development: large infrastructure projects vs local micro-finance and community schemes'
+        'Measuring development: GDP per capita (income per person), HDI (composite index combining income, health, and education), Gini coefficient (measures income inequality)',
+        'Causes of uneven development: colonial history, landlocked location, political instability, debt burden, unfair trade rules, natural hazards',
+        'Emerging country case study: economic growth since 1990, expanding middle class, foreign direct investment, persistent inequality (e.g. India or China)',
+        'Role of TNCs: bring investment, employment, and technology transfer; but profits leave the country, wages may be low, and supply chains exploit LIC workers',
+        'Top-down development: large infrastructure projects (dams, roads) funded by governments or international organisations; may not meet local needs',
+        'Bottom-up development: microfinance schemes, community water projects; small-scale but directly improves quality of life'
       ]},
-      {name:'Topic 3: Urbanising World',points:[
-        'Global urbanisation: over 50% urban since 2007; fastest growth in sub-Saharan Africa and South Asia',
-        'Megacity case study: site (physical), situation (regional links), connectivity (global)',
-        'Urban challenges: informal settlements (lack water, sanitation, security), traffic congestion, pollution',
-        'Sustainability strategies: green infrastructure, improving squatter settlements, mixed-use zoning'
+      {name:'Topic 3: Challenges of an Urbanising World',points:[
+        'Global urbanisation: over 50% of world population is urban since 2007; fastest growth in sub-Saharan Africa and South Asia',
+        'Push and pull factors: push factors drive people out of rural areas (lack of jobs, poor services); pull factors attract people to cities (employment, education, healthcare)',
+        'Megacity case study: site (physical location), situation (regional connections), connectivity (global links); challenges of size and rapid growth',
+        'Informal settlements: lack legal tenure, piped water, sanitation, electricity; fire risk; poor access to healthcare and education',
+        'Sustainable urban strategies: green infrastructure, upgrading squatter settlements (site and service schemes), mixed-use zoning, improving public transport'
       ]},
-      {name:'Topic 4: UK Physical Landscape',points:[
-        'Geological foundations: upland north and west (igneous/metamorphic); lowland south and east (sedimentary)',
+      {name:'Topic 4: UK Physical Landscapes',points:[
+        'Geology: upland north and west (resistant igneous and metamorphic rock forms mountains); lowland south and east (softer sedimentary rock forms plains)',
+        'Coastal erosion processes: hydraulic action (wave pressure), corrasion/abrasion (rocks scraping cliff), attrition (rocks wearing each other down), solution (dissolving rock)',
         'Coastal erosion landforms: headlands and bays, cliffs, wave-cut platforms, caves, arches, stacks, stumps',
-        'Coastal management: hard engineering (seawalls, groynes -- expensive but effective) vs soft engineering (beach nourishment, managed retreat)',
-        'River erosion: hydraulic action, corrasion, attrition, solution; landforms: V-valley, interlocking spurs, waterfalls',
-        'River deposition landforms: flood plain, levees, meanders, oxbow lakes, deltas',
-        'Flood management: hard (dams, concrete channels) vs soft (afforestation, floodplain zoning, warning systems)'
+        'Coastal management: hard engineering (seawalls, groynes, rock armour - expensive, effective, may cause problems elsewhere); soft engineering (beach nourishment, managed retreat - cheaper, more sustainable)',
+        'River processes: erosion (hydraulic action, corrasion, attrition, solution), transportation (traction, saltation, suspension, solution), deposition (when energy decreases)',
+        'River landforms: V-shaped valleys and interlocking spurs (upper course), waterfalls and gorges (middle course), meanders and ox-bow lakes, flood plains, levees (lower course)',
+        'Flood management: hard engineering (dams, flood relief channels, concrete embankments); soft engineering (afforestation, floodplain zoning, flood warning systems)'
       ]},
-      {name:'Topic 5: UK Human Landscape',points:[
-        'Urban and rural differences: density, age structure, ethnicity, economic activity, services',
-        'Causes of urbanisation: industrialisation (historical), rural-urban migration',
-        'Counter-urbanisation: people leave cities; impacts on rural areas (house prices, commuting)',
-        'Economic change: decline of manufacturing; growth of service and quaternary sectors',
-        'Regeneration: physical (new buildings), economic (attracting investment), social (improving housing and services)'
+      {name:'Topic 5: UK Human Landscapes',points:[
+        'Urban growth: industrialisation attracted workers to cities in the 19th and 20th centuries; cities expanded outwards through suburbanisation',
+        'Counter-urbanisation: people leave cities for rural areas; driven by higher house prices in cities, improved transport links, and desire for quality of life; raises house prices in rural areas',
+        'Economic change: decline of manufacturing industry (deindustrialisation); growth of service sector; rise of quaternary industries (research, technology, finance)',
+        'Regeneration: physical regeneration (new buildings and infrastructure), economic regeneration (attracting businesses and investment), social regeneration (improving housing and community facilities)',
+        'Rural change: farming employs fewer people; tourism brings income but also pressure; second homes and commuters inflate house prices and reduce community cohesion'
       ]},
-      {name:'Topic 6: Global Development and Connections',points:[
-        'Global biomes: tropical rainforest, temperate deciduous forest, boreal taiga, grassland, desert, tundra -- know global distribution',
-        'Biosphere services: climate regulation, water cycling, soil formation, food and medicine resources',
-        'Tropical deforestation causes: commercial farming, logging, HEP projects, road building',
-        'Energy mix: non-renewable (coal, oil, gas, nuclear) vs renewable (solar, wind, HEP, tidal, geothermal)',
-        'Energy security: import dependency, geopolitical risk, transition to renewables'
+      {name:'Topic 6: Geographical Investigations (Fieldwork)',points:[
+        'Fieldwork: you must know the data you collected, the methods you used, and how to evaluate their strengths and limitations',
+        'Primary data: collected first-hand by you (e.g. questionnaires, beach profiles, river measurements)',
+        'Secondary data: collected by others (e.g. census data, OS maps, published statistics)',
+        'Evaluating methods: consider sample size, sampling strategy (systematic, random, stratified), potential for bias, and reliability'
+      ]},
+      {name:'Topic 7: People and the Biosphere',points:[
+        'Global biomes: tropical rainforest, tropical grassland (savanna), hot desert, temperate deciduous forest, boreal forest (taiga), tundra; know their global distribution',
+        'Biosphere services: climate regulation (carbon storage), water cycling (transpiration), soil formation (nutrient cycling), food and medicinal resources',
+        'Tropical rainforest: hot and wet all year; high biodiversity; buttress roots, drip tips, epiphytes are adaptations to the environment',
+        'Causes of deforestation: commercial farming (cattle ranching, soya), logging (timber and paper), HEP dam construction, road building and settlement'
+      ]},
+      {name:'Topic 8: Forests Under Threat',points:[
+        'Deforestation impacts: loss of biodiversity, disruption of water cycle (less transpiration), increased carbon emissions, soil erosion',
+        'Sustainable management: selective logging, replanting programmes, ecotourism, REDD+ schemes (paying countries to keep forests standing)',
+        'Temperate forests: deciduous trees shed leaves in winter as an adaptation; face threats from acid rain, urbanisation, and agriculture'
+      ]},
+      {name:'Topic 9: Consuming Energy Resources',points:[
+        'Energy mix: non-renewable sources (coal, oil, natural gas, nuclear) provide reliable baseload; renewable sources (solar, wind, HEP, tidal, geothermal) are sustainable but often intermittent',
+        'Energy security: a country is energy secure if it has reliable access to affordable energy; import dependency creates vulnerability to price shocks and political instability',
+        'Factors affecting energy mix: physical geography (availability of sun, wind, rivers), level of economic development, political decisions and international agreements',
+        'Sustainable energy: reducing demand through efficiency measures, switching to renewables, carbon capture and storage; key to meeting Paris Agreement targets'
       ]}
     ]
   },
@@ -516,56 +645,75 @@ const SPEC = {
     examBoard:'Edexcel GCSE Business (1BS0)',
     sections:[
       {name:'Theme 1: Investigating Small Business',points:[
-        'Entrepreneurs: take risk for profit/personal satisfaction; opportunity cost of decisions',
-        'Revenue = selling price \u00d7 quantity sold',
-        'Fixed costs: do not change with output (e.g. rent, salaries)',
-        'Variable costs: change with output (e.g. materials, packaging)',
+        'Entrepreneurs: take calculated risks in exchange for potential profit; opportunity cost is the value of the next best alternative foregone',
+        'Business aims and objectives: survival, profit, growth, social aims; objectives should be SMART',
+        'Revenue = selling price x quantity sold',
+        'Fixed costs: do not change with output (e.g. rent, salaries, insurance)',
+        'Variable costs: change directly with output (e.g. raw materials, packaging, piece-rate wages)',
         'Total costs = fixed costs + variable costs',
-        'Profit = total revenue - total costs; gross profit vs net profit distinction',
-        'Break-even: fixed costs / (selling price - variable cost per unit); use break-even charts',
-        'Sources of finance: owner\'s savings, bank loan, overdraft, share issue, crowdfunding, retained profit',
-        'Marketing mix: Product (USP, lifecycle), Price (penetration, skimming, competitive), Place (channels), Promotion (above/below line)',
-        'Market research: primary (surveys, focus groups -- costly but specific) vs secondary (desk research -- cheap but may be out of date)'
+        'Profit = total revenue - total costs; gross profit = revenue - cost of sales; net profit = gross profit - overheads',
+        'Break-even output = fixed costs / (selling price - variable cost per unit); use break-even charts to read off margin of safety',
+        'Cash flow: timing difference between money coming in and going out; a business can be profitable but have poor cash flow',
+        'Sources of finance: internal (owner\'s savings, retained profit) and external (bank loan, overdraft, share issue, crowdfunding, trade credit)',
+        'Market research: primary research (surveys, focus groups, observation) is up to date but expensive; secondary research (government data, reports) is cheap but may be outdated',
+        'Market segmentation: dividing the market into groups by age, income, location, lifestyle; allows targeted marketing',
+        'Marketing mix (4 Ps): Product (design, USP, product lifecycle), Price (penetration, skimming, competitive, cost-plus), Place (distribution channels), Promotion (advertising, social media, sales promotions)'
       ]},
       {name:'Theme 2: Building a Business',points:[
-        'Business growth: organic (internal -- new products, new markets) vs inorganic (mergers and takeovers)',
-        'Globalisation: trading internationally; benefits (larger market) and risks (exchange rates, legal differences)',
-        'Ethics and environment: CSR, sustainable sourcing, waste reduction; balancing profit with responsibility',
-        'Production methods: job (one-off, high cost), batch (groups, some flexibility), flow (continuous, low unit cost)',
-        'Lean production: just-in-time (minimise stock), kaizen (continuous improvement), cell production',
-        'Motivation theories: Maslow (hierarchy of needs), Taylor (scientific management -- financial reward)',
-        'Human resources: recruitment (job description, person spec, interview), training (induction, on-the-job, off-the-job)',
-        'ARR (%) = (average annual profit / initial investment) \u00d7 100',
-        'Payback period: time to recover investment; simpler but ignores time value of money'
+        'Business growth: organic growth (internal expansion - new products, new markets, increased sales); inorganic growth (mergers and takeovers)',
+        'Economies of scale: as output increases, average cost per unit falls; bulk buying, specialist staff, spreading fixed costs',
+        'Globalisation: trading internationally opens up larger markets but introduces risks (exchange rate fluctuations, different legal systems, cultural differences)',
+        'Location decisions: factors include proximity to market, labour supply, raw materials, transport links, and government incentives',
+        'Ethics and CSR: businesses face pressure to act responsibly towards employees, communities, and the environment; may conflict with short-term profit maximisation',
+        'Production methods: job production (one-off, high quality, high cost), batch production (groups of similar items), flow/mass production (continuous, low unit cost, capital intensive)',
+        'Lean production: just-in-time manufacturing (minimise stock holding); kaizen (continuous improvement through employee suggestions); reduces waste',
+        'Motivation theories: Taylor (scientific management; workers motivated mainly by financial reward); Maslow (hierarchy of needs from physiological to self-actualisation)',
+        'Human resources: recruitment process (job description, person specification, shortlisting, interview); training types (induction, on-the-job, off-the-job)',
+        'ARR (%) = (average annual profit / initial investment) x 100',
+        'Payback period: number of years to recover the initial investment; simpler to calculate but ignores long-term profitability',
+        'Organisational structure: hierarchy shows chain of command; span of control is the number of subordinates a manager is directly responsible for; delayering reduces layers of management'
       ]}
     ]
   },
 
   'French':{
-    examBoard:'AQA GCSE French (8658)',
+    examBoard:'Edexcel GCSE French (1FR0)',
     sections:[
-      {name:'Themes and Topics',points:[
-        'Identity and culture: self, family, friends, relationships, role models, social media, technology',
-        'Local, national, international areas of interest: town/region, travel, global issues, environment',
-        'Current and future study and employment: school, career aspirations, work experience, gap year',
-        'International and global dimension: tourism, immigration, cultural diversity'
+      {name:'Theme 1: Identity and Culture',points:[
+        'Me, my family and friends: describe yourself and others; relationships, qualities, role models',
+        'Technology in everyday life: social media use, advantages and disadvantages, screen time, online safety',
+        'Free time activities: sports, music, hobbies; give and justify opinions using because and although',
+        'Customs and festivals in French-speaking countries: compare with UK traditions'
+      ]},
+      {name:'Theme 2: Local, National, International and Global Areas of Interest',points:[
+        'Home, town, neighbourhood and region: describe where you live; local facilities and transport',
+        'Social issues: poverty, homelessness, volunteer work, charity; use modal verbs to express obligation',
+        'Global issues: environment, climate change, pollution, recycling; use il faut que + subjunctive',
+        'Travel and tourism: holidays, means of transport, accommodation; past and future tenses are essential'
+      ]},
+      {name:'Theme 3: Current and Future Study and Employment',points:[
+        'Studies and school: subjects, school rules, describe your school day; give opinions with reasons',
+        'Life at school: compare school in France and the UK; school events, trips, exchanges',
+        'Education post-16: further study options; use conditional to say what you would like to do',
+        'Career plans and ambitions: future jobs; use future simple and conditional tenses'
       ]},
       {name:'Core Grammar',points:[
-        'Present tense: regular -er/-ir/-re verbs + key irregulars (aller, avoir, \u00eatre, faire, prendre, vouloir, pouvoir)',
-        'Perfect tense (pass\u00e9 compos\u00e9): avoir + past participle (most verbs); \u00eatre + past participle (DR MRS VANDERTRAMP verbs); agreement of past participle',
-        'Imperfect tense: habitual past actions and descriptions; stem from nous present - ons + endings',
-        'Near future: aller (conjugated) + infinitive',
-        'Future simple: infinitive (or irregular stem) + future endings (-ai, -as, -a, -ons, -ez, -ont)',
-        'Conditional: infinitive (or irregular stem) + imperfect endings; je voudrais, ce serait',
-        'Negation: ne...pas, ne...jamais (never), ne...rien (nothing), ne...plus (no longer), ne...que (only)',
-        'Subjunctive: after il faut que, bien que, pour que -- use present subjunctive of common verbs'
+        'Present tense: regular -er/-ir/-re endings; key irregulars: aller (je vais), avoir (j\'ai), etre (je suis), faire (je fais), pouvoir (je peux), vouloir (je veux), prendre (je prends)',
+        'Perfect tense (passe compose): avoir + past participle for most verbs; etre + past participle for DR MRS VANDERTRAMP verbs and all reflexive verbs; past participle agrees with subject when using etre',
+        'Imperfect tense (imparfait): stem from nous form of present tense minus -ons + endings (-ais, -ais, -ait, -ions, -iez, -aient); used for habitual past actions and descriptions',
+        'Near future (futur proche): conjugated aller + infinitive (e.g. je vais jouer = I am going to play)',
+        'Future simple (futur simple): infinitive (or irregular stem) + endings (-ai, -as, -a, -ons, -ez, -ont); key irregulars: aller (ir-), avoir (aur-), etre (ser-), faire (fer-), pouvoir (pourr-), vouloir (voudr-)',
+        'Conditional (conditionnel): same stem as future simple + imperfect endings; je voudrais, ce serait, on pourrait',
+        'Negation: ne...pas (not), ne...jamais (never), ne...rien (nothing), ne...plus (no longer), ne...personne (nobody), ne...que (only)',
+        'Subjunctive: used after il faut que, bien que, pour que, vouloir que; learn common present subjunctive forms',
+        'Reflexive verbs: se lever (to get up), se laver (to wash), s\'appeler (to be called); use reflexive pronoun before verb'
       ]},
       {name:'Exam Skills',points:[
-        'Reading: identify gist first, then specific details; watch for negatives and tense changes',
-        'Listening: read questions before audio plays; predict vocabulary from context',
-        'Writing: include 3 or more tenses in every essay; justify opinions; use a range of connectives and structures',
-        'Speaking: prepare opinions on all core topics; extend with reasons; recover from mistakes confidently',
-        'Translation into French: accuracy over length; know high-frequency vocabulary off by heart'
+        'Reading (25%): read questions carefully before the text; identify gist first then specific details; watch for negatives and tense changes that affect meaning',
+        'Listening (25%): read questions before the audio plays; listen for the overall meaning first; predict vocabulary from context; beware of distractors',
+        'Writing (25%): include at least 3 different tenses in every extended piece; justify all opinions; use connectives (cependant, par contre, bien que) and a variety of structures',
+        'Speaking (25%): prepare opinions on all core topics and themes in advance; extend answers with reasons and examples; recover from mistakes confidently and continue',
+        'Translation into French: accuracy is more important than length; know high-frequency vocabulary off by heart; check verb endings, gender agreements, and accents'
       ]}
     ]
   }
