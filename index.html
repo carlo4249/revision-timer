@@ -13,6 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style2.css">
+<link rel="stylesheet" href="css/fixes.css">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -59,7 +60,8 @@
     <div class="settings-section-lbl">Appearance</div>
     <div class="settings-wrap">
       <div class="theme-toggle-row">
-        <span class="theme-toggle-label">Light mode</span>
+        <!-- FIX: label changed to "Dark mode" — checked = dark (moon), unchecked = light (sun) -->
+        <span class="theme-toggle-label">Dark mode</span>
         <label class="theme-switch-sm">
           <input type="checkbox" class="ts-chk theme-chk" onchange="toggleThemeFromSettings(this)">
           <div class="ts-container">
@@ -77,19 +79,20 @@
       <div class="setting-row"><div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-notif" onchange="toggleSetting(this,'notif')"><div class="slider"></div></label></div>
       <div class="setting-row"><div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-eye" onchange="toggleSetting(this,'eye')" checked><div class="slider"></div></label></div>
       <div class="setting-row"><div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-hydra" onchange="toggleSetting(this,'hydra')" checked><div class="slider"></div></label></div>
-      <div class="setting-row"><div><div class="sr-lbl">Focus check-ins</div><div class="sr-desc">Prompt every 7-12 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Focus check&#8209;ins</div><div class="sr-desc">Prompt every 7&ndash;12 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label></div>
     </div>
 
     <div class="settings-section-lbl">Account</div>
     <div class="settings-wrap" id="settings-account-section"></div>
 
     <div class="settings-section-lbl">Data</div>
+    <!-- FIX: danger zone open by default, arrow pre-rotated -->
     <div class="danger-zone" style="margin:0 16px">
       <div class="danger-header" onclick="toggleDanger(this)">
         <div class="danger-title">&#9888;&#xFE0F; Danger zone</div>
-        <span class="danger-arrow">&#9660;</span>
+        <span class="danger-arrow" style="transform:rotate(180deg)">&#9660;</span>
       </div>
-      <div class="danger-body" id="danger-body">
+      <div class="danger-body open" id="danger-body">
         <div style="font-size:12px;color:var(--red);margin-bottom:10px;line-height:1.55">Permanently deletes all session history, spec ratings, and spaced repetition data.</div>
         <button class="clear-btn" onclick="confirmClearData()">Clear all data</button>
       </div>
