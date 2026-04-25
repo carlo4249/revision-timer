@@ -52,42 +52,56 @@ html,body{
     pointer-events:none
   }
   .screen{width:var(--card-w);max-width:var(--card-w);margin:0 auto}
+
+  /* ── Bulletproof centering: left:0;right:0;max-width;margin:auto ── */
   .bottom-nav{
-    left:50%;
-    right:auto;
-    transform:translateX(-50%);
-    width:var(--card-w);
+    left:0;
+    right:0;
+    max-width:var(--card-w);
+    margin:0 auto;
     border-left:1px solid var(--border);
     border-right:1px solid var(--border)
   }
   #home-screen .screen-foot{
-    left:50%;
-    right:auto;
-    transform:translateX(-50%);
-    width:var(--card-w);
+    left:0;
+    right:0;
+    max-width:var(--card-w);
+    margin:0 auto;
     border-left:1px solid var(--border);
     border-right:1px solid var(--border)
   }
   .checkin-ov{
-    left:50%;right:auto;
-    transform:translateX(-50%) translateY(100%);
-    width:var(--card-w)
+    left:0;right:0;
+    max-width:var(--card-w);
+    margin:0 auto;
+    transform:translateY(100%)
   }
-  .checkin-ov.vis{transform:translateX(-50%) translateY(0)}
+  .checkin-ov.vis{transform:translateY(0)}
+
   .overlay .sheet{max-width:700px}
   .sched-ios-sheet,.sr-sheet{max-width:var(--card-w);margin:0 auto}
+
+  /* card-clip-wrap: fixed, centered, same pattern */
   .card-clip-wrap{
-    left:50%;right:auto;width:var(--card-w);
-    transform:translateX(-50%);
+    left:0;right:0;
+    max-width:var(--card-w);
+    margin:0 auto;
   }
+
+  /* toast: no transform hack needed when left:0/right:0/max-width */
   .toast{
-    left:50%;right:auto;
-    transform:translate(-50%,-130%);
-    width:calc(var(--card-w) - 32px);
+    left:0;right:0;
     max-width:calc(var(--card-w) - 32px);
-    margin:0;
+    margin:0 auto;
+    transform:translateY(-130%);
   }
-  .toast.show{transform:translate(-50%,0)}
+  .toast.show{transform:translateY(0)}
+
+  /* Settings panel: fixed width on desktop, never collapses */
+  .settings-panel{
+    width:320px;
+    min-width:320px;
+  }
 }
 @media(min-width:1400px){:root{--card-w:840px}}
 @media(min-width:1700px){:root{--card-w:940px}}
