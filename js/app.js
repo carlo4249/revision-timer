@@ -51,16 +51,11 @@ function escHtml(s) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Format spec text: superscripts, chemical subscripts, arrows, degrees
 function fmtSpec(txt) {
-  // Superscripts: x^2, x^(-1), x^(1/3)
   txt = txt.replace(/\^(\([^)]*\)|[-\w\/]+)/g, (_,e) => `<sup>${e.replace(/[()]/g,'')}</sup>`);
-  // Chemical/formula subscripts: capital letter optionally followed by one lowercase, then digits
   txt = txt.replace(/([A-Z][a-z]?)(\d+)/g, '$1<sub>$2</sub>');
-  // Reaction arrows (after HTML-escaping, --> becomes --&gt;)
   txt = txt.replace(/--&gt;/g, '→');
   txt = txt.replace(/&lt;--&gt;/g, '⇌');
-  // Degrees C
   txt = txt.replace(/(\d+)\s*degrees?\s*[Cc]/g, '$1°C');
   return txt;
 }
@@ -71,7 +66,6 @@ function fmt(secs) {
 }
 
 // ===================== THEME =====================
-// FIX: checked = dark mode (moon icon), unchecked = light mode (sun icon)
 function toggleThemeFromSettings(checkbox) {
   const t = checkbox.checked ? 'dark' : 'light';
   applyTheme(t);
@@ -82,7 +76,6 @@ function applyTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
   const tcm = el('tcm');
   if (tcm) tcm.content = t==='dark' ? '#0e1010' : '#f2f2ed';
-  // checked = dark mode (shows moon), unchecked = light mode (shows sun)
   document.querySelectorAll('.theme-chk').forEach(c => { c.checked = (t==='dark'); });
 }
 
@@ -138,7 +131,7 @@ function updateSettingsAccountUI() {
         <div class="sr-desc" style="word-break:break-all">${escHtml(name)}</div>
       </div>
       <div class="setting-row">
-        <button class="btn btn-secondary" style="width:100%;font-size:13px;background:var(--s2);border:1.5px solid var(--border)" onclick="signOutUser()">Sign out</button>
+        <button class="btn btn-secondary" style="width:100%;font-size:13px;background:var(--s2);border:1.5px solid var(--border)" onclick="confirmSignOut()">Sign out</button>
       </div>`;
   } else {
     section.innerHTML = `
@@ -147,6 +140,18 @@ function updateSettingsAccountUI() {
       </div>`;
   }
 }
+
+// ===================== SIGN OUT CONFIRM =====================
+function confirmSignOut() {
+  openConfirm(
+    'Sign out?',
+    'Your data is saved to the cloud and will be waiting when you sign back in.',
+    'Sign out',
+    'btn btn-secondary',
+    () => signOutUser()
+  );
+}
+
 async function signOutUser() {
   if (window.firebaseAuth) await window.firebaseAuth.signOut().catch(()=>{});
   currentUser = null;
@@ -179,14 +184,24 @@ function adminUnlock() {
     }
   }
 }
+
 function adminDeactivate() {
-  isAdmin = false;
-  try { sessionStorage.removeItem('sv_admin'); } catch(e) {}
-  syncAdminUI();
-  updateAdminContentUI();
-  buildScheduleCard();
-  showToast('Admin mode off','');
+  openConfirm(
+    'Deactivate admin?',
+    'You will need to re-enter the password to enable admin mode again.',
+    'Deactivate',
+    'btn btn-secondary',
+    () => {
+      isAdmin = false;
+      try { sessionStorage.removeItem('sv_admin'); } catch(e) {}
+      syncAdminUI();
+      updateAdminContentUI();
+      buildScheduleCard();
+      showToast('Admin mode off','');
+    }
+  );
 }
+
 function syncAdminUI() {
   const unlockSec = el('admin-unlock-section');
   const activeSec = el('admin-active-section');
@@ -331,7 +346,7 @@ function toggleSetting(checkbox, key) {
   if (key==='notif' && CFG.notif) askNotif();
 }
 function confirmClearData() {
-  openConfirm('Clear all data?','Permanently deletes all session history, spec confidence, and spaced repetition data.','Clear everything','btn btn-danger', () => {
+  openConfirm('Clear all data?','Permanently deletes all session history, spec confidence, and spaced repetition data. This cannot be undone.','Clear everything','btn btn-danger', () => {
     clearAllData(); CFG = { ...DEFAULT_CFG };
     refreshStats(); buildScheduleCard(); buildSRCard(); updateProgressBar();
     showToast('Data cleared','All sessions removed', false);
@@ -414,6 +429,8 @@ function buildScheduleCard() {
   buildQuickStart();
   updateProgressBar();
 }
+
+// ===================== QUICK START WITH CONFIRM =====================
 function quickStart() {
   checkTodayDone();
   const dow = new Date().getDay(), td = TIMETABLE[dow];
@@ -423,12 +440,24 @@ function quickStart() {
   let next = -1;
   for (let i=0; i<3; i++) { if (!TODAY_DONE[keys[i]]) { next=i; break; } }
   if (next < 0) return;
-  S.subject = isAdmin ? slots[next] : 'General';
-  S.type = selM; S.scheduleMode = true;
-  const m = METHODS[selM==='custom'?'paper':selM];
-  if (!m) return;
-  S.phases = JSON.parse(JSON.stringify(m.phases)).map(p => ({...p,sessionLabel:S.subject,method:selM==='custom'?'paper':selM}));
-  beginSession();
+
+  const subjName = isAdmin ? slots[next] : `Session ${next+1}`;
+  const methodName = METHODS[selM==='custom'?'paper':selM]?.name || 'Past Paper';
+
+  openConfirm(
+    `Start ${subjName}?`,
+    `${methodName} session. Make sure you have everything you need before you begin.`,
+    'Start now',
+    'btn btn-primary',
+    () => {
+      S.subject = isAdmin ? slots[next] : 'General';
+      S.type = selM; S.scheduleMode = true;
+      const m = METHODS[selM==='custom'?'paper':selM];
+      if (!m) return;
+      S.phases = JSON.parse(JSON.stringify(m.phases)).map(p => ({...p,sessionLabel:S.subject,method:selM==='custom'?'paper':selM}));
+      beginSession();
+    }
+  );
 }
 
 // ===================== SCHEDULE OVERLAY =====================
@@ -476,16 +505,26 @@ function initSchedDrag() {
   sheet.addEventListener('touchmove',  e => { if (schedDragStart===null) return; const d=e.touches[0].clientY-schedDragStart; if (d>0) sheet.style.transform=`translateY(${d}px)`; }, {passive:true});
   sheet.addEventListener('touchend',   e => { const d=e.changedTouches[0].clientY-(schedDragStart||0); sheet.style.transition='transform .3s cubic-bezier(.22,.8,.3,1)'; if (d>80) closeSchedOv(); else sheet.style.transform=''; schedDragStart=null; }, {passive:true});
 }
+
 function startScheduleMode() {
   closeSchedOv();
   const dow = new Date().getDay(), td = TIMETABLE[dow];
   if (!td) return;
   checkTodayDone();
   const subj = isAdmin ? (!TODAY_DONE.s1?td.s1.subj:!TODAY_DONE.s2?td.s2.subj:td.s3.subj) : 'General';
-  S.subject = subj; S.type='schedule'; S.scheduleMode=true;
-  const m = METHODS['paper']; if (!m) return;
-  S.phases = JSON.parse(JSON.stringify(m.phases)).map(p => ({...p,sessionLabel:subj,method:'paper'}));
-  beginSession();
+
+  openConfirm(
+    "Start today's schedule?",
+    `Beginning with ${escHtml(subj)}. Clear your desk, silence notifications, and focus.`,
+    'Start schedule',
+    'btn btn-primary',
+    () => {
+      S.subject = subj; S.type='schedule'; S.scheduleMode=true;
+      const m = METHODS['paper']; if (!m) return;
+      S.phases = JSON.parse(JSON.stringify(m.phases)).map(p => ({...p,sessionLabel:subj,method:'paper'}));
+      beginSession();
+    }
+  );
 }
 
 // ===================== SUBJECT CHIPS =====================
@@ -555,7 +594,7 @@ function confirmSkip() {
   });
 }
 function confirmEnd() {
-  openConfirm('End session?','Progress will be saved.','End','btn btn-danger', () => {
+  openConfirm('End session?','Your focus time will be saved to stats.','End session','btn btn-danger', () => {
     clearInterval(S.ticker); S.ticker = null;
     stopReminders(); stopBreathe(); dismissCheckin(); releaseLock2();
     recordSession();
@@ -563,9 +602,39 @@ function confirmEnd() {
     buildScheduleCard();
   });
 }
+
+// ===================== START SESSION WITH CONFIRM =====================
 function startSession() {
   const raw = el('subj');
-  S.subject = raw && raw.value.trim() ? normalizeSubj(raw.value.trim()) : 'General';
+  const subjectVal = raw && raw.value.trim() ? normalizeSubj(raw.value.trim()) : '';
+
+  // If no subject entered, nudge user but still allow proceeding
+  if (!subjectVal) {
+    openConfirm(
+      'No subject entered',
+      'Starting without a subject will log this session as "General". Add a subject for better stats.',
+      'Start anyway',
+      'btn btn-primary',
+      () => _doStartSession('General')
+    );
+    return;
+  }
+
+  const methodName = METHODS[selM]?.name || 'Custom';
+  const durations = { blurt:'25 min', paper:'55 min', flash:'30 min', teach:'35 min', practise:'55 min', custom:'custom time' };
+  const dur = durations[selM] || '';
+
+  openConfirm(
+    `Start ${escHtml(subjectVal)}?`,
+    `${methodName} · ${dur}. Clear your space, put your phone away, and commit to the session.`,
+    'Start session',
+    'btn btn-primary',
+    () => _doStartSession(subjectVal)
+  );
+}
+
+function _doStartSession(subject) {
+  S.subject = subject;
   S.type = selM; S.scheduleMode = false;
   if (selM==='custom') {
     const focusEl=el('cust-focus'), breakEl=el('cust-break');
@@ -580,6 +649,7 @@ function startSession() {
   }
   beginSession();
 }
+
 function beginSession() {
   S.phaseIdx=0; S.sessionN++; S.actualFocusSecs=0;
   S.checkinScores=[]; S.energy=0; markCatSel='';
@@ -974,7 +1044,6 @@ function renderSpecContent(list, prog) {
     html+=`<div class="spec-section-lbl">${escHtml(sec.name)}</div>`;
     sec.points.forEach(p=>{
       const c=conf[idx]||'';
-      // FIX: use fmtSpec to render math/chem notation properly
       html+=`<div class="spec-point" onclick="cycleSpec(${idx},this)"><div class="spec-dot${c?' '+c:''}"></div><div class="spec-txt">${fmtSpec(escHtml(p))}</div></div>`;
       idx++;
     });
