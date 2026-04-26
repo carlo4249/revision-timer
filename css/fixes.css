@@ -1,6 +1,37 @@
-/* css/fixes.css -- Solus sizing & UX fixes */
+/* css/fixes.css -- Solus production fixes */
 
-/* ===== CARD CLIP WRAP: properly centered fixed container ===== */
+/*
+  Z-INDEX HIERARCHY
+  -----------------
+  1    : screen content
+  50   : home screen-foot
+  100  : bottom-nav
+  150  : checkin-ov
+  229  : settings-backdrop
+  230  : card-clip-wrap (settings panel inside at z-index: 1 relative)
+  260  : modal overlays -- confirm, add-exam, schedule sheet, SR review
+  500  : toast
+  1000 : app-loader
+*/
+
+
+/* ================================================================
+   MODAL OVERLAYS
+   Must sit above the settings panel (card-clip-wrap z-index 230)
+   so confirm dialogs, the schedule sheet, and SR review render
+   correctly even when settings is open in the background.
+   ================================================================ */
+
+.overlay  { z-index: 260; }
+.sr-ov    { z-index: 260; }
+#sched-ov { z-index: 260; }
+
+
+/* ================================================================
+   CARD CLIP WRAP
+   Centres the settings panel container on every viewport.
+   ================================================================ */
+
 .card-clip-wrap {
   position: fixed;
   top: 0;
@@ -18,40 +49,64 @@
   .card-clip-wrap {
     width: var(--card-w);
     max-width: var(--card-w);
-    left: 50%;
-    transform: translateX(-50%);
   }
 }
 
-/* ===== SETTINGS PANEL: proper sizing on all screen sizes ===== */
+
+/* ================================================================
+   SETTINGS BACKDROP
+   Full-viewport dimmer behind the settings panel.
+   ================================================================ */
+
+.settings-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 229;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.settings-backdrop.open {
+  display: block;
+  opacity: 1;
+}
+
+
+/* ================================================================
+   SETTINGS PANEL
+   Correct sizing across all screen widths; never clips content.
+   ================================================================ */
+
 .settings-panel {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   height: 100%;
-  /* Mobile: comfortable width that doesn't overwhelm small screens */
   width: clamp(260px, 80vw, 320px);
+  max-width: calc(100% - 40px);
   transform: translateX(100%);
   background: var(--s1);
   border-left: 1px solid var(--border);
   z-index: 1;
-  transition: transform .35s cubic-bezier(.22, .8, .3, 1);
+  transition: transform 0.35s cubic-bezier(0.22, 0.8, 0.3, 1);
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
   pointer-events: auto;
   box-shadow: var(--shadow-lg);
-  /* Ensure it doesn't exceed card width */
-  max-width: calc(100% - 40px);
 }
 
 .settings-panel.open {
   transform: translateX(0);
 }
 
-/* Desktop: fixed width, never collapses */
+/* Fixed width on desktop -- never collapses */
 @media (min-width: 1024px) {
   .settings-panel {
     width: 300px;
@@ -60,7 +115,20 @@
   }
 }
 
-/* ===== SETTINGS PANEL HEAD: safe area + sticky ===== */
+/* Very small screens: leave 32 px visible to hint at closability */
+@media (max-width: 360px) {
+  .settings-panel {
+    width: calc(100vw - 32px);
+    max-width: calc(100vw - 32px);
+  }
+}
+
+
+/* ================================================================
+   SETTINGS PANEL -- STICKY HEAD
+   Stays visible while the panel scrolls; respects the notch.
+   ================================================================ */
+
 .settings-panel-head {
   display: flex;
   align-items: center;
@@ -74,31 +142,16 @@
   z-index: 2;
 }
 
-/* ===== SETTINGS PANEL BOTTOM PADDING: safe area ===== */
-.settings-panel > div:last-child,
-.settings-panel > [style*="height:44px"] {
-  padding-bottom: max(var(--sab), 16px);
+
+/* ================================================================
+   SETTINGS PANEL -- INNER LAYOUT
+   Consistent margins and border-radii for all child components.
+   ================================================================ */
+
+.settings-panel .settings-section-lbl {
+  padding: 16px 14px 6px;
 }
 
-/* ===== SETTINGS BACKDROP: full viewport ===== */
-.settings-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 229;
-  background: rgba(0, 0, 0, .55);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: none;
-  opacity: 0;
-  transition: opacity .3s;
-}
-
-.settings-backdrop.open {
-  display: block;
-  opacity: 1;
-}
-
-/* ===== SETTINGS WRAP INSIDE PANEL: consistent margins ===== */
 .settings-panel .settings-wrap {
   margin: 0 14px;
   border-radius: var(--r);
@@ -111,10 +164,6 @@
   padding: 12px 14px;
 }
 
-.settings-panel .settings-section-lbl {
-  padding: 16px 14px 6px;
-}
-
 .settings-panel .danger-zone {
   margin: 0 14px;
 }
@@ -123,55 +172,89 @@
   padding: 0 14px 14px;
 }
 
-/* ===== CONFIRM OVERLAY: improved ===== */
-.confirm-overlay-inner {
-  background: var(--s1);
-  border-radius: 22px 22px 0 0;
-  padding: 20px 20px calc(var(--sab) + 24px);
-  width: 100%;
-  border-top: 1px solid var(--border);
-  box-shadow: 0 -8px 40px rgba(0, 0, 0, .3);
+/* Bottom spacer respects the home-indicator on iOS */
+.settings-panel > div:last-child {
+  padding-bottom: max(var(--sab), 16px);
+  flex-shrink: 0;
 }
 
-/* ===== START SESSION CONFIRM SHEET: slightly taller ===== */
-#start-confirm-ov .sheet {
-  padding-bottom: calc(var(--sab) + 20px);
+
+/* ================================================================
+   SETTINGS PANEL -- SCROLLBAR
+   ================================================================ */
+
+.settings-panel::-webkit-scrollbar        { width: 3px; }
+.settings-panel::-webkit-scrollbar-track  { background: transparent; }
+.settings-panel::-webkit-scrollbar-thumb  { background: var(--s3); border-radius: 2px; }
+
+
+/* ================================================================
+   OVERLAY SHEETS -- DESKTOP CENTERING
+   Mirrors the bottom-nav pattern:
+     left: 0; right: 0; max-width: var(--card-w); margin: 0 auto
+   so every sheet is pinned to the card column, not the viewport.
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  .overlay .sheet {
+    max-width: var(--card-w);
+    margin: 0 auto;
+  }
+
+  .sched-ios-sheet {
+    max-width: var(--card-w);
+    margin: 0 auto;
+  }
+
+  .sr-sheet {
+    max-width: var(--card-w);
+    margin: 0 auto;
+  }
 }
 
-/* ===== SCROLLBAR INSIDE SETTINGS ===== */
-.settings-panel::-webkit-scrollbar { width: 3px; }
-.settings-panel::-webkit-scrollbar-track { background: transparent; }
-.settings-panel::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 2px; }
 
-/* ===== DANGER ZONE OPEN SPACING ===== */
+/* ================================================================
+   DANGER ZONE
+   ================================================================ */
+
 .danger-body.open {
   padding: 12px 14px 14px;
 }
 
-/* ===== ADMIN ACTIVE ROW ===== */
+
+/* ================================================================
+   ADMIN ACTIVE ROW
+   ================================================================ */
+
 .admin-active-row {
   border-radius: var(--r);
 }
 
-/* ===== SMALL SCREEN: tighten settings panel ===== */
-@media (max-width: 360px) {
-  .settings-panel {
-    width: calc(100vw - 32px);
-    max-width: calc(100vw - 32px);
-  }
+
+/* ================================================================
+   START SESSION CONFIRM SHEET -- safe-area bottom padding
+   ================================================================ */
+
+#start-confirm-ov .sheet {
+  padding-bottom: calc(var(--sab) + 20px);
 }
 
-/* ===== SESSION CONFIRM OVERLAY ===== */
+
+/* ================================================================
+   SESSION CONFIRM OVERLAY (reserved)
+   ================================================================ */
+
 #session-confirm-ov {
   display: none;
   position: fixed;
   inset: 0;
   z-index: 300;
   align-items: flex-end;
-  background: rgba(0, 0, 0, .65);
+  background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+
 #session-confirm-ov.open {
   display: flex;
 }
