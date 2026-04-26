@@ -1,0 +1,177 @@
+/* css/fixes.css -- Solus sizing & UX fixes */
+
+/* ===== CARD CLIP WRAP: properly centered fixed container ===== */
+.card-clip-wrap {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 100vw;
+  z-index: 230;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .card-clip-wrap {
+    width: var(--card-w);
+    max-width: var(--card-w);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* ===== SETTINGS PANEL: proper sizing on all screen sizes ===== */
+.settings-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  /* Mobile: comfortable width that doesn't overwhelm small screens */
+  width: clamp(260px, 80vw, 320px);
+  transform: translateX(100%);
+  background: var(--s1);
+  border-left: 1px solid var(--border);
+  z-index: 1;
+  transition: transform .35s cubic-bezier(.22, .8, .3, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  box-shadow: var(--shadow-lg);
+  /* Ensure it doesn't exceed card width */
+  max-width: calc(100% - 40px);
+}
+
+.settings-panel.open {
+  transform: translateX(0);
+}
+
+/* Desktop: fixed width, never collapses */
+@media (min-width: 1024px) {
+  .settings-panel {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+  }
+}
+
+/* ===== SETTINGS PANEL HEAD: safe area + sticky ===== */
+.settings-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(var(--sat), 18px) 20px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  background: var(--s1);
+  z-index: 2;
+}
+
+/* ===== SETTINGS PANEL BOTTOM PADDING: safe area ===== */
+.settings-panel > div:last-child,
+.settings-panel > [style*="height:44px"] {
+  padding-bottom: max(var(--sab), 16px);
+}
+
+/* ===== SETTINGS BACKDROP: full viewport ===== */
+.settings-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 229;
+  background: rgba(0, 0, 0, .55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.settings-backdrop.open {
+  display: block;
+  opacity: 1;
+}
+
+/* ===== SETTINGS WRAP INSIDE PANEL: consistent margins ===== */
+.settings-panel .settings-wrap {
+  margin: 0 14px;
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--s0);
+}
+
+.settings-panel .setting-row {
+  padding: 12px 14px;
+}
+
+.settings-panel .settings-section-lbl {
+  padding: 16px 14px 6px;
+}
+
+.settings-panel .danger-zone {
+  margin: 0 14px;
+}
+
+.settings-panel .admin-section {
+  padding: 0 14px 14px;
+}
+
+/* ===== CONFIRM OVERLAY: improved ===== */
+.confirm-overlay-inner {
+  background: var(--s1);
+  border-radius: 22px 22px 0 0;
+  padding: 20px 20px calc(var(--sab) + 24px);
+  width: 100%;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, .3);
+}
+
+/* ===== START SESSION CONFIRM SHEET: slightly taller ===== */
+#start-confirm-ov .sheet {
+  padding-bottom: calc(var(--sab) + 20px);
+}
+
+/* ===== SCROLLBAR INSIDE SETTINGS ===== */
+.settings-panel::-webkit-scrollbar { width: 3px; }
+.settings-panel::-webkit-scrollbar-track { background: transparent; }
+.settings-panel::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 2px; }
+
+/* ===== DANGER ZONE OPEN SPACING ===== */
+.danger-body.open {
+  padding: 12px 14px 14px;
+}
+
+/* ===== ADMIN ACTIVE ROW ===== */
+.admin-active-row {
+  border-radius: var(--r);
+}
+
+/* ===== SMALL SCREEN: tighten settings panel ===== */
+@media (max-width: 360px) {
+  .settings-panel {
+    width: calc(100vw - 32px);
+    max-width: calc(100vw - 32px);
+  }
+}
+
+/* ===== SESSION CONFIRM OVERLAY ===== */
+#session-confirm-ov {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, .65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+#session-confirm-ov.open {
+  display: flex;
+}
