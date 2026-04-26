@@ -44,10 +44,10 @@
   </button>
 </div>
 
-<!-- Settings backdrop -->
+<!-- Settings backdrop: sits below the settings panel but above screens -->
 <div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings()"></div>
 
-<!-- Card clip wrap: constrains settings panel on desktop -->
+<!-- Card clip wrap: constrains the settings panel to the card column -->
 <div class="card-clip-wrap">
   <div class="settings-panel" id="settings-panel">
     <div class="settings-panel-head">
@@ -60,7 +60,6 @@
     <div class="settings-section-lbl">Appearance</div>
     <div class="settings-wrap">
       <div class="theme-toggle-row">
-        <!-- FIX: label changed to "Dark mode" — checked = dark (moon), unchecked = light (sun) -->
         <span class="theme-toggle-label">Dark mode</span>
         <label class="theme-switch-sm">
           <input type="checkbox" class="ts-chk theme-chk" onchange="toggleThemeFromSettings(this)">
@@ -75,23 +74,38 @@
 
     <div class="settings-section-lbl">Timer</div>
     <div class="settings-wrap">
-      <div class="setting-row"><div><div class="sr-lbl">Sound chimes</div><div class="sr-desc">Audio at each phase transition</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-sound" onchange="toggleSetting(this,'sound')" checked><div class="slider"></div></label></div>
-      <div class="setting-row"><div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-notif" onchange="toggleSetting(this,'notif')"><div class="slider"></div></label></div>
-      <div class="setting-row"><div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-eye" onchange="toggleSetting(this,'eye')" checked><div class="slider"></div></label></div>
-      <div class="setting-row"><div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-hydra" onchange="toggleSetting(this,'hydra')" checked><div class="slider"></div></label></div>
-      <div class="setting-row"><div><div class="sr-lbl">Focus check&#8209;ins</div><div class="sr-desc">Prompt every 7&ndash;12 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label></div>
+      <div class="setting-row">
+        <div><div class="sr-lbl">Sound chimes</div><div class="sr-desc">Audio at each phase transition</div></div>
+        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-sound" onchange="toggleSetting(this,'sound')" checked><div class="slider"></div></label>
+      </div>
+      <div class="setting-row">
+        <div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div>
+        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-notif" onchange="toggleSetting(this,'notif')"><div class="slider"></div></label>
+      </div>
+      <div class="setting-row">
+        <div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div>
+        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-eye" onchange="toggleSetting(this,'eye')" checked><div class="slider"></div></label>
+      </div>
+      <div class="setting-row">
+        <div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div>
+        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-hydra" onchange="toggleSetting(this,'hydra')" checked><div class="slider"></div></label>
+      </div>
+      <div class="setting-row">
+        <div><div class="sr-lbl">Focus check&#8209;ins</div><div class="sr-desc">Prompt every 7&ndash;12 min</div></div>
+        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label>
+      </div>
     </div>
 
     <div class="settings-section-lbl">Account</div>
     <div class="settings-wrap" id="settings-account-section"></div>
 
     <div class="settings-section-lbl">Data</div>
-    <!-- FIX: danger zone open by default, arrow pre-rotated -->
-    <div class="danger-zone" style="margin:0 16px">
+    <div class="danger-zone" style="margin:0 14px">
       <div class="danger-header" onclick="toggleDanger(this)">
         <div class="danger-title">&#9888;&#xFE0F; Danger zone</div>
         <span class="danger-arrow" style="transform:rotate(180deg)">&#9660;</span>
       </div>
+      <!-- open by default so the button is immediately visible -->
       <div class="danger-body open" id="danger-body">
         <div style="font-size:12px;color:var(--red);margin-bottom:10px;line-height:1.55">Permanently deletes all session history, spec ratings, and spaced repetition data.</div>
         <button class="clear-btn" onclick="confirmClearData()">Clear all data</button>
@@ -119,9 +133,16 @@
       </div>
     </div>
 
+    <!-- Bottom spacer respects iOS home indicator -->
     <div style="height:44px;flex-shrink:0"></div>
   </div>
 </div>
+
+<!--
+  OVERLAY LAYER (z-index: 260 via fixes.css)
+  These must sit above the settings backdrop (229) and the card-clip-wrap (230)
+  so they remain fully interactive even when settings is open in the background.
+-->
 
 <!-- Confirm overlay -->
 <div class="overlay" id="confirm-ov" onclick="if(event.target===this)closeConfirm()">
@@ -153,22 +174,6 @@
   </div>
 </div>
 
-<!-- Focus check-in overlay -->
-<div class="checkin-ov" id="checkin-ov">
-  <div class="checkin-sheet">
-    <div class="checkin-title">Focus check</div>
-    <div class="checkin-sub">How sharp are you feeling?</div>
-    <div class="checkin-opts">
-      <div class="checkin-opt" onclick="logCheckin(1,this)">&#128564;</div>
-      <div class="checkin-opt" onclick="logCheckin(2,this)">&#128533;</div>
-      <div class="checkin-opt" onclick="logCheckin(3,this)">&#128528;</div>
-      <div class="checkin-opt" onclick="logCheckin(4,this)">&#128522;</div>
-      <div class="checkin-opt" onclick="logCheckin(5,this)">&#128293;</div>
-    </div>
-    <button class="checkin-dismiss" onclick="dismissCheckin()">Dismiss</button>
-  </div>
-</div>
-
 <!-- Add Exam overlay -->
 <div class="overlay" id="add-exam-ov" onclick="if(event.target===this)closeAddExam()">
   <div class="sheet">
@@ -187,6 +192,39 @@
     </div>
   </div>
 </div>
+
+<!-- Focus check-in overlay (above timer, below overlays) -->
+<div class="checkin-ov" id="checkin-ov">
+  <div class="checkin-sheet">
+    <div class="checkin-title">Focus check</div>
+    <div class="checkin-sub">How sharp are you feeling?</div>
+    <div class="checkin-opts">
+      <div class="checkin-opt" onclick="logCheckin(1,this)">&#128564;</div>
+      <div class="checkin-opt" onclick="logCheckin(2,this)">&#128533;</div>
+      <div class="checkin-opt" onclick="logCheckin(3,this)">&#128528;</div>
+      <div class="checkin-opt" onclick="logCheckin(4,this)">&#128522;</div>
+      <div class="checkin-opt" onclick="logCheckin(5,this)">&#128293;</div>
+    </div>
+    <button class="checkin-dismiss" onclick="dismissCheckin()">Dismiss</button>
+  </div>
+</div>
+
+<!-- SR review overlay -->
+<div class="sr-ov" id="sr-ov" onclick="if(event.target===this)closeSRReview()">
+  <div class="sr-sheet">
+    <div class="sr-handle"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--hint);margin-bottom:12px">Review</div>
+    <div class="sr-progress" id="sr-prog"></div>
+    <div class="sr-topic" id="sr-topic"></div>
+    <div class="sr-subj" id="sr-subj-lbl"></div>
+    <div class="sr-btns">
+      <button class="sr-btn nope" onclick="srAnswer(false)">Not yet</button>
+      <button class="sr-btn got" onclick="srAnswer(true)">Got it &#10003;</button>
+    </div>
+    <div class="sr-card-hint" id="sr-hint"></div>
+  </div>
+</div>
+
 
 <!-- ================== HOME SCREEN ================== -->
 <div class="screen tab-screen active" id="home-screen">
@@ -478,14 +516,14 @@
       <div class="lbl">Your Notion</div>
       <div id="notion-quicklinks"></div>
       <div class="lbl">Revision sites</div>
-      <div class="site-cat-lbl" style="margin-top:0">Flashcards &amp; recall</div>
+      <div class="site-cat-lbl" style="margin-top:0">Flashcards and recall</div>
       <div class="site-grid">
         <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-maths-resources" target="_blank"><div class="site-name">Quizlet: Maths</div><div class="site-desc">Formula recall, exam prompts</div></a>
         <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-biology-resources" target="_blank"><div class="site-name">Quizlet: Sciences</div><div class="site-desc">Processes, keywords, diagrams</div></a>
         <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-english-literature-resources" target="_blank"><div class="site-name">Quizlet: English</div><div class="site-desc">Literature, past paper Qs</div></a>
         <a class="site-card" href="https://quizlet.com/gb/content/ocr-gcse-computer-science-resources" target="_blank"><div class="site-name">Quizlet: CS</div><div class="site-desc">OCR definitions, processes</div></a>
       </div>
-      <div class="site-cat-lbl">Learn &amp; reteach</div>
+      <div class="site-cat-lbl">Learn and reteach</div>
       <div class="site-grid">
         <a class="site-card" href="https://app.senecalearning.com/dashboard" target="_blank"><div class="site-name">Seneca</div><div class="site-desc">New content quickly</div></a>
         <a class="site-card" href="https://www.cognitoresources.org/" target="_blank"><div class="site-name">Cognito</div><div class="site-desc">Clear science explanations</div></a>
@@ -494,7 +532,7 @@
       </div>
       <div class="site-cat-lbl">Exam practice</div>
       <div class="site-grid">
-        <a class="site-card" href="https://www.physicsandmathstutor.com/" target="_blank"><div class="site-name">Physics &amp; Maths Tutor</div><div class="site-desc">Past papers, mark schemes</div></a>
+        <a class="site-card" href="https://www.physicsandmathstutor.com/" target="_blank"><div class="site-name">Physics and Maths Tutor</div><div class="site-desc">Past papers, mark schemes</div></a>
         <a class="site-card" href="https://www.savemyexams.com/members/" target="_blank"><div class="site-name">Save My Exams</div><div class="site-desc">Topic questions</div></a>
         <a class="site-card" href="https://corbettmaths.com/5-a-day/" target="_blank"><div class="site-name">Corbett 5-a-day</div><div class="site-desc">Daily maths practice</div><div class="site-tag">Daily habit</div></a>
         <a class="site-card" href="https://www.mathsgenie.co.uk/" target="_blank"><div class="site-name">Maths Genie</div><div class="site-desc">Graded topic questions</div></a>
@@ -549,22 +587,6 @@
     <div class="nav-indicator"></div>
   </div>
 </nav>
-
-<!-- SR review overlay -->
-<div class="sr-ov" id="sr-ov" onclick="if(event.target===this)closeSRReview()">
-  <div class="sr-sheet">
-    <div class="sr-handle"></div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--hint);margin-bottom:12px">Review</div>
-    <div class="sr-progress" id="sr-prog"></div>
-    <div class="sr-topic" id="sr-topic"></div>
-    <div class="sr-subj" id="sr-subj-lbl"></div>
-    <div class="sr-btns">
-      <button class="sr-btn nope" onclick="srAnswer(false)">Not yet</button>
-      <button class="sr-btn got" onclick="srAnswer(true)">Got it &#10003;</button>
-    </div>
-    <div class="sr-card-hint" id="sr-hint"></div>
-  </div>
-</div>
 
 <script src="js/data.js"></script>
 <script src="js/storage.js"></script>
