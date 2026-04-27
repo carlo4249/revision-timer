@@ -24,176 +24,71 @@
 <div class="desktop-card"></div>
 <div class="app-bg"><div class="pattern-bg"></div></div>
 
-<!-- Loader -->
-<div id="app-loader">
-  <svg class="loader-svg" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg>
-  <div class="loader-logo">Solus<span>.</span></div>
-</div>
-
 <!-- Toast -->
 <div class="toast" id="toast">
-  <div class="toast-icon">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
-  </div>
-  <div class="toast-text">
-    <div class="toast-title" id="toast-title">Done</div>
-    <div class="toast-sub" id="toast-sub"></div>
-  </div>
-  <button class="toast-close" onclick="hideToast()" aria-label="Dismiss">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
-  </button>
+  <div class="toast-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg></div>
+  <div class="toast-text"><div class="toast-title" id="toast-title">Done</div><div class="toast-sub" id="toast-sub"></div></div>
+  <button class="toast-close" onclick="hideToast()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></button>
 </div>
 
-<!-- Settings backdrop: sits below the settings panel but above screens -->
+<!-- Settings -->
 <div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings()"></div>
-
-<!-- Card clip wrap: constrains the settings panel to the card column -->
 <div class="card-clip-wrap">
   <div class="settings-panel" id="settings-panel">
     <div class="settings-panel-head">
       <span class="settings-panel-title">Settings</span>
-      <button class="settings-close" onclick="closeSettings()" aria-label="Close">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
-      </button>
+      <button class="settings-close" onclick="closeSettings()" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></button>
     </div>
-
     <div class="settings-section-lbl">Appearance</div>
     <div class="settings-wrap">
       <div class="theme-toggle-row">
         <span class="theme-toggle-label">Dark mode</span>
         <label class="theme-switch-sm">
           <input type="checkbox" class="ts-chk theme-chk" onchange="toggleThemeFromSettings(this)">
-          <div class="ts-container">
-            <div class="ts-clouds"></div>
-            <div class="ts-stars"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545Z" fill="currentColor"/></svg></div>
-            <div class="ts-circle"><div class="ts-sunmoon"><div class="ts-moon"><div class="ts-spot"></div><div class="ts-spot"></div><div class="ts-spot"></div></div></div></div>
-          </div>
+          <div class="ts-container"><div class="ts-clouds"></div><div class="ts-stars"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545Z" fill="currentColor"/></svg></div><div class="ts-circle"><div class="ts-sunmoon"><div class="ts-moon"><div class="ts-spot"></div><div class="ts-spot"></div><div class="ts-spot"></div></div></div></div></div>
         </label>
       </div>
     </div>
-
     <div class="settings-section-lbl">Timer</div>
     <div class="settings-wrap">
-      <div class="setting-row">
-        <div><div class="sr-lbl">Sound chimes</div><div class="sr-desc">Audio at each phase transition</div></div>
-        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-sound" onchange="toggleSetting(this,'sound')" checked><div class="slider"></div></label>
-      </div>
-      <div class="setting-row">
-        <div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div>
-        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-notif" onchange="toggleSetting(this,'notif')"><div class="slider"></div></label>
-      </div>
-      <div class="setting-row">
-        <div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div>
-        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-eye" onchange="toggleSetting(this,'eye')" checked><div class="slider"></div></label>
-      </div>
-      <div class="setting-row">
-        <div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div>
-        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-hydra" onchange="toggleSetting(this,'hydra')" checked><div class="slider"></div></label>
-      </div>
-      <div class="setting-row">
-        <div><div class="sr-lbl">Focus check&#8209;ins</div><div class="sr-desc">Prompt every 7&ndash;12 min</div></div>
-        <label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label>
-      </div>
+      <div class="setting-row"><div><div class="sr-lbl">Sound chimes</div><div class="sr-desc">Audio at each phase transition</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-sound" onchange="toggleSetting(this,'sound')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Notifications</div><div class="sr-desc">Alerts when phases start or end</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-notif" onchange="toggleSetting(this,'notif')"><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">20-20-20 eye reminder</div><div class="sr-desc">Look 20 ft away every 20 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-eye" onchange="toggleSetting(this,'eye')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Hydration reminder</div><div class="sr-desc">Drink water every 45 minutes</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-hydra" onchange="toggleSetting(this,'hydra')" checked><div class="slider"></div></label></div>
+      <div class="setting-row"><div><div class="sr-lbl">Focus check-ins</div><div class="sr-desc">Prompt every 7-12 min</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-checkin" onchange="toggleSetting(this,'checkin')" checked><div class="slider"></div></label></div>
     </div>
-
     <div class="settings-section-lbl">Account</div>
     <div class="settings-wrap" id="settings-account-section"></div>
-
     <div class="settings-section-lbl">Data</div>
     <div class="danger-zone" style="margin:0 14px">
-      <div class="danger-header" onclick="toggleDanger(this)">
-        <div class="danger-title">&#9888;&#xFE0F; Danger zone</div>
-        <span class="danger-arrow" style="transform:rotate(180deg)">&#9660;</span>
-      </div>
-      <!-- open by default so the button is immediately visible -->
-      <div class="danger-body open" id="danger-body">
-        <div style="font-size:12px;color:var(--red);margin-bottom:10px;line-height:1.55">Permanently deletes all session history, spec ratings, and spaced repetition data.</div>
-        <button class="clear-btn" onclick="confirmClearData()">Clear all data</button>
-      </div>
+      <div class="danger-header" onclick="toggleDanger(this)"><div class="danger-title">&#9888;&#xFE0F; Danger zone</div><span class="danger-arrow" style="transform:rotate(180deg)">&#9660;</span></div>
+      <div class="danger-body open" id="danger-body"><div style="font-size:12px;color:var(--red);margin-bottom:10px;line-height:1.55">Permanently deletes all session history, spec ratings, and spaced repetition data.</div><button class="clear-btn" onclick="confirmClearData()">Clear all data</button></div>
     </div>
-
     <div class="settings-section-lbl">Admin</div>
     <div class="admin-section">
-      <div id="admin-unlock-section">
-        <div style="font-size:12px;color:var(--muted);line-height:1.6">Restricted access. Enables personal timetable, Notion links and full schedule.</div>
-        <div class="admin-unlock-form">
-          <input type="password" class="tinput" id="admin-pw-input" placeholder="Password" autocomplete="off" onkeydown="if(event.key==='Enter')adminUnlock()">
-          <button class="admin-unlock-btn" onclick="adminUnlock()">Unlock</button>
-        </div>
-        <div style="font-size:12px;color:var(--red);min-height:18px;margin-top:5px" id="admin-pw-error"></div>
-      </div>
-      <div id="admin-active-section" style="display:none">
-        <div class="admin-active-row">
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--brk)">&#10003; Admin mode active</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">Full access enabled</div>
-          </div>
-          <button class="admin-deactivate-btn" onclick="adminDeactivate()">Deactivate</button>
-        </div>
-      </div>
+      <div id="admin-unlock-section"><div style="font-size:12px;color:var(--muted);line-height:1.6">Restricted access. Enables personal timetable, Notion links and full schedule.</div><div class="admin-unlock-form"><input type="password" class="tinput" id="admin-pw-input" placeholder="Password" autocomplete="off" onkeydown="if(event.key==='Enter')adminUnlock()"><button class="admin-unlock-btn" onclick="adminUnlock()">Unlock</button></div><div style="font-size:12px;color:var(--red);min-height:18px;margin-top:5px" id="admin-pw-error"></div></div>
+      <div id="admin-active-section" style="display:none"><div class="admin-active-row"><div><div style="font-size:13px;font-weight:700;color:var(--brk)">&#10003; Admin mode active</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Full access enabled</div></div><button class="admin-deactivate-btn" onclick="adminDeactivate()">Deactivate</button></div></div>
     </div>
-
-    <!-- Bottom spacer respects iOS home indicator -->
     <div style="height:44px;flex-shrink:0"></div>
   </div>
 </div>
 
-<!--
-  OVERLAY LAYER (z-index: 260 via fixes.css)
-  These must sit above the settings backdrop (229) and the card-clip-wrap (230)
-  so they remain fully interactive even when settings is open in the background.
--->
-
 <!-- Confirm overlay -->
 <div class="overlay" id="confirm-ov" onclick="if(event.target===this)closeConfirm()">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="confirm-title">Are you sure?</div>
-    <div class="sheet-body" id="confirm-body"></div>
-    <div class="sheet-btns">
-      <button class="btn btn-danger" id="confirm-ok" onclick="doConfirm()">Confirm</button>
-      <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
-    </div>
-  </div>
+  <div class="sheet"><div class="sheet-handle"></div><div class="sheet-title" id="confirm-title">Are you sure?</div><div class="sheet-body" id="confirm-body"></div><div class="sheet-btns"><button class="btn btn-danger" id="confirm-ok" onclick="doConfirm()">Confirm</button><button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button></div></div>
 </div>
 
 <!-- Schedule overlay -->
 <div id="sched-ov" onclick="if(event.target===this)closeSchedOv()">
   <div class="sched-ios-sheet">
     <div class="sched-handle-bar"><span></span></div>
-    <div class="sched-sheet-header">
-      <div class="sched-sheet-title" id="sched-ov-title">Today's Plan</div>
-      <button class="sheet-x-btn" onclick="closeSchedOv()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
-      </button>
-    </div>
+    <div class="sched-sheet-header"><div class="sched-sheet-title" id="sched-ov-title">Today's Plan</div><button class="sheet-x-btn" onclick="closeSchedOv()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></button></div>
     <div class="sched-sheet-body" id="sched-ov-body"></div>
-    <div class="sched-sheet-actions">
-      <button class="btn btn-primary" onclick="startScheduleMode()">Start Today's Schedule</button>
-    </div>
+    <div class="sched-sheet-actions"><button class="btn btn-primary" onclick="startScheduleMode()">Start Today's Schedule</button></div>
   </div>
 </div>
 
-<!-- Add Exam overlay -->
-<div class="overlay" id="add-exam-ov" onclick="if(event.target===this)closeAddExam()">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">Add exam</div>
-    <div class="sheet-body">Track a custom exam and see how many days are left.</div>
-    <div class="lbl" style="margin-top:0">Subject</div>
-    <input class="tinput" id="add-exam-subj" type="text" placeholder="e.g. Chemistry" style="margin-bottom:12px">
-    <div class="lbl">Paper / Component</div>
-    <input class="tinput" id="add-exam-paper" type="text" placeholder="e.g. Paper 1" style="margin-bottom:12px">
-    <div class="lbl">Date</div>
-    <input class="tinput" id="add-exam-date" type="date" style="margin-bottom:18px;color-scheme:dark">
-    <div class="sheet-btns">
-      <button class="btn btn-primary" onclick="saveCustomExam()">Add exam</button>
-      <button class="btn btn-secondary" onclick="closeAddExam()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- Focus check-in overlay (above timer, below overlays) -->
+<!-- Focus check-in -->
 <div class="checkin-ov" id="checkin-ov">
   <div class="checkin-sheet">
     <div class="checkin-title">Focus check</div>
@@ -217,69 +112,49 @@
     <div class="sr-progress" id="sr-prog"></div>
     <div class="sr-topic" id="sr-topic"></div>
     <div class="sr-subj" id="sr-subj-lbl"></div>
-    <div class="sr-btns">
-      <button class="sr-btn nope" onclick="srAnswer(false)">Not yet</button>
-      <button class="sr-btn got" onclick="srAnswer(true)">Got it &#10003;</button>
-    </div>
+    <div class="sr-btns"><button class="sr-btn nope" onclick="srAnswer(false)">Not yet</button><button class="sr-btn got" onclick="srAnswer(true)">Got it &#10003;</button></div>
     <div class="sr-card-hint" id="sr-hint"></div>
   </div>
 </div>
 
-
-<!-- ================== HOME SCREEN ================== -->
-<div class="screen tab-screen active" id="home-screen">
+<!-- ── HOME SCREEN ── -->
+<div class="screen tab-screen active" id="home-wrap">
   <div class="screen-head">
     <div class="hdr">
       <span class="app-name">Solus<span>.</span></span>
       <div class="hdr-right">
         <div class="exam-chip" id="exam-chip"></div>
-        <button class="cog-btn" onclick="openSettings()" aria-label="Settings">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
-        </button>
+        <button class="cog-btn" onclick="openSettings()" aria-label="Settings"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg></button>
       </div>
     </div>
     <div class="session-progress-bar"><div id="session-progress-fill" class="session-progress-fill"></div></div>
   </div>
-
   <div class="scroll-area" style="padding-top:10px">
     <div class="quickstart" id="quickstart" onclick="quickStart()" style="display:none">
-      <div>
-        <div class="qs-label">Up next</div>
-        <div class="qs-session" id="qs-text"></div>
-      </div>
+      <div><div class="qs-label">Up next</div><div class="qs-session" id="qs-text"></div></div>
       <button class="qs-btn" onclick="event.stopPropagation();quickStart()">Go &#8250;</button>
     </div>
-
     <div id="sr-due-card" style="display:none" class="sr-home-card" onclick="openSRReview()">
-      <div class="sr-card-top">
-        <span class="sr-card-title">Spaced repetition due</span>
-        <span class="sr-badge" id="sr-due-count">0</span>
-      </div>
+      <div class="sr-card-top"><span class="sr-card-title">Spaced repetition due</span><span class="sr-badge" id="sr-due-count">0</span></div>
       <div class="sr-card-sub" id="sr-due-preview">Tap to review what needs refreshing today</div>
     </div>
-
     <div style="margin-bottom:12px">
       <div class="grad-card" onclick="openSchedOv()" style="cursor:pointer">
         <div class="grad-card-inner">
-          <div class="sc-header">
-            <div class="sc-title" id="sc-title">Today's Plan</div>
-            <div class="sc-badge" id="sc-badge">0/3 done</div>
-          </div>
+          <div class="sc-header"><div class="sc-title" id="sc-title">Today's Plan</div><div class="sc-badge" id="sc-badge">0/3 done</div></div>
           <div class="sc-sessions" id="sc-sessions"></div>
           <div class="schedule-progress" id="sc-progress"></div>
           <div class="sc-action"><span>View full schedule</span><span style="font-size:16px">&#8250;</span></div>
         </div>
       </div>
     </div>
-
     <div class="lbl-bold">Subject</div>
     <input class="tinput" id="subj" type="text" placeholder="e.g. Chemistry, Maths..." autocomplete="off" spellcheck="false">
     <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px" id="subj-chips"></div>
-
     <div class="lbl-bold" style="margin-top:22px">Session method</div>
     <div class="method-grid">
       <div class="method-card" data-m="blurt" onclick="selMethod(this)"><span class="mc-icon">&#9999;&#65039;</span><div class="mc-name">Blurting</div><div class="mc-tag">Write from memory, check gaps</div><span class="mc-time">25 min</span></div>
-      <div class="method-card sel" data-m="paper" onclick="selMethod(this)"><span class="mc-icon">&#128196;</span><div class="mc-name">Past Paper</div><div class="mc-tag">Strict timed exam conditions</div><span class="mc-time">50 + 5m break</span></div>
+      <div class="method-card" data-m="paper" onclick="selMethod(this)"><span class="mc-icon">&#128196;</span><div class="mc-name">Past Paper</div><div class="mc-tag">Strict timed exam conditions</div><span class="mc-time">50 + 5m break</span></div>
       <div class="method-card" data-m="flash" onclick="selMethod(this)"><span class="mc-icon">&#127183;</span><div class="mc-name">Flashcards</div><div class="mc-tag">Active recall, weak cards only</div><span class="mc-time">30 min</span></div>
       <div class="method-card" data-m="teach" onclick="selMethod(this)"><span class="mc-icon">&#128483;&#65039;</span><div class="mc-name">Teach It</div><div class="mc-tag">Explain aloud, note every gap</div><span class="mc-time">35 min</span></div>
       <div class="method-card" data-m="practise" onclick="selMethod(this)"><span class="mc-icon">&#128221;</span><div class="mc-name">Practice Qs</div><div class="mc-tag">SME or PMT with mark scheme</div><span class="mc-time">50 + 5m break</span></div>
@@ -291,22 +166,15 @@
     </div>
     <div style="height:14px"></div>
   </div>
-
   <div class="screen-foot">
     <button class="btn-start-main" id="btn-start" onclick="startSession()">Start Session - 55 min</button>
   </div>
 </div>
 
-<!-- ================== TIMER SCREEN ================== -->
+<!-- ── TIMER SCREEN ── -->
 <div class="screen full-screen" id="timer-screen">
   <div class="screen-head">
-    <div class="t-top">
-      <div class="pill pill-focus" id="phase-lbl">Focus</div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span id="timer-method-icon" style="font-size:18px"></span>
-        <button class="btn-ghost" onclick="confirmEnd()">End</button>
-      </div>
-    </div>
+    <div class="t-top"><div class="pill pill-focus" id="phase-lbl">Focus</div><div style="display:flex;align-items:center;gap:8px"><span id="timer-method-icon" style="font-size:18px"></span><button class="btn-ghost" onclick="confirmEnd()">End</button></div></div>
     <div class="pdots" id="pdots"></div>
     <div class="kbd-hint"><span class="kbd">Space</span> pause &nbsp;&middot;&nbsp; <span class="kbd">S</span> skip</div>
   </div>
@@ -338,39 +206,22 @@
   </div>
 </div>
 
-<!-- ================== BREAK SCREEN ================== -->
+<!-- ── BREAK SCREEN ── -->
 <div class="screen full-screen" id="break-screen">
-  <div class="screen-head">
-    <div class="brk-top">
-      <div class="pill pill-brk" id="brk-lbl">Break</div>
-      <button class="btn-ghost" onclick="confirmSkip()">Skip</button>
-    </div>
-  </div>
+  <div class="screen-head"><div class="brk-top"><div class="pill pill-brk" id="brk-lbl">Break</div><button class="btn-ghost" onclick="confirmSkip()">Skip</button></div></div>
   <div class="brk-hero">
     <div style="font-size:15px;font-weight:700;color:var(--text)">Step away from the screen</div>
-    <div class="breathe-ring">
-      <div style="text-align:center">
-        <div style="font-size:12px;color:var(--brk);font-weight:600" id="brk-breathe">Breathe in...</div>
-        <div style="font-size:10px;color:var(--hint);margin-top:3px">4-2-4-2 rhythm</div>
-      </div>
-    </div>
+    <div class="breathe-ring"><div style="text-align:center"><div style="font-size:12px;color:var(--brk);font-weight:600" id="brk-breathe">Breathe in...</div><div style="font-size:10px;color:var(--hint);margin-top:3px">4-2-4-2 rhythm</div></div></div>
     <div class="brk-time" id="brk-time">05:00</div>
     <div style="font-size:13px;color:var(--brk);font-weight:500" id="brk-sublabel">Hydrate, stretch, rest your eyes</div>
     <div style="font-size:11px;color:var(--muted);margin-top:4px" id="brk-next"></div>
   </div>
-  <div class="screen-foot full-screen">
-    <div class="brk-ctrls">
-      <button class="btn-c bc-pause" id="brk-pause" onclick="togglePause()">Pause</button>
-      <button class="btn-c bc-skip" onclick="confirmSkip()">Done early</button>
-    </div>
-  </div>
+  <div class="screen-foot full-screen"><div class="brk-ctrls"><button class="btn-c bc-pause" id="brk-pause" onclick="togglePause()">Pause</button><button class="btn-c bc-skip" onclick="confirmSkip()">Done early</button></div></div>
 </div>
 
-<!-- ================== LOG SCREEN ================== -->
+<!-- ── LOG SCREEN ── -->
 <div class="screen full-screen" id="log-screen">
-  <div class="screen-head">
-    <div style="font-size:20px;font-weight:800;letter-spacing:-.6px;padding:6px 0 14px" id="log-header">Session complete</div>
-  </div>
+  <div class="screen-head"><div style="font-size:20px;font-weight:800;letter-spacing:-.6px;padding:6px 0 14px" id="log-header">Session complete</div></div>
   <div class="scroll-area">
     <div class="log-intro"><p><strong>Log what tripped you up.</strong> Categorise by error type - each has a different fix.</p></div>
     <div class="lbl">Energy this session</div>
@@ -386,12 +237,7 @@
     <div class="lbl">Topic</div>
     <input class="tinput" id="log-topic" type="text" placeholder="e.g. circle theorems, Le Chatelier's principle">
     <div class="lbl">Marks scored (optional)</div>
-    <div class="marks-row">
-      <input class="marks-in" id="log-got" type="number" min="0" max="99" placeholder="Got">
-      <span class="marks-sep">/</span>
-      <input class="marks-in" id="log-total" type="number" min="1" max="99" placeholder="Out of">
-      <span class="marks-lbl" style="margin-left:6px">marks</span>
-    </div>
+    <div class="marks-row"><input class="marks-in" id="log-got" type="number" min="0" max="99" placeholder="Got"><span class="marks-sep">/</span><input class="marks-in" id="log-total" type="number" min="1" max="99" placeholder="Out of"><span class="marks-lbl" style="margin-left:6px">marks</span></div>
     <div class="lbl">Where did you lose marks?</div>
     <div class="mark-cat-grid">
       <div class="mark-cat-btn" onclick="selMarkCat(this,'app')">&#128202;<br>Application<br><span style="font-size:9px;opacity:.7">Fix: exam Qs</span></div>
@@ -407,13 +253,7 @@
     <textarea class="tarea" id="log-avoid" placeholder="Concrete action for next session"></textarea>
     <div class="lbl">Exam question (optional)</div>
     <input class="tinput" id="log-question" type="text" placeholder="Exact question or task">
-    <div class="spaced-row">
-      <div>
-        <div style="font-size:13px;font-weight:600">Add to spaced repetition</div>
-        <div style="font-size:11px;color:var(--hint);margin-top:2px">Intervals: 14d &middot; 28d &middot; 60d max</div>
-      </div>
-      <label class="switch"><input type="checkbox" class="checkbox" id="tgl-spaced"><div class="slider"></div></label>
-    </div>
+    <div class="spaced-row"><div><div style="font-size:13px;font-weight:600">Add to spaced repetition</div><div style="font-size:11px;color:var(--hint);margin-top:2px">Intervals: 14d &middot; 28d &middot; 60d max</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-spaced"><div class="slider"></div></label></div>
     <button class="copy-btn" id="copy-btn" onclick="copyForNotion()"><span>Copy for Notion</span><span style="font-size:15px">&#128203;</span></button>
     <div style="height:10px"></div>
   </div>
@@ -423,181 +263,24 @@
   </div>
 </div>
 
-<!-- ================== STATS SCREEN ================== -->
-<div class="screen tab-screen" id="stats-screen">
-  <div class="screen-head">
-    <div class="hdr">
-      <span class="app-name">Stats<span>.</span></span>
-      <button class="cog-btn" onclick="openSettings()" aria-label="Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="scroll-area" style="padding-top:8px">
-    <div class="period-tabs" id="stats-period">
-      <input type="radio" name="period-tab" id="pr-week" class="period-radio pr--1" checked onchange="setPeriod('week')">
-      <label class="period-lbl" for="pr-week">This week</label>
-      <input type="radio" name="period-tab" id="pr-month" class="period-radio pr--2" onchange="setPeriod('month')">
-      <label class="period-lbl" for="pr-month">This month</label>
-      <input type="radio" name="period-tab" id="pr-all" class="period-radio pr--3" onchange="setPeriod('all')">
-      <label class="period-lbl" for="pr-all">All time</label>
-      <div class="period-indicator"></div>
-    </div>
-
-    <div class="stats-grid">
-      <div class="scard highlight"><div class="scard-lbl">Today</div><div class="scard-val" id="st-today">0</div><div class="scard-unit">minutes</div></div>
-      <div class="scard"><div class="scard-lbl" id="st-period-lbl">This week</div><div class="scard-val" id="st-week">0</div><div class="scard-unit">minutes</div></div>
-      <div class="scard"><div class="scard-lbl">Sessions</div><div class="scard-val" id="st-total">0</div><div class="scard-unit">all time</div></div>
-      <div class="scard"><div class="scard-lbl">Total</div><div class="scard-val" id="st-mins">0</div><div class="scard-unit">minutes</div></div>
-    </div>
-
-    <div class="chart-wrap">
-      <div class="chart-title" id="chart-title-lbl">This week (minutes)</div>
-      <canvas class="chart" id="week-chart" height="90"></canvas>
-    </div>
-
-    <div class="lbl" id="targets-lbl" style="display:none">Weekly targets</div>
-    <div class="scard" style="display:none;padding:16px" id="target-achieved"></div>
-
-    <div class="lbl">Subject breakdown</div>
-    <div class="scard" style="padding:16px" id="subj-bars">
-      <div class="stats-empty"><div class="stats-empty-icon">&#128202;</div><div class="stats-empty-title">No sessions yet</div><div class="stats-empty-sub">Your subject breakdown will appear here after your first session.</div></div>
-    </div>
-    <div style="height:8px"></div>
-  </div>
-</div>
-
-<!-- ================== SPEC SCREEN ================== -->
-<div class="screen tab-screen" id="spec-screen">
-  <div class="screen-head">
-    <div class="hdr">
-      <span class="app-name">Spec<span>.</span></span>
-      <button class="cog-btn" onclick="openSettings()" aria-label="Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="scroll-area" style="padding-top:4px">
-    <div id="spec-lock-view" class="res-lock">
-      <div class="res-lock-icon">&#127919;</div>
-      <div class="res-lock-title">Spec tracker</div>
-      <div class="res-lock-sub">Sign in to track your spec confidence and progress across every subject.</div>
-    </div>
-    <div id="spec-unlocked-view" style="display:none">
-      <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Tap a point to cycle: <span style="color:var(--red)">red</span> &rarr; <span style="color:var(--log)">amber</span> &rarr; <span style="color:var(--brk)">green</span> &rarr; unrated</div>
-      <div class="spec-legend">
-        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:var(--s3)"></div>Not rated</div>
-        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#cc4038"></div>Red</div>
-        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#be8816"></div>Amber</div>
-        <div class="spec-leg-item"><div class="spec-leg-dot" style="background:#3c7250"></div>Green</div>
-      </div>
-      <div class="spec-subj-scroll" id="spec-scroll-wrap"><div class="spec-pills" id="spec-pills"></div></div>
-      <div id="spec-prog-row"></div>
-      <div id="spec-list"></div>
-    </div>
-    <div style="height:12px"></div>
-  </div>
-</div>
-
-<!-- ================== RESOURCES SCREEN ================== -->
-<div class="screen tab-screen" id="resources-screen">
-  <div class="screen-head">
-    <div class="hdr">
-      <span class="app-name">Resources<span>.</span></span>
-      <button class="cog-btn" onclick="openSettings()" aria-label="Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="scroll-area" style="padding-top:4px">
-
-    <!-- Admin-only view -->
-    <div id="res-admin-view" style="display:none">
-      <div class="lbl">Your Notion</div>
-      <div id="notion-quicklinks"></div>
-      <div class="lbl">Revision sites</div>
-      <div class="site-cat-lbl" style="margin-top:0">Flashcards and recall</div>
-      <div class="site-grid">
-        <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-maths-resources" target="_blank"><div class="site-name">Quizlet: Maths</div><div class="site-desc">Formula recall, exam prompts</div></a>
-        <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-biology-resources" target="_blank"><div class="site-name">Quizlet: Sciences</div><div class="site-desc">Processes, keywords, diagrams</div></a>
-        <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-english-literature-resources" target="_blank"><div class="site-name">Quizlet: English</div><div class="site-desc">Literature, past paper Qs</div></a>
-        <a class="site-card" href="https://quizlet.com/gb/content/ocr-gcse-computer-science-resources" target="_blank"><div class="site-name">Quizlet: CS</div><div class="site-desc">OCR definitions, processes</div></a>
-      </div>
-      <div class="site-cat-lbl">Learn and reteach</div>
-      <div class="site-grid">
-        <a class="site-card" href="https://app.senecalearning.com/dashboard" target="_blank"><div class="site-name">Seneca</div><div class="site-desc">New content quickly</div></a>
-        <a class="site-card" href="https://www.cognitoresources.org/" target="_blank"><div class="site-name">Cognito</div><div class="site-desc">Clear science explanations</div></a>
-        <a class="site-card" href="https://members.gcsepod.com/pupils/dashboard" target="_blank"><div class="site-name">GCSE Pod</div><div class="site-desc">Short topic videos</div></a>
-        <a class="site-card" href="https://www.youtube.com/@Freesciencelessons" target="_blank"><div class="site-name">Free Science Lessons</div><div class="site-desc">Science YouTube</div></a>
-      </div>
-      <div class="site-cat-lbl">Exam practice</div>
-      <div class="site-grid">
-        <a class="site-card" href="https://www.physicsandmathstutor.com/" target="_blank"><div class="site-name">Physics and Maths Tutor</div><div class="site-desc">Past papers, mark schemes</div></a>
-        <a class="site-card" href="https://www.savemyexams.com/members/" target="_blank"><div class="site-name">Save My Exams</div><div class="site-desc">Topic questions</div></a>
-        <a class="site-card" href="https://corbettmaths.com/5-a-day/" target="_blank"><div class="site-name">Corbett 5-a-day</div><div class="site-desc">Daily maths practice</div><div class="site-tag">Daily habit</div></a>
-        <a class="site-card" href="https://www.mathsgenie.co.uk/" target="_blank"><div class="site-name">Maths Genie</div><div class="site-desc">Graded topic questions</div></a>
-      </div>
-      <div class="lbl">How to revise</div>
-      <div id="how-to-revise"></div>
-      <div class="lbl">Weekly schedule</div>
-      <div class="sched-table-wrap" id="res-sched-table"></div>
-    </div>
-
-    <!-- Public resources (all users) -->
-    <div id="res-public-view"></div>
-    <div class="lbl" style="margin-top:0">Personalised Checklists</div>
-    <a class="notion-quick-link" href="checklists.html" style="text-decoration:none">
-      <span class="notion-quick-icon">✅</span>
-      <div style="flex:1">
-        <div class="notion-quick-title">RAG Checklists</div>
-        <div class="notion-quick-sub">Biology · Chemistry · Physics — admin locked</div>
-      </div>
-      <span style="color:var(--hint);font-size:14px;margin-left:auto;flex-shrink:0">›</span>
-    </a>
-    <!-- Exam tracker (all logged-in users) -->
-    <div id="res-exam-section">
-      <div class="lbl">Upcoming exams</div>
-      <div class="exam-list" id="exam-list"></div>
-      <button class="add-exam-btn" onclick="openAddExam()">&#43; Add exam</button>
-    </div>
-
-    <div style="height:20px"></div>
-  </div>
-</div>
-
-<!-- ================== BOTTOM NAV ================== -->
+<!-- ── BOTTOM NAV ── -->
 <nav class="bottom-nav" id="bottom-nav">
   <div class="nav-tabs">
-    <input type="radio" name="nav-tab" id="nr-home" class="nav-radio" checked onchange="showTab('home')">
-    <label class="nav-tab-lbl active-tab" for="nr-home">
-      <span class="nav-icon">&#128218;</span>
-      <span class="nav-text">Home</span>
-    </label>
-
-    <input type="radio" name="nav-tab" id="nr-stats" class="nav-radio" onchange="showTab('stats')">
-    <label class="nav-tab-lbl" for="nr-stats">
-      <span class="nav-icon">&#128202;</span>
-      <span class="nav-text">Stats</span>
-    </label>
-
-    <input type="radio" name="nav-tab" id="nr-spec" class="nav-radio" onchange="showTab('spec')">
-    <label class="nav-tab-lbl" for="nr-spec">
-      <span class="nav-icon">&#127919;</span>
-      <span class="nav-text">Spec</span>
-    </label>
-
-    <input type="radio" name="nav-tab" id="nr-res" class="nav-radio" onchange="showTab('resources')">
-    <label class="nav-tab-lbl" for="nr-res">
-      <span class="nav-icon">&#128279;</span>
-      <span class="nav-text">Resources</span>
-    </label>
-
+    <input type="radio" name="nav-tab" id="nr-home" class="nav-radio" checked>
+    <label class="nav-tab-lbl active-tab" for="nr-home" onclick="navTo('home')"><span class="nav-icon">&#128218;</span><span class="nav-text">Home</span></label>
+    <input type="radio" name="nav-tab" id="nr-stats" class="nav-radio">
+    <label class="nav-tab-lbl" for="nr-stats" onclick="navTo('stats')"><span class="nav-icon">&#128202;</span><span class="nav-text">Stats</span></label>
+    <input type="radio" name="nav-tab" id="nr-spec" class="nav-radio">
+    <label class="nav-tab-lbl" for="nr-spec" onclick="navTo('spec')"><span class="nav-icon">&#127919;</span><span class="nav-text">Spec</span></label>
+    <input type="radio" name="nav-tab" id="nr-res" class="nav-radio">
+    <label class="nav-tab-lbl" for="nr-res" onclick="navTo('resources')"><span class="nav-icon">&#128279;</span><span class="nav-text">Resources</span></label>
     <div class="nav-indicator"></div>
   </div>
 </nav>
 
 <script src="js/data.js"></script>
 <script src="js/storage.js"></script>
-<script src="js/app.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/home.js"></script>
 </body>
 </html>
