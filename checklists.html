@@ -4,117 +4,93 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" id="tcm" content="#0e1010">
-<title>Solus – Checklists</title>
+<title>Solus - Checklists</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style2.css">
-<link rel="stylesheet" href="css/fixes.css">
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase-config.js"></script>
 <style>
-/* ── Page shell ── */
-.cl-page{display:flex;flex-direction:column;height:100dvh;overflow:hidden;position:relative;z-index:1}
-.cl-head{flex-shrink:0;padding:max(env(safe-area-inset-top,0px),14px) 20px 0}
-.cl-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 20px calc(env(safe-area-inset-bottom,0px)+24px);-webkit-overflow-scrolling:touch}
-.cl-scroll::-webkit-scrollbar{width:3px}
-.cl-scroll::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
+/* Page shell */
+.cl-page { display:flex; flex-direction:column; height:100dvh; overflow:hidden; position:relative; z-index:1; }
+.cl-head { flex-shrink:0; padding:max(env(safe-area-inset-top,0px),14px) 20px 0; }
+.cl-scroll { flex:1; overflow-y:auto; overflow-x:hidden; padding:0 20px calc(env(safe-area-inset-bottom,0px) + 32px); -webkit-overflow-scrolling:touch; }
+.cl-scroll::-webkit-scrollbar { width:3px; }
+.cl-scroll::-webkit-scrollbar-thumb { background:var(--s3); border-radius:2px; }
 
-/* ── Lock screen ── */
-.lock-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:100dvh;padding:32px 24px;text-align:center;gap:12px}
-.lock-icon{font-size:56px;margin-bottom:4px}
-.lock-title{font-size:22px;font-weight:800;letter-spacing:-.6px}
-.lock-sub{font-size:14px;color:var(--muted);line-height:1.6;max-width:260px;margin-bottom:8px}
-.lock-input{width:100%;max-width:320px;height:48px;padding:14px 15px;
-  border-radius:var(--r);border:1.5px solid var(--border);outline:none;
-  background:var(--s0);color:var(--text);font-family:inherit;font-size:16px;
-  text-align:center;letter-spacing:2px;transition:border-color .2s}
-.lock-input:focus{border-color:rgba(16,152,247,.45)}
-.lock-btn{width:100%;max-width:320px;padding:15px;margin-top:4px;
-  background:linear-gradient(135deg,var(--acc),#0a7ad4);color:#fff;
-  border:none;border-radius:var(--r-lg);font-family:inherit;font-size:15px;
-  font-weight:700;cursor:pointer;transition:opacity .2s}
-.lock-btn:active{opacity:.85}
-.lock-err{font-size:13px;color:var(--red);min-height:20px}
-.lock-back{background:none;border:none;font-family:inherit;font-size:13px;
-  color:var(--hint);cursor:pointer;padding:8px;transition:color .15s;margin-top:4px}
-.lock-back:hover{color:var(--muted)}
+/* Lock screen */
+.lock-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100dvh; padding:32px 24px; text-align:center; gap:12px; }
+.lock-icon { font-size:52px; margin-bottom:4px; }
+.lock-title { font-size:22px; font-weight:800; letter-spacing:-.6px; }
+.lock-sub { font-size:14px; color:var(--muted); line-height:1.6; max-width:260px; margin-bottom:8px; }
+.lock-input { width:100%; max-width:320px; height:48px; padding:14px 15px; border-radius:var(--r); border:1.5px solid var(--border); outline:none; background:var(--s0); color:var(--text); font-family:inherit; font-size:16px; text-align:center; letter-spacing:2px; transition:border-color .2s; }
+.lock-input:focus { border-color:rgba(16,152,247,.45); }
+.lock-btn { width:100%; max-width:320px; padding:15px; margin-top:4px; background:linear-gradient(135deg,var(--acc),#0a7ad4); color:#fff; border:none; border-radius:var(--r-lg); font-family:inherit; font-size:15px; font-weight:700; cursor:pointer; transition:opacity .2s; }
+.lock-btn:active { opacity:.85; }
+.lock-err { font-size:13px; color:var(--red); min-height:20px; }
+.lock-back { background:none; border:none; font-family:inherit; font-size:13px; color:var(--hint); cursor:pointer; padding:8px; transition:color .15s; margin-top:4px; }
+.lock-back:hover { color:var(--muted); }
 
-/* ── Header ── */
-.cl-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px;gap:8px}
-.cl-back{background:none;border:1px solid var(--border);color:var(--muted);
-  padding:7px 12px;border-radius:var(--r);font-family:inherit;font-size:12px;
-  font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;
-  transition:background .15s,color .15s;flex-shrink:0}
-.cl-back:hover{background:var(--s2);color:var(--text)}
+/* Header */
+.cl-hdr { display:flex; align-items:center; justify-content:space-between; padding:4px 0 14px; gap:8px; }
+.cl-back { background:none; border:1px solid var(--border); color:var(--muted); padding:7px 14px; border-radius:var(--r); font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; transition:background .15s,color .15s; flex-shrink:0; }
+.cl-back:hover { background:var(--s2); color:var(--text); }
 
-/* ── Subject + paper pills ── */
-.subj-scroll{overflow-x:auto;overflow-y:hidden;margin-bottom:10px;padding-bottom:3px;-webkit-overflow-scrolling:touch}
-.subj-scroll::-webkit-scrollbar{height:2px}
-.subj-scroll::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
-.subj-pills{display:flex;gap:6px;width:max-content;padding:2px 2px 4px}
-.subj-pill{padding:8px 16px;background:var(--s1);border:1px solid var(--border);
-  border-radius:20px;font-size:12px;font-weight:600;color:var(--muted);
-  cursor:pointer;white-space:nowrap;transition:all .2s;user-select:none}
-.subj-pill:hover{background:var(--s2)}
-.subj-pill.act{background:var(--acc);color:#fff;border-color:var(--acc);
-  box-shadow:0 2px 8px rgba(16,152,247,.2)}
+/* Subject pills */
+.subj-scroll { overflow-x:auto; overflow-y:hidden; margin-bottom:10px; padding-bottom:3px; -webkit-overflow-scrolling:touch; }
+.subj-scroll::-webkit-scrollbar { height:2px; }
+.subj-scroll::-webkit-scrollbar-thumb { background:var(--s3); border-radius:2px; }
+.subj-pills { display:flex; gap:6px; width:max-content; padding:2px 2px 4px; }
+.subj-pill { padding:8px 16px; background:var(--s1); border:1px solid var(--border); border-radius:20px; font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; white-space:nowrap; transition:all .2s; user-select:none; }
+.subj-pill:hover { background:var(--s2); }
+.subj-pill.act { background:var(--acc); color:#fff; border-color:var(--acc); box-shadow:0 2px 8px rgba(16,152,247,.2); }
 
-.paper-tabs{display:flex;gap:6px;margin-bottom:14px}
-.paper-tab{flex:1;padding:9px;background:var(--s1);border:1.5px solid var(--border);
-  border-radius:var(--r);font-family:inherit;font-size:12px;font-weight:700;
-  color:var(--muted);cursor:pointer;transition:all .2s;text-align:center}
-.paper-tab:hover{background:var(--s2)}
-.paper-tab.act{background:var(--acc-l);border-color:rgba(16,152,247,.35);color:var(--acc-t)}
+/* Paper tabs */
+.paper-tabs { display:flex; gap:6px; margin-bottom:16px; }
+.paper-tab { flex:1; padding:10px; background:var(--s1); border:1.5px solid var(--border); border-radius:var(--r); font-family:inherit; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; transition:all .2s; text-align:center; }
+.paper-tab:hover { background:var(--s2); }
+.paper-tab.act { background:var(--acc-l); border-color:rgba(16,152,247,.35); color:var(--acc-t); }
 
-/* ── Progress row ── */
-.prog-row{display:flex;gap:7px;margin-bottom:14px}
-.prog-badge{flex:1;background:var(--s1);border:1px solid var(--border);
-  border-radius:var(--r);padding:10px 8px;text-align:center}
-.prog-n{font-size:22px;font-weight:800;letter-spacing:-1px;line-height:1}
-.prog-lbl{font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
-.prog-n.red-n{color:#cc4038}
-.prog-n.amb-n{color:#be8816}
-.prog-n.grn-n{color:#3c7250}
-.prog-n.none-n{color:var(--hint)}
+/* Progress badges */
+.prog-row { display:flex; gap:7px; margin-bottom:14px; }
+.prog-badge { flex:1; background:var(--s1); border:1px solid var(--border); border-radius:var(--r); padding:10px 8px; text-align:center; }
+.prog-n { font-size:22px; font-weight:800; letter-spacing:-1px; line-height:1; }
+.prog-lbl { font-size:9px; color:var(--hint); text-transform:uppercase; letter-spacing:.6px; margin-top:3px; }
+.prog-n.red-n { color:#cc4038; }
+.prog-n.amb-n { color:#be8816; }
+.prog-n.grn-n { color:#3c7250; }
+.prog-n.none-n { color:var(--hint); }
 
-/* ── Progress bar ── */
-.pg-bar-wrap{height:5px;background:var(--s2);border-radius:3px;margin-bottom:16px;overflow:hidden;display:flex;gap:1px}
-.pg-bar-seg{height:100%;transition:width .5s cubic-bezier(.22,.8,.3,1)}
-.pg-seg-red{background:#cc4038}
-.pg-seg-amb{background:#be8816}
-.pg-seg-grn{background:#3c7250}
+/* Progress bar */
+.pg-bar-wrap { height:5px; background:var(--s2); border-radius:3px; margin-bottom:16px; overflow:hidden; display:flex; gap:1px; }
+.pg-bar-seg { height:100%; transition:width .5s cubic-bezier(.22,.8,.3,1); }
+.pg-seg-red { background:#cc4038; }
+.pg-seg-amb { background:#be8816; }
+.pg-seg-grn { background:#3c7250; }
 
-/* ── Legend ── */
-.cl-legend{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap}
-.cl-leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-.cl-leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+/* Legend */
+.cl-legend { display:flex; gap:14px; margin-bottom:14px; flex-wrap:wrap; }
+.cl-leg { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); }
+.cl-leg-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 
-/* ── Item rows ── */
-.cl-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;
-  background:var(--s1);border-radius:var(--r);border:1px solid var(--border);
-  margin-bottom:5px;cursor:pointer;transition:background .15s;user-select:none}
-.cl-item:hover{background:var(--s2)}
-.cl-item:active{transform:scale(.99)}
-.cl-dot{width:15px;height:15px;border-radius:50%;flex-shrink:0;
-  border:2px solid var(--s3);margin-top:1px;transition:all .2s}
-.cl-dot.red {background:#cc4038;border-color:#cc4038}
-.cl-dot.amber{background:#be8816;border-color:#be8816}
-.cl-dot.green{background:#3c7250;border-color:#3c7250}
-.cl-txt{font-size:12px;color:var(--text);flex:1;line-height:1.6}
-.cl-txt.higher{color:var(--acc-t)}
-.cl-txt.core{color:var(--log)}
-.exam-board-badge{display:inline-flex;align-items:center;background:var(--s2);
-  border:1px solid var(--border);border-radius:8px;padding:4px 10px;
-  font-size:10px;font-weight:700;color:var(--muted);margin-bottom:12px;letter-spacing:.3px}
+/* Exam board badge */
+.exam-board-badge { display:inline-flex; align-items:center; background:var(--s2); border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:10px; font-weight:700; color:var(--muted); margin-bottom:14px; letter-spacing:.3px; }
 
-/* ── Desktop ── */
-@media(min-width:1024px){
-  .cl-page{width:var(--card-w);max-width:var(--card-w);margin:0 auto}
+/* Items */
+.cl-item { display:flex; align-items:flex-start; gap:12px; padding:11px 14px; background:var(--s1); border-radius:var(--r); border:1px solid var(--border); margin-bottom:5px; cursor:pointer; transition:background .15s; user-select:none; }
+.cl-item:hover { background:var(--s2); }
+.cl-item:active { transform:scale(.99); }
+.cl-dot { width:15px; height:15px; border-radius:50%; flex-shrink:0; border:2px solid var(--s3); margin-top:1px; transition:all .2s; }
+.cl-dot.red   { background:#cc4038; border-color:#cc4038; }
+.cl-dot.amber { background:#be8816; border-color:#be8816; }
+.cl-dot.green { background:#3c7250; border-color:#3c7250; }
+.cl-txt { font-size:12px; color:var(--text); flex:1; line-height:1.65; }
+.cl-txt.higher { color:var(--acc-t); }
+.cl-txt.core   { color:var(--log); }
+
+/* Desktop */
+@media(min-width:1024px) {
+  .cl-page { width:var(--card-w); max-width:var(--card-w); margin:0 auto; }
 }
 </style>
 </head>
@@ -125,125 +101,100 @@
 
 <!-- Lock screen -->
 <div id="lock-screen" class="lock-screen">
-  <div class="lock-icon">🔒</div>
+  <div class="lock-icon">&#128274;</div>
   <div class="lock-title">Checklists</div>
   <div class="lock-sub">Enter your admin password to access your personalised revision checklists.</div>
-  <input class="lock-input" type="password" id="lock-pw" placeholder="Password" autocomplete="off"
-    onkeydown="if(event.key==='Enter')tryUnlock()">
+  <input class="lock-input" type="password" id="lock-pw" placeholder="Password" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()">
   <div class="lock-err" id="lock-err"></div>
   <button class="lock-btn" onclick="tryUnlock()">Unlock</button>
-  <button class="lock-back" onclick="window.location.href='index.html'">← Back to Solus</button>
+  <button class="lock-back" onclick="window.location.href='resources.html'">&#8592; Back to Solus</button>
 </div>
 
-<!-- Main checklist page (hidden until unlocked) -->
+<!-- Main page (hidden until unlocked) -->
 <div id="cl-page" class="cl-page" style="display:none">
   <div class="cl-head">
     <div class="cl-hdr">
-      <button class="cl-back" onclick="window.location.href='index.html'">
-        <span>←</span> Solus
-      </button>
+      <button class="cl-back" onclick="window.location.href='resources.html'">&#8592; Solus</button>
       <span class="app-name" style="font-size:20px">Checklists<span style="color:var(--acc-t)">.</span></span>
       <button class="cl-back" onclick="confirmReset()" style="color:var(--hint);font-size:11px">Reset</button>
     </div>
-
-    <!-- Subject pills -->
     <div class="subj-scroll"><div class="subj-pills" id="subj-pills"></div></div>
-
-    <!-- Paper tabs -->
     <div class="paper-tabs" id="paper-tabs"></div>
   </div>
 
   <div class="cl-scroll">
-    <!-- Exam board badge -->
     <div id="board-badge"></div>
-
-    <!-- Progress badges -->
     <div class="prog-row">
       <div class="prog-badge"><div class="prog-n red-n"  id="pr-red">0</div><div class="prog-lbl">Red</div></div>
       <div class="prog-badge"><div class="prog-n amb-n"  id="pr-amb">0</div><div class="prog-lbl">Amber</div></div>
       <div class="prog-badge"><div class="prog-n grn-n"  id="pr-grn">0</div><div class="prog-lbl">Green</div></div>
       <div class="prog-badge"><div class="prog-n none-n" id="pr-none">0</div><div class="prog-lbl">Unrated</div></div>
     </div>
-
-    <!-- Progress bar -->
-    <div class="pg-bar-wrap" id="pg-bar">
-      <div class="pg-bar-seg pg-seg-red"  id="seg-red" style="width:0%"></div>
-      <div class="pg-bar-seg pg-seg-amb"  id="seg-amb" style="width:0%"></div>
-      <div class="pg-bar-seg pg-seg-grn"  id="seg-grn" style="width:0%"></div>
+    <div class="pg-bar-wrap">
+      <div class="pg-bar-seg pg-seg-red" id="seg-red" style="width:0%"></div>
+      <div class="pg-bar-seg pg-seg-amb" id="seg-amb" style="width:0%"></div>
+      <div class="pg-bar-seg pg-seg-grn" id="seg-grn" style="width:0%"></div>
     </div>
-
-    <!-- Legend -->
     <div class="cl-legend">
       <div class="cl-leg"><div class="cl-leg-dot" style="background:var(--s3)"></div>Tap once: Red</div>
       <div class="cl-leg"><div class="cl-leg-dot" style="background:#cc4038"></div>Tap again: Amber</div>
       <div class="cl-leg"><div class="cl-leg-dot" style="background:#be8816"></div>Tap again: Green</div>
       <div class="cl-leg"><div class="cl-leg-dot" style="background:#3c7250"></div>Tap again: Reset</div>
     </div>
-
-    <!-- Checklist items -->
     <div id="cl-list"></div>
     <div style="height:8px"></div>
   </div>
 </div>
 
 <!-- Confirm overlay -->
-<div class="overlay" id="confirm-ov" onclick="if(event.target===this)closeConfirm()">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="confirm-title">Are you sure?</div>
-    <div class="sheet-body" id="confirm-body"></div>
-    <div class="sheet-btns">
-      <button class="btn btn-danger" id="confirm-ok" onclick="doConfirm()">Confirm</button>
-      <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
-    </div>
-  </div>
+<div class="overlay" id="confirm-ov" onclick="if(event.target===this)closeConfirm()" style="z-index:260">
+  <div class="sheet"><div class="sheet-handle"></div><div class="sheet-title" id="confirm-title">Are you sure?</div><div class="sheet-body" id="confirm-body"></div><div class="sheet-btns"><button class="btn btn-danger" id="confirm-ok" onclick="doConfirm()">Confirm</button><button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button></div></div>
 </div>
 
 <script>
-// ── Admin password ──
+// ── Data ──────────────────────────────────────────────────
 const ADMIN_PW = 'Xaniel32!';
 const LS_KEY   = 'rv_plc_conf';
 
-// ── All checklist data ──
 const CHECKLISTS = {
   Biology: {
-    examBoard: 'Edexcel GCSE Biology (1BI0) – Triple Science',
+    examBoard: 'Edexcel GCSE Biology (1BI0) - Triple Science',
     papers: {
       'Paper 1': [
         'Describe animal and plant cells',
-        'Describe specialised cells; sperm cell, egg cell, ciliated epithelial cell, root hair cell',
+        'Describe specialised cells: sperm cell, egg cell, ciliated epithelial cell, root hair cell',
         'Describe how to use a microscope and prepare a cell slide',
         'Calculate the sizes of cells from the microscope and convert units',
-        'Describe difference between Eukaryotic and prokaryotic cells',
-        'Describe structure of bacterial cell and compare to animal and plant cells',
-        'Describe what an enzyme is and how it works by lock and key hypothesis',
-        'Name enzymes that breakdown carbohydrate, protein and fats and the products',
-        'Describe factors that affect enzyme action; temperature, pH, enzyme concentration and substrate concentration',
-        'Core practical: investigate effect of pH on amylase breakdown of starch',
+        'Describe the difference between eukaryotic and prokaryotic cells',
+        'Describe the structure of a bacterial cell and compare to animal and plant cells',
+        'Describe what an enzyme is and how it works using the lock and key hypothesis',
+        'Name enzymes that break down carbohydrate, protein and fats and state the products',
+        'Describe factors that affect enzyme action: temperature, pH, enzyme concentration and substrate concentration',
+        'Core practical: investigate the effect of pH on amylase breakdown of starch',
         'Core practical: testing foods',
         'Describe how substances move into and out of cells by diffusion, osmosis and active transport',
         'Core practical: investigate osmosis in potato cells',
-        'Describe how cells divide by mitosis, and explain what happens at each stage',
+        'Describe how cells divide by mitosis and explain what happens at each stage',
         'Describe how some organisms reproduce by asexual reproduction',
-        'Describe how animal and plants grow and interpret percentile growth charts',
+        'Describe how animals and plants grow and interpret percentile growth charts',
         'Describe cancer as uncontrollable cell division',
-        'Describe what stem cells are and meristems in plants and describe their uses in medicine',
-        'Describe the structure of the nervous system, including the structure of neurones',
+        'Describe what stem cells are, explain meristems in plants, and describe their uses in medicine',
+        'Describe the structure of the nervous system including the structure of neurones',
         'Describe the pathway taken by nerve impulses in a voluntary and involuntary reflex action',
         'Explain how impulses cross the synapse',
-        'Describe the functions of the cerebral cortex, cerebellum and medulla oblongata in the brain',
+        'Describe the functions of the cerebral cortex, cerebellum and medulla oblongata',
         'Describe how problems of the brain and spinal cord can be detected (HIGHER)',
-        'Describe the parts of the eye and their functions, explain how long and short sight is corrected and how cataracts are treated',
+        'Describe the parts of the eye and their functions; explain how long and short sight is corrected and how cataracts are treated',
         'Describe how gametes are produced by meiosis and compare the outcomes of mitosis and meiosis',
         'Describe the structure of DNA',
         'Core practical: describe the stages in the extraction of DNA from fruit',
-        'Explain what happens during protein synthesis – transcription and translation (HIGHER)',
+        'Explain what happens during protein synthesis: transcription and translation (HIGHER)',
         'Explain what causes a mutation and how it affects the functions of proteins (HIGHER)',
         'Describe the experiments carried out by Mendel and what conclusions were made about inheritance',
         'Describe how alleles are inherited using genetic diagrams and interpret pedigree analysis charts',
         'Describe mutations and their effects',
         'Explain how blood group is inherited and what is meant by codominance',
-        'Explain how sex linked disorders are inherited and interpret pedigree charts (HIGHER)',
+        'Explain how sex-linked disorders are inherited and interpret pedigree charts (HIGHER)',
         'Describe what the human genome project is and how it is used in medicine',
         'Describe the causes of variation: genetic and environmental',
         'Describe the evidence for human evolution: fossils and stone tools',
@@ -254,14 +205,14 @@ const CHECKLISTS = {
         'Describe how genetic engineering can be used',
         'Explain the benefits and risks of selective breeding and genetic engineering',
         'Explain how genetic engineering is carried out to produce insulin (HIGHER)',
-        'Describe how organisms are classified into kingdoms and say why the domain system was introduced',
+        'Describe how organisms are classified into kingdoms and explain why the domain system was introduced',
         'Explain why GM crops are produced and the advantages and disadvantages',
         'Explain why fertilisers are used and explain how biological control is used to improve the growth of crops',
         'Define the WHO definition of health',
         'Describe the difference between communicable and non-communicable disease and give examples',
         'Describe causes of deficiency diseases, malnutrition and obesity and the effects on health including heart disease',
-        'Describe the effects of smoking on heart and excess alcohol on liver and the treatments for heart disease',
-        'Describe how pathogens transmit disease and the symptoms; cholera, TB, malaria, chalara ash dieback, HIV',
+        'Describe the effects of smoking on the heart and excess alcohol on the liver and the treatments for heart disease',
+        'Describe how pathogens transmit disease and the symptoms: cholera, TB, malaria, chalara ash dieback, HIV',
         'Describe the life cycle of viruses and how we can compare the effects using bacterial lawn plates',
         'Describe STIs: chlamydia and HIV, how they are spread, prevention and treatment',
         'Describe the chemical and physical barriers to prevent invading pathogens',
@@ -269,40 +220,40 @@ const CHECKLISTS = {
         'Describe the specific immune system and how it kills pathogens',
         'Describe how vaccines work to prevent disease',
         'Describe what antibiotics are and how they are used to kill bacteria',
-        'Core practical: Investigate antibiotics using aseptic technique',
+        'Core practical: investigate antibiotics using aseptic technique',
         'Explain what monoclonal antibodies are and how they are used (HIGHER)',
         'Describe the stages in development of new drugs'
       ],
       'Paper 2': [
-        'Describe photosynthesis, give the word and chemical equation',
-        'Describe the structure of the leaf, explain how it is adapted to carry out photosynthesis and how stomata open and close',
+        'Describe photosynthesis and give the word and chemical equation',
+        'Describe the structure of the leaf and explain how it is adapted to carry out photosynthesis and how stomata open and close',
         'Describe the factors that affect the rate of photosynthesis and interpret graphs; state what is meant by a limiting factor',
         'Calculate light intensity using the inverse square law (HIGHER)',
-        'Core practical: Investigate the effect of light intensity on rate of photosynthesis in pondweed and algae balls',
+        'Core practical: investigate the effect of light intensity on rate of photosynthesis in pondweed and algae balls',
         'Describe how substances are transported in plants through xylem and phloem by transpiration and translocation',
         'Describe factors that affect the rate of transpiration',
         'Explain how plants are adapted to extreme environments',
         'Explain the effects of plant hormones on phototropism and gravitropism',
-        'Explain how plant hormones are used in rooting powders, weedkillers and in fruit ripening (HIGHER)',
-        'Describe what hormones are and name hormones and glands',
-        'Describe the effect of thyroxine on metabolic rate and how it is controlled by negative feedback; effect of adrenalin on fight or flight response (HIGHER)',
+        'Explain how plant hormones are used in rooting powders, weedkillers and fruit ripening (HIGHER)',
+        'Describe what hormones are and name key hormones and glands',
+        'Describe the effect of thyroxine on metabolic rate and how it is controlled by negative feedback; describe the effect of adrenalin on the fight or flight response (HIGHER)',
         'Describe the events in the menstrual cycle and the role of oestrogen and progesterone',
-        'Describe the interaction of the female sex hormones and how they control the menstrual cycle; how levels are controlled by negative feedback (HIGHER)',
+        'Describe the interaction of the female sex hormones and how they control the menstrual cycle; explain how levels are controlled by negative feedback (HIGHER)',
         'Explain how hormones are used to assist in fertility treatments (HIGHER)',
         'Discuss different methods of contraception and their success rates',
         'Describe the role of insulin and the difference between type I and type II diabetes and how they are treated',
-        'Describe the link between type II diabetes and obesity and how BMI and waist:hip ratio are used as a measure of obesity',
+        'Describe the link between type II diabetes and obesity and how BMI and waist to hip ratio are used as measures of obesity',
         'Describe how the body controls temperature (thermoregulation)',
         'Describe the structure of the urinary system and how to treat kidney failure',
         'Describe how the body controls water levels (osmoregulation)',
-        'Describe what happens in the nephron; filtration and reabsorption',
+        'Describe what happens in the nephron: filtration and reabsorption',
         'Explain the role of ADH and how it affects the nephrons (HIGHER)',
         'Describe the factors affecting the rate of diffusion',
         'Describe the components of blood and how red blood cells are adapted to carry oxygen',
         'Describe the structure and function of blood vessels',
         'Describe the structure and function of the heart',
         'Calculate heart rate and compare in a fit and unfit person',
-        'Calculate surface area:volume ratio and explain how it affects gas exchange and diffusion',
+        'Calculate surface area to volume ratio and explain how it affects gas exchange and diffusion',
         'Describe aerobic respiration and anaerobic respiration and compare the outcomes',
         'Describe the effects of exercise on anaerobic respiration',
         'Core practical: investigate respiration rate in small organisms',
@@ -311,7 +262,7 @@ const CHECKLISTS = {
         'Describe how energy is transferred through ecosystems and interpret pyramids of biomass',
         'Core practical: describe how to sample populations using quadrats and line transects',
         'Describe parasitic and mutualistic relationships and give examples',
-        'Describe human impacts on biodiversity; fish farming, introducing non-indigenous species and eutrophication',
+        'Describe human impacts on biodiversity: fish farming, introducing non-indigenous species and eutrophication',
         'Explain how we can preserve biodiversity',
         'Describe the water cycle and how water can be treated to make it potable',
         'Describe the carbon cycle',
@@ -322,37 +273,38 @@ const CHECKLISTS = {
       ]
     }
   },
+
   Chemistry: {
-    examBoard: 'Edexcel GCSE Chemistry (1CH0) – Triple Science',
+    examBoard: 'Edexcel GCSE Chemistry (1CH0) - Triple Science',
     papers: {
       'Paper 1': [
         'Describe the particle model in solids, liquids and gases; name changes of state and describe how particle arrangement and movement changes',
         'Describe the difference between elements, compounds and mixtures, and how melting point shows a pure substance or mixture',
-        'Describe how to separate substances in a mixture (filtration, crystallisation, distillation and chromatography including Rf values)',
-        'Core practical: Investigating distillation and chromatography to separate inks',
+        'Describe how to separate substances in a mixture: filtration, crystallisation, distillation and chromatography including Rf values',
+        'Core practical: investigating distillation and chromatography to separate inks',
         'Describe the stages in purifying water to make it potable',
-        'Describe the structure of an atom, and state the number of protons, electrons and neutrons',
-        'Describe what is meant by an Isotope',
-        'Calculate the relative atomic mass of Isotopes (HIGHER)',
-        'Describe how the Periodic table is arranged and how Mendeleev left gaps for undiscovered elements',
+        'Describe the structure of an atom and state the number of protons, electrons and neutrons',
+        'Describe what is meant by an isotope',
+        'Calculate the relative atomic mass of isotopes (HIGHER)',
+        'Describe how the periodic table is arranged and how Mendeleev left gaps for undiscovered elements',
         'Describe the relationship between the group number and period and the electronic arrangement of the atom',
         'Describe how electrons are arranged in shells around the nucleus and state the electronic configuration',
-        'Describe Ionic and Covalent bonding',
-        'Describe the properties of Ionic compounds and explain the conduction of electricity and melting points with reference to structure and bonding',
+        'Describe ionic and covalent bonding',
+        'Describe the properties of ionic compounds and explain the conduction of electricity and melting points with reference to structure and bonding',
         'Describe structure and properties of simple molecular substances',
-        'Describe structure and properties of allotropes of carbon; diamond, graphite, graphene and fullerenes',
+        'Describe structure and properties of allotropes of carbon: diamond, graphite, graphene and fullerenes',
         'Describe structure and bonding in metals and explain properties',
         'Evaluate bonding models',
-        'Describe acids and bases (alkalis) and the colour they go with different indicators; universal indicator, litmus, phenolphthalein, methyl orange',
+        'Describe acids and bases (alkalis) and the colour they go with different indicators: universal indicator, litmus, phenolphthalein, methyl orange',
         'Describe neutralisation reactions and how pH changes during neutralisation',
         'Explain how acidity changes with the number of H+ ions (HIGHER)',
         'Explain the difference between dilute/concentrated and strong/weak acids in terms of H+ ions and pH (HIGHER)',
-        'Core practical: Describe how to prepare a pure dry soluble salt',
-        'Core practical: Investigate neutralisation',
+        'Core practical: describe how to prepare a pure dry soluble salt',
+        'Core practical: investigate neutralisation',
         'Describe how to carry out a titration',
         'Explain how the pH changes during a neutralisation reaction',
         'Describe the reactions between metals and acids and metal carbonate and acids; test for hydrogen and carbon dioxide gas',
-        'Write an Ionic equation including half equations, showing oxidation and reduction (HIGHER)',
+        'Write an ionic equation including half equations showing oxidation and reduction (HIGHER)',
         'Describe a precipitation reaction and use the solubility rules to predict which substance would form a precipitate',
         'Calculate the relative formula mass',
         'Deduce the empirical formula from the molecular formula and calculate empirical formula from reacting masses',
@@ -362,7 +314,7 @@ const CHECKLISTS = {
         'Deduce the balanced chemical equation using the ratio of moles from the reacting masses (HIGHER)',
         'Describe what is meant by electrolysis and what happens during electrolysis',
         'Explain the reactions occurring at each electrode in terms of oxidation and reduction; write half equations (HIGHER)',
-        'Core practical: Investigate the electrolysis of copper sulfate using graphite and copper electrodes',
+        'Core practical: investigate the electrolysis of copper sulfate using graphite and copper electrodes',
         'Describe the order of reactivity of metals and how it is used to determine the extraction method from their ores',
         'Describe how extracting metals is an example of oxidation and reduction',
         'Give the advantages and disadvantages of recycling metals; describe factors used to determine life cycle assessment',
@@ -371,11 +323,11 @@ const CHECKLISTS = {
         'Explain the conditions that affect the position of equilibrium during a reversible reaction (HIGHER)',
         'Describe the typical properties of transition metals',
         'Describe what corrosion is; describe conditions needed for iron to rust and explain how rusting can be prevented',
-        'Describe what is meant by electroplating and how it is done (HIGHER – need to write half equations)',
+        'Describe what is meant by electroplating and how it is done (HIGHER)',
         'Describe what an alloy is and explain why alloys are stronger than the pure metal',
         'Describe why different alloys are chosen for different uses',
         'Calculate percentage yield; explain why actual yield is always less than expected',
-        'Calculate atom economy (HIGHER – need to use data to explain why a reaction pathway is chosen)',
+        'Calculate atom economy (HIGHER)',
         'Calculate concentration of a solution (HIGHER)',
         'Carry out a titration (core practical)',
         'Calculate concentration of unknown solution from the titration results (HIGHER)',
@@ -386,17 +338,17 @@ const CHECKLISTS = {
         'Explain the reactions in a hydrogen fuel cell (HIGHER)'
       ],
       'Paper 2': [
-        'Describe the physical and chemical properties of Group 1 metals, and describe their reaction with water',
-        'Describe how the reactivity increases as you go down the group and explain this in terms of electronic configuration',
-        'Describe the physical and chemical properties of Group 7 Halogens',
+        'Describe the physical and chemical properties of Group 1 metals and describe their reaction with water',
+        'Describe how reactivity increases as you go down the group and explain this in terms of electronic configuration',
+        'Describe the physical and chemical properties of Group 7 halogens',
         'Explain the trend in reactivity in terms of electronic configuration',
         'Describe how a more reactive halogen displaces a less reactive halogen',
         'Explain displacement reactions in terms of oxidation and reduction',
-        'Describe the physical and chemical properties of Group 0 Noble gases',
+        'Describe the physical and chemical properties of Group 0 noble gases',
         'Describe what happens during a chemical reaction in terms of kinetic theory and reacting particles',
         'Describe how to measure the rate of a chemical reaction',
         'Interpret graphs of rates of reaction and calculate the rate of a reaction',
-        'Explain factors affecting rates of reaction using kinetic theory; temperature, concentration, surface area',
+        'Explain factors affecting rates of reaction using kinetic theory: temperature, concentration, surface area',
         'Describe what a catalyst is and explain how it speeds up a chemical reaction; interpret reaction profiles',
         'Core practical: investigating rates of reaction',
         'Describe an exothermic and endothermic reaction',
@@ -409,7 +361,7 @@ const CHECKLISTS = {
         'Describe the homologous series of alkanes and name the first four; give their molecular and structural formulas',
         'Describe complete and incomplete combustion of alkanes and the problems of incomplete combustion',
         'Describe the problems of burning fossil fuels: greenhouse effect and acid rain',
-        'Describe how long chain hydrocarbons can be cracked to make shorter more useful fuels',
+        'Describe how long-chain hydrocarbons can be cracked to make shorter more useful fuels',
         'Compare hydrogen and petrol as fuels',
         'Describe the composition of the Earth\'s early atmosphere and the evidence',
         'Explain how the Earth\'s atmosphere changed, giving reasons',
@@ -433,24 +385,23 @@ const CHECKLISTS = {
       ]
     }
   },
+
   Physics: {
-    examBoard: 'Edexcel GCSE Physics (1PH0) – Single Science, Paper 1',
+    examBoard: 'Edexcel GCSE Physics (1PH0) - Single Science',
     papers: {
-      'Topics 1–3': [
-        // Topic 1
+      'Topics 1 to 3': [
         'T1: Recall and use the SI unit for physical quantities as listed in the specification',
-        'T1: Recall and use multiples and sub-multiples of units including G, M, k, c, m, μ and n',
+        'T1: Recall and use multiples and sub-multiples of units including G, M, k, c, m, u and n',
         'T1: Be able to convert between different units, including hours to seconds',
         'T1: Use significant figures and standard form where appropriate',
-        // Topic 2
         'T2: Describe what scalar and vector quantities are and explain the differences',
         'T2: Recall vector and scalar quantities including displacement/distance, velocity/speed, acceleration, force, weight/mass, momentum and energy',
         'T2: Define what velocity is',
-        'T2: Recall and use: speed (m/s) = distance (m) ÷ time (s)',
-        'T2: Recall and use: distance travelled (m) = average speed (m/s) × time (s)',
+        'T2: Recall and use: speed (m/s) = distance (m) divided by time (s)',
+        'T2: Recall and use: distance travelled (m) = average speed (m/s) x time (s)',
         'T2: Analyse distance/time graphs including determination of speed from the gradient',
-        'T2: Recall and use the equation: a = (v – u) / t',
-        'T2: Use the equation: v² – u² = 2 × a × x',
+        'T2: Recall and use the equation: a = (v minus u) divided by t',
+        'T2: Use the equation: v squared minus u squared = 2 x a x x',
         'T2: Analyse velocity/time graphs: compare acceleration from gradients qualitatively',
         'T2: Analyse velocity/time graphs: calculate the acceleration from the gradient (uniform acceleration only)',
         'T2: Analyse velocity/time graphs: determine distance travelled using area (uniform acceleration only)',
@@ -458,8 +409,8 @@ const CHECKLISTS = {
         'T2: Recall typical everyday speeds for wind, sound, walking, running, cycling and transport',
         'T2: Recall Newton\'s First Law where the resultant force is zero',
         'T2: Recall Newton\'s First Law where the resultant force is not zero',
-        'T2: Recall and use Newton\'s Second Law: F = m × a',
-        'T2: Define weight; recall and use W = m × g',
+        'T2: Recall and use Newton\'s Second Law: F = m x a',
+        'T2: Define weight; recall and use W = m x g',
         'T2: Describe how weight is measured',
         'T2: Describe the relationship between weight and gravitational field strength',
         'T2: Core Practical: Investigate the relationship between force, mass and acceleration',
@@ -468,9 +419,9 @@ const CHECKLISTS = {
         'T2 (HT): Explain that inertial mass measures how difficult it is to change an object\'s velocity',
         'T2: Recall and apply Newton\'s Third Law to equilibrium situations',
         'T2 (HT): Apply Newton\'s Third Law to collisions and relate to conservation of momentum',
-        'T2 (HT): Define momentum; recall and use p = m × v',
+        'T2 (HT): Define momentum; recall and use p = m x v',
         'T2 (HT): Describe examples of momentum in collisions',
-        'T2 (HT): Use Newton\'s Second Law as: F = (mv – mu) / t',
+        'T2 (HT): Use Newton\'s Second Law as: F = (mv minus mu) divided by t',
         'T2: Explain methods of measuring human reaction times and recall typical results',
         'T2: Recall that stopping distance = thinking distance + braking distance',
         'T2: Explain that stopping distance is affected by a range of factors; name them',
@@ -479,9 +430,8 @@ const CHECKLISTS = {
         'T2 (HT): Estimate forces involved in typical road situations due to decelerations',
         'T2: Estimate how stopping distance varies over a range of typical speeds',
         'T2: Carry out calculations on work done to show braking distance depends on initial velocity squared',
-        // Topic 3
-        'T3: Recall and use ΔGPE = m × g × Δh',
-        'T3: Recall and use KE = ½ × m × v²',
+        'T3: Recall and use GPE = m x g x h',
+        'T3: Recall and use KE = 0.5 x m x v squared',
         'T3: Draw and interpret diagrams to represent energy transfers',
         'T3: Explain what is meant by conservation of energy',
         'T3: Analyse energy changes for an object projected upwards or up a slope',
@@ -494,19 +444,18 @@ const CHECKLISTS = {
         'T3: Explain how energy is dissipated and stored in less useful ways',
         'T3: Explain ways of reducing unwanted energy transfer including lubrication and thermal insulation',
         'T3: Describe how wall thickness and thermal conductivity affect a building\'s rate of cooling',
-        'T3: Recall and use: efficiency = useful energy transferred / total energy supplied',
+        'T3: Recall and use: efficiency = useful energy transferred divided by total energy supplied',
         'T3 (HT): Explain how efficiency can be increased',
         'T3: Describe the main energy sources and compare renewable and non-renewable uses',
         'T3: Explain patterns and trends in the use of energy resources'
       ],
-      'Topics 4–7': [
-        // Topic 4
+      'Topics 4 to 7': [
         'T4: Recall that waves transfer energy and information without transferring matter',
         'T4: Describe evidence that with water and sound waves it is the wave, not the medium, that travels',
         'T4: Define and use the terms frequency and wavelength as applied to waves',
         'T4: Use the terms amplitude, period, wave velocity and wavefront',
         'T4: Describe the difference between longitudinal and transverse waves with examples',
-        'T4: Recall and use v = f × λ and v = x/t',
+        'T4: Recall and use v = f x lambda and v = x/t',
         'T4: Describe how to measure the velocity of sound in air and ripples on water surfaces',
         'T4 (HT): Calculate depth or distance from time and wave velocity',
         'T4: Describe the effects of reflection, refraction, transmission and absorption of waves',
@@ -514,14 +463,13 @@ const CHECKLISTS = {
         'T4 (HT): Explain how waves are refracted at a boundary in terms of change of speed',
         'T4 (HT): Recall that different substances may absorb, transmit, refract or reflect waves differently with wavelength',
         'T4 (HT): Describe the processes which convert wave disturbances between sound waves and vibrations in solids',
-        'T4 (HT): Explain why wave–disturbance conversion only works over a limited frequency range',
-        'T4 (HT): Use wave–disturbance conversion to explain how the human ear works',
+        'T4 (HT): Explain why wave disturbance conversion only works over a limited frequency range',
+        'T4 (HT): Use wave disturbance conversion to explain how the human ear works',
         'T4 (HT): Recall the frequency of ultrasound and state its units',
         'T4 (HT): Explain uses of ultrasound and infrasound',
         'T4: Describe how changes in velocity, frequency and wavelength in transmission of sound are inter-related',
         'T4: Core Practical: Investigate the suitability of equipment to measure speed, frequency and wavelength of a wave',
-        // Topic 5
-        'T5: Explain with ray diagrams reflection, refraction and TIR, including law of reflection and critical angle',
+        'T5: Explain with ray diagrams reflection, refraction and total internal reflection, including law of reflection and critical angle',
         'T5: Explain the difference between specular and diffuse reflection',
         'T5: Explain how colour of light is related to differential absorption and transmission through filters',
         'T5: Relate the power of a lens to its focal length and shape',
@@ -545,7 +493,6 @@ const CHECKLISTS = {
         'T5: Describe some uses of EM radiation',
         'T5 (HT): Recall that radio waves can be produced by, or induce, oscillations in electrical circuits',
         'T5: Recall that changes in atoms and nuclei can generate and be caused by radiation across a wide frequency range',
-        // Topic 6a
         'T6a: Describe the structure of the atom',
         'T6a: Recall the typical size (order of magnitude) of atoms and small molecules',
         'T6a: Describe the structure of nuclei of isotopes',
@@ -555,18 +502,17 @@ const CHECKLISTS = {
         'T6a: Recall that electrons orbit the nucleus at different set distances',
         'T6a: Explain that electrons change orbit when there is absorption or emission of EM radiation',
         'T6a: Explain how atoms may form positive ions',
-        'T6a: Recall that alpha, β–, β+, gamma and neutron radiation are emitted from unstable nuclei randomly',
-        'T6a: Recall that alpha, β– and β+ and gamma rays are ionising radiation',
+        'T6a: Recall that alpha, beta minus, beta plus, gamma and neutron radiation are emitted from unstable nuclei randomly',
+        'T6a: Recall that alpha, beta minus, beta plus and gamma rays are ionising radiation',
         'T6a: Explain what is meant by background radiation',
         'T6a: Describe the origins of background radiation from Earth and space',
-        'T6a: Describe methods for measuring and detecting radioactivity – photographic film and GM tube',
+        'T6a: Describe methods for measuring and detecting radioactivity: photographic film and GM tube',
         'T6a: Recall what alpha, beta and gamma radiation are made of',
         'T6a: Compare alpha, beta and gamma radiations in terms of their abilities to penetrate and ionise',
         'T6a: Describe how and why the atomic model has changed over time including scattering experiments',
-        'T6a: Describe the process of β– and β+ decay',
-        'T6a: Explain the effects on atomic and mass numbers of radioactive decays (α, β, γ and neutron emission)',
+        'T6a: Describe the process of beta minus and beta plus decay',
+        'T6a: Explain the effects on atomic and mass numbers of radioactive decays',
         'T6a: Recall that nuclei that have undergone decay often rearrange with a loss of energy as gamma radiation',
-        // Topic 6b
         'T6b: Use given data to balance nuclear equations in terms of mass and charge',
         'T6b: Describe how the activity of a radioactive source decreases over time',
         'T6b: Recall that the unit of activity of a radioactive isotope is the Becquerel (Bq)',
@@ -585,14 +531,13 @@ const CHECKLISTS = {
         'T6b (Phy only): Recall that fission, fusion and radioactive decay can be sources of energy',
         'T6b (Phy only): Explain the fission of U-235',
         'T6b (Phy only): Explain the principle of a controlled nuclear chain reaction',
-        'T6b (Phy only): Explain how the chain reaction is controlled in a nuclear reactor (moderators and control rods)',
+        'T6b (Phy only): Explain how the chain reaction is controlled in a nuclear reactor using moderators and control rods',
         'T6b (Phy only): Describe how thermal energy from the chain reaction is used to generate electricity',
         'T6b (Phy only): Recall that the products of nuclear fission are radioactive',
         'T6b (Phy only): Describe nuclear fusion',
         'T6b (Phy only): Explain the difference between nuclear fusion and nuclear fission',
         'T6b (Phy only): Explain why nuclear fusion does not happen at low temperatures and pressures',
         'T6b (Phy only): Relate the conditions for fusion to the difficulty of making a practical power station',
-        // Topic 7 (all Phy only)
         'T7 (Phy only): Explain how weight and g differ between the Earth and other bodies in space',
         'T7 (Phy only): Recall what our solar system consists of',
         'T7 (Phy only): Recall the names and order of the eight planets from the Sun',
@@ -601,7 +546,7 @@ const CHECKLISTS = {
         'T7 (Phy only): Explain how gravity can lead to changing velocity but unchanged speed in circular orbits',
         'T7 (Phy only): Explain how, for a stable orbit, radius must change if orbital speed changes',
         'T7 (Phy only): Compare the Steady State and Big Bang theories',
-        'T7 (Phy only): Describe evidence supporting the Big Bang theory – red-shift and CMB radiation',
+        'T7 (Phy only): Describe evidence supporting the Big Bang theory: red-shift and CMB radiation',
         'T7 (Phy only): Recall that there is more evidence supporting the Big Bang theory than the Steady State theory',
         'T7 (Phy only): Describe that a moving wave source causes a change in observed frequency and wavelength',
         'T7 (Phy only): Describe the red-shift in light received from galaxies at different distances',
@@ -611,49 +556,34 @@ const CHECKLISTS = {
         'T7 (Phy only): Describe the evolution of stars of similar mass to the Sun',
         'T7 (Phy only): Explain how the balance between thermal expansion and gravity affects the life cycle of stars',
         'T7 (Phy only): Describe the evolution of stars with a mass larger than the Sun',
-        'T7 (Phy only): Describe how methods of observing the Universe have changed; why some telescopes are outside the atmosphere'
+        'T7 (Phy only): Describe how methods of observing the Universe have changed and why some telescopes are outside the atmosphere'
       ]
     }
   }
 };
 
-// ── State ──
+// ── State ─────────────────────────────────────────────────
 let curSubj  = 'Biology';
 let curPaper = Object.keys(CHECKLISTS.Biology.papers)[0];
 let conf     = {};
 let confirmCb = null;
 
-// ── Init ──
-function init() {
-  applyTheme();
-  // Check admin
-  let admin = false;
-  try { admin = sessionStorage.getItem('sv_admin') === '1'; } catch(e){}
-  if (admin) {
-    showApp();
-  }
-  // Try Firebase auth
-  if (window.FIREBASE_ENABLED && window.firebaseAuth) {
-    window.firebaseAuth.onAuthStateChanged(u => {
-      if (u) loadConfFromFirestore(u.uid);
-    });
-  }
-}
-
+// ── Theme ─────────────────────────────────────────────────
 function applyTheme() {
   let t = 'dark';
-  try { t = localStorage.getItem('rv_theme') || 'dark'; } catch(e){}
+  try { t = localStorage.getItem('rv_theme') || 'dark'; } catch(e) {}
   document.documentElement.setAttribute('data-theme', t);
   const m = document.getElementById('tcm');
   if (m) m.content = t === 'dark' ? '#0e1010' : '#f2f2ed';
 }
 
+// ── Lock ──────────────────────────────────────────────────
 function tryUnlock() {
-  const pw  = document.getElementById('lock-pw');
+  const pw = document.getElementById('lock-pw');
   const err = document.getElementById('lock-err');
   if (!pw) return;
   if (pw.value === ADMIN_PW) {
-    try { sessionStorage.setItem('sv_admin', '1'); } catch(e){}
+    try { sessionStorage.setItem('sv_admin', '1'); } catch(e) {}
     pw.value = '';
     showApp();
   } else {
@@ -673,32 +603,15 @@ function showApp() {
   render();
 }
 
-// ── Conf persistence ──
+// ── Persistence ───────────────────────────────────────────
 function loadConf() {
   try { conf = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch(e) { conf = {}; }
 }
-
 function saveConf() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(conf)); } catch(e){}
-  if (window.FIREBASE_ENABLED && window.firebaseAuth && window.firebaseAuth.currentUser && window.firebaseDb) {
-    const uid = window.firebaseAuth.currentUser.uid;
-    window.firebaseDb.collection('users_plc').doc(uid).set({ conf, updatedAt: Date.now() }).catch(() => {});
-  }
+  try { localStorage.setItem(LS_KEY, JSON.stringify(conf)); } catch(e) {}
 }
 
-async function loadConfFromFirestore(uid) {
-  if (!window.firebaseDb) return;
-  try {
-    const doc = await window.firebaseDb.collection('users_plc').doc(uid).get();
-    if (doc.exists && doc.data().conf) {
-      conf = doc.data().conf;
-      localStorage.setItem(LS_KEY, JSON.stringify(conf));
-      render();
-    }
-  } catch(e) {}
-}
-
-// ── Subject pills ──
+// ── Subject pills ─────────────────────────────────────────
 function buildSubjPills() {
   const wrap = document.getElementById('subj-pills');
   if (!wrap) return;
@@ -706,7 +619,6 @@ function buildSubjPills() {
     `<div class="subj-pill${s === curSubj ? ' act' : ''}" onclick="switchSubj('${s}')">${s}</div>`
   ).join('');
 }
-
 function switchSubj(s) {
   curSubj  = s;
   curPaper = Object.keys(CHECKLISTS[s].papers)[0];
@@ -714,36 +626,37 @@ function switchSubj(s) {
   render();
 }
 
-// ── Render ──
+// ── Render ────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function render() {
-  const data = CHECKLISTS[curSubj];
+  const data   = CHECKLISTS[curSubj];
   const papers = Object.keys(data.papers);
 
   // Paper tabs
   const pt = document.getElementById('paper-tabs');
   if (pt) pt.innerHTML = papers.map(p =>
-    `<button class="paper-tab${p === curPaper ? ' act' : ''}" onclick="switchPaper('${p.replace(/'/g,"\\'")}')">
-      ${p}
-    </button>`
+    `<button class="paper-tab${p === curPaper ? ' act' : ''}" onclick="switchPaper(this,'${esc(p)}')">${p}</button>`
   ).join('');
 
-  // Exam board badge
+  // Board badge
   const bb = document.getElementById('board-badge');
-  if (bb) bb.innerHTML = `<div class="exam-board-badge">${data.examBoard}</div>`;
+  if (bb) bb.innerHTML = `<div class="exam-board-badge">${esc(data.examBoard)}</div>`;
 
-  // Items and conf key
-  const items   = data.papers[curPaper] || [];
-  const confKey = `${curSubj}::${curPaper}`;
+  const items    = data.papers[curPaper] || [];
+  const confKey  = `${curSubj}::${curPaper}`;
   const itemConf = conf[confKey] || {};
 
-  // Count
+  // Counts
   let red = 0, amb = 0, grn = 0, none = 0;
   items.forEach((_, i) => {
     const c = itemConf[i] || '';
-    if (c === 'red')   red++;
+    if      (c === 'red')   red++;
     else if (c === 'amber') amb++;
     else if (c === 'green') grn++;
-    else none++;
+    else                    none++;
   });
   const total = items.length;
   document.getElementById('pr-red').textContent  = red;
@@ -751,57 +664,58 @@ function render() {
   document.getElementById('pr-grn').textContent  = grn;
   document.getElementById('pr-none').textContent = none;
 
-  // Progress bar
   const pct = v => total > 0 ? (v / total * 100).toFixed(1) + '%' : '0%';
   document.getElementById('seg-red').style.width = pct(red);
   document.getElementById('seg-amb').style.width = pct(amb);
   document.getElementById('seg-grn').style.width = pct(grn);
 
-  // Item list
+  // Items
   const list = document.getElementById('cl-list');
   if (!list) return;
   list.innerHTML = items.map((txt, i) => {
     const c   = itemConf[i] || '';
-    const isH = txt.includes('(HIGHER)') || txt.includes('(HT)') || txt.includes('HIGHER)');
-    const isC = txt.toLowerCase().startsWith('core practical') || txt.toLowerCase().includes('core practical:');
+    const isH = txt.includes('(HIGHER)') || txt.includes('(HT)') || txt.includes('Phy only)');
+    const isC = txt.toLowerCase().startsWith('core practical');
     const cls = isH ? 'higher' : isC ? 'core' : '';
-    const display = txt.replace(' (HIGHER)', ' ★').replace(' (HT)', ' ★').replace('(HIGHER)', ' ★');
-    return `<div class="cl-item" onclick="cycleItem('${confKey}',${i},this)">
+    const display = txt
+      .replace(' (HIGHER)', ' \u2605')
+      .replace(' (HT)', ' \u2605')
+      .replace('(HIGHER)', ' \u2605');
+    return `<div class="cl-item" onclick="cycleItem('${esc(confKey)}',${i},this)">
       <div class="cl-dot${c ? ' '+c : ''}"></div>
       <div class="cl-txt${cls ? ' '+cls : ''}">${esc(display)}</div>
     </div>`;
   }).join('');
 }
 
-function switchPaper(p) {
+function switchPaper(btn, p) {
   curPaper = p;
+  document.querySelectorAll('.paper-tab').forEach(b => b.classList.remove('act'));
+  btn.classList.add('act');
   render();
 }
 
 function cycleItem(confKey, idx, el) {
   if (!conf[confKey]) conf[confKey] = {};
   const cur  = conf[confKey][idx] || '';
-  const next = {'' : 'red', 'red': 'amber', 'amber': 'green', 'green': ''}[cur];
-  if (next) conf[confKey][idx] = next;
-  else delete conf[confKey][idx];
+  const next = { '':'red', 'red':'amber', 'amber':'green', 'green':'' }[cur];
+  if (next) conf[confKey][idx] = next; else delete conf[confKey][idx];
   saveConf();
-  // Update dot only (fast, no full re-render)
   const dot = el.querySelector('.cl-dot');
   if (dot) dot.className = 'cl-dot' + (next ? ' '+next : '');
-  // Refresh counts
   updateCounts(confKey);
 }
 
 function updateCounts(confKey) {
-  const items   = CHECKLISTS[curSubj].papers[curPaper] || [];
+  const items    = CHECKLISTS[curSubj].papers[curPaper] || [];
   const itemConf = conf[confKey] || {};
-  let red = 0, amb = 0, grn = 0, none = 0;
+  let red=0, amb=0, grn=0, none=0;
   items.forEach((_, i) => {
     const c = itemConf[i] || '';
-    if (c === 'red') red++;
-    else if (c === 'amber') amb++;
-    else if (c === 'green') grn++;
-    else none++;
+    if      (c==='red')   red++;
+    else if (c==='amber') amb++;
+    else if (c==='green') grn++;
+    else                  none++;
   });
   const total = items.length;
   document.getElementById('pr-red').textContent  = red;
@@ -814,44 +728,25 @@ function updateCounts(confKey) {
   document.getElementById('seg-grn').style.width = pct(grn);
 }
 
-function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── Reset ──
+// ── Reset ─────────────────────────────────────────────────
 function confirmReset() {
-  openConfirm(
-    'Reset all checklists?',
-    'This will clear all RAG ratings for every subject and paper. This cannot be undone.',
-    () => {
-      conf = {};
-      saveConf();
-      render();
-    }
-  );
+  openConfirm('Reset all checklists?', 'This will clear all RAG ratings for every subject and paper. This cannot be undone.',
+    () => { conf = {}; saveConf(); render(); });
 }
-
 function openConfirm(title, body, cb) {
   confirmCb = cb;
   document.getElementById('confirm-title').textContent = title;
   document.getElementById('confirm-body').textContent  = body;
   document.getElementById('confirm-ov').classList.add('open');
 }
+function closeConfirm() { document.getElementById('confirm-ov').classList.remove('open'); confirmCb = null; }
+function doConfirm()    { const cb = confirmCb; closeConfirm(); if (cb) cb(); }
 
-function closeConfirm() {
-  document.getElementById('confirm-ov').classList.remove('open');
-  confirmCb = null;
-}
-
-function doConfirm() {
-  const cb = confirmCb;
-  closeConfirm();
-  if (cb) cb();
-}
-
-// ── Go ──
-init();
+// ── Init ──────────────────────────────────────────────────
+applyTheme();
+let admin = false;
+try { admin = sessionStorage.getItem('sv_admin') === '1'; } catch(e) {}
+if (admin) { showApp(); }
 </script>
 </body>
 </html>
