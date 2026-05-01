@@ -3,6 +3,14 @@
 
 let currentUser = null;
 
+// Global state -- declared here at module scope so every page script can read
+// and write them safely before loadFromLocalStorage() has been called.
+let CFG        = {};
+let STATS      = {};
+let SPACED     = [];
+let TODAY_DONE = {};
+let SPEC_CONF  = {};
+
 // -- Defaults --
 const DEFAULT_CFG         = { sound: true, notif: false, eye: true, hydra: true, checkin: true };
 const DEFAULT_STATS       = { total: 0, mins: 0, hist: [] };
