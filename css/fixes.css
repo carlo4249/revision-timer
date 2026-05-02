@@ -145,11 +145,12 @@
 
 /* ================================================================
    SETTINGS PANEL -- INNER LAYOUT
-   Consistent margins and border-radii for all child components.
+   FIX: first section label top padding reduced from 16px → 8px
+   to close the excessive visual gap under the panel header.
    ================================================================ */
 
 .settings-panel .settings-section-lbl {
-  padding: 16px 14px 6px;
+  padding: 8px 14px 6px;   /* was 16px 14px 6px */
 }
 
 .settings-panel .settings-wrap {
