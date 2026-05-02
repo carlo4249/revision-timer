@@ -101,7 +101,7 @@ function syncAdminUI() {
   document.querySelectorAll('.theme-chk').forEach(c => { c.checked = (t === 'dark'); });
 }
 
-// Stub - each page overrides
+// Stub -- each page overrides
 function onAdminChange() {}
 function onDataCleared() {}
 
@@ -257,34 +257,61 @@ function injectManifest() {
 }
 
 // ── Common page init ─────────────────────────────────────
+//
+// FIX: Tab-switching delay.
+//
+// Previous approach: waited for onAuthStateChanged to fire before loading
+// localStorage or calling pageInitFn. Firebase auth resolution takes
+// 200-800 ms, causing a visible blank-page delay on every tab switch.
+//
+// New approach:
+//   1. Apply theme and load localStorage immediately (synchronous, ~1 ms).
+//   2. Call pageInitFn immediately so the page renders without waiting for
+//      Firebase.
+//   3. If Firebase is enabled, register onAuthStateChanged. When it fires:
+//      a. If no user → redirect to auth.html.
+//      b. If user → set currentUser, silently sync Firestore in the
+//         background, then call pageInitFn again so data-dependent UI
+//         updates with any cloud-only data. The second call is cheap
+//         because each page guards against redundant rebuilds.
+//
 async function commonPageInit(pageName, pageInitFn) {
+  // ── Step 1: render immediately from localStorage ────────
   applyTheme();
   injectManifest();
-  document.addEventListener('touchstart', () => unlockAudio(), { once:true, passive:true });
-  document.addEventListener('click',      () => unlockAudio(), { once:true });
+  loadFromLocalStorage();
+  syncAdminUI();
+  applySettings();
+  updateExamChip();
 
-  const finishInit = async (user) => {
-    currentUser = user;
-    loadFromLocalStorage();
-    if (user && window.FIREBASE_ENABLED && window.firebaseDb) {
-      await loadFromFirestore(user.uid);
+  document.addEventListener('touchstart', () => unlockAudio(), { once: true, passive: true });
+  document.addEventListener('click',      () => unlockAudio(), { once: true });
+
+  // ── Step 2: paint the page right now ───────────────────
+  if (typeof pageInitFn === 'function') pageInitFn();
+
+  requestAnimationFrame(() => {
+    updateNavIndicator(pageName);
+    window.addEventListener('resize', () => requestAnimationFrame(() => updateNavIndicator(pageName)));
+  });
+
+  // ── Step 3: Firebase auth check in background ───────────
+  if (!window.FIREBASE_ENABLED || !window.firebaseAuth) return;
+
+  // Use a one-shot listener so it doesn't fire again on token refresh.
+  const unsubscribe = window.firebaseAuth.onAuthStateChanged(async user => {
+    unsubscribe(); // detach immediately after first resolution
+    if (!user) {
+      window.location.href = 'auth.html';
+      return;
     }
+    // User confirmed — update currentUser and pull cloud data
+    currentUser = user;
+    await loadFromFirestore(user.uid);
+    // Re-render with any data that was only in Firestore
     syncAdminUI();
     applySettings();
     updateExamChip();
     if (typeof pageInitFn === 'function') pageInitFn();
-    requestAnimationFrame(() => {
-      updateNavIndicator(pageName);
-      window.addEventListener('resize', () => requestAnimationFrame(() => updateNavIndicator(pageName)));
-    });
-  };
-
-  if (window.FIREBASE_ENABLED && window.firebaseAuth) {
-    window.firebaseAuth.onAuthStateChanged(async user => {
-      if (user) { await finishInit(user); }
-      else { window.location.href = 'auth.html'; }
-    });
-  } else {
-    await finishInit(null);
-  }
+  });
 }
