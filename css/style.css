@@ -62,7 +62,8 @@ html,body{
     border-left:1px solid var(--border);
     border-right:1px solid var(--border)
   }
-  #home-screen .screen-foot{
+  /* FIX: was #home-screen — id is actually home-wrap */
+  #home-wrap .screen-foot{
     left:0;
     right:0;
     max-width:var(--card-w);
@@ -160,10 +161,11 @@ html,body{
   transition:background .2s,color .2s;
 }
 .settings-close:hover{background:var(--s3);color:var(--text)}
+/* FIX: top padding 18px → 12px — closes oversized gap below panel header */
 .settings-section-lbl{
   font-size:10px;font-weight:700;letter-spacing:.9px;
   text-transform:uppercase;color:var(--hint);
-  padding:18px 20px 7px;
+  padding:12px 20px 7px;
 }
 .settings-panel .settings-wrap{
   margin:0 16px;border-radius:var(--r);
@@ -235,9 +237,11 @@ html,body{
 .scroll-area::-webkit-scrollbar-track{background:transparent}
 .scroll-area::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
 .tab-screen .scroll-area{padding-bottom:calc(var(--sab) + var(--nav) + 32px)}
-#home-screen .scroll-area{padding-bottom:calc(var(--sab) + var(--nav) + 96px)}
+/* FIX: was #home-screen — actual id is home-wrap */
+#home-wrap .scroll-area{padding-bottom:calc(var(--sab) + var(--nav) + 96px)}
 .screen-foot{flex-shrink:0;padding:10px 20px calc(var(--sab) + 10px)}
-#home-screen .screen-foot{
+/* FIX: was #home-screen — actual id is home-wrap */
+#home-wrap .screen-foot{
   position:fixed;bottom:0;left:0;right:0;
   padding:20px 20px calc(var(--sab) + var(--nav) + 14px);
   background:linear-gradient(to top,var(--bg) 60%,transparent);
