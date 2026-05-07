@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- NEW font -->
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style2.css">
 <link rel="stylesheet" href="css/fixes.css">
@@ -117,6 +119,18 @@
   </div>
 </div>
 
+<!-- ── NEW HERO BLOCK ── -->
+<div class="hero-block" id="home-hero">
+  <h1 class="hero-title">
+    <span class="hero-line hero-line--top" aria-hidden="true"></span>
+    <span class="hero-word">Master your</span>
+    <span class="hero-word hero-word--accent">revision</span>
+    <span class="hero-line hero-line--bottom" aria-hidden="true"></span>
+  </h1>
+  <p class="hero-sub">Designed for you — tracking what matters</p>
+</div>
+<!-- ── END HERO ── -->
+
 <!-- ── HOME SCREEN ── -->
 <div class="screen tab-screen active" id="home-wrap">
   <div class="screen-head">
@@ -129,7 +143,7 @@
     </div>
     <div class="session-progress-bar"><div id="session-progress-fill" class="session-progress-fill"></div></div>
   </div>
-  <div class="scroll-area" style="padding-top:10px">
+  <div class="scroll-area" style="padding-top:0"> <!-- reduced top padding because hero already pushes content -->
     <div class="quickstart" id="quickstart" onclick="quickStart()" style="display:none">
       <div><div class="qs-label">Up next</div><div class="qs-session" id="qs-text"></div></div>
       <button class="qs-btn" onclick="event.stopPropagation();quickStart()">Go &#8250;</button>
@@ -164,6 +178,18 @@
       <input class="tinput" id="cust-focus" type="number" min="5" max="180" placeholder="Focus (mins)">
       <input class="tinput" id="cust-break" type="number" min="0" max="60" placeholder="Break (0 = none)">
     </div>
+    <!-- NEW FOOTER -->
+    <footer class="app-footer">
+      <div class="footer-decor" aria-hidden="true">
+        <svg viewBox="0 0 100 30" fill="none">
+          <circle cx="20" cy="15" r="4" fill="var(--acc)" opacity="0.15"/>
+          <circle cx="50" cy="10" r="6" fill="var(--brk)" opacity="0.15"/>
+          <circle cx="80" cy="20" r="3" fill="var(--log)" opacity="0.2"/>
+        </svg>
+      </div>
+      <p class="footer-quote">“Small, consistent effort beats bursts of cramming.”</p>
+    </footer>
+    <!-- END FOOTER -->
     <div style="height:14px"></div>
   </div>
   <div class="screen-foot">
@@ -174,6 +200,16 @@
 <!-- ── TIMER SCREEN ── -->
 <div class="screen full-screen" id="timer-screen">
   <div class="screen-head">
+    <!-- NEW TIMER DECOR -->
+    <div class="timer-decor" aria-hidden="true">
+      <svg viewBox="0 0 80 40" class="decor-axis" fill="none">
+        <path d="M 40 36 L 68 20" stroke="var(--acc)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+        <path d="M 40 36 L 12 20" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <path d="M 40 36 L 40 4" stroke="var(--brk)" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+        <circle cx="40" cy="36" r="2" fill="var(--text)" opacity="0.5"/>
+      </svg>
+    </div>
+    <!-- END DECOR -->
     <div class="t-top"><div class="pill pill-focus" id="phase-lbl">Focus</div><div style="display:flex;align-items:center;gap:8px"><span id="timer-method-icon" style="font-size:18px"></span><button class="btn-ghost" onclick="confirmEnd()">End</button></div></div>
     <div class="pdots" id="pdots"></div>
     <div class="kbd-hint"><span class="kbd">Space</span> pause &nbsp;&middot;&nbsp; <span class="kbd">S</span> skip</div>
