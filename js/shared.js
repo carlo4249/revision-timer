@@ -1,8 +1,14 @@
 // js/shared.js -- Solus shared utilities
 
 // ── Navigation ──────────────────────────────────────────
-const NAV_ORDER = ['home', 'stats', 'spec', 'resources'];
-const NAV_HREFS = { home: 'index.html', stats: 'stats.html', spec: 'spec.html', resources: 'resources.html' };
+const NAV_ORDER = ['home', 'stats', 'spec', 'resources', 'checklists'];
+const NAV_HREFS = {
+  home:       'index.html',
+  stats:      'stats.html',
+  spec:       'spec.html',
+  resources:  'resources.html',
+  checklists: 'checklists.html'
+};
 
 function navTo(name) {
   window.location.href = NAV_HREFS[name] || 'index.html';
@@ -269,14 +275,14 @@ function injectManifest() {
 //   2. Call pageInitFn immediately so the page renders without waiting for
 //      Firebase.
 //   3. If Firebase is enabled, register onAuthStateChanged. When it fires:
-//      a. If no user → redirect to auth.html.
-//      b. If user → set currentUser, silently sync Firestore in the
+//      a. If no user -> redirect to auth.html.
+//      b. If user -> set currentUser, silently sync Firestore in the
 //         background, then call pageInitFn again so data-dependent UI
 //         updates with any cloud-only data. The second call is cheap
 //         because each page guards against redundant rebuilds.
 //
 async function commonPageInit(pageName, pageInitFn) {
-  // ── Step 1: render immediately from localStorage ────────
+  // Step 1: render immediately from localStorage
   applyTheme();
   injectManifest();
   loadFromLocalStorage();
@@ -287,7 +293,7 @@ async function commonPageInit(pageName, pageInitFn) {
   document.addEventListener('touchstart', () => unlockAudio(), { once: true, passive: true });
   document.addEventListener('click',      () => unlockAudio(), { once: true });
 
-  // ── Step 2: paint the page right now ───────────────────
+  // Step 2: paint the page right now
   if (typeof pageInitFn === 'function') pageInitFn();
 
   requestAnimationFrame(() => {
@@ -295,20 +301,17 @@ async function commonPageInit(pageName, pageInitFn) {
     window.addEventListener('resize', () => requestAnimationFrame(() => updateNavIndicator(pageName)));
   });
 
-  // ── Step 3: Firebase auth check in background ───────────
+  // Step 3: Firebase auth check in background
   if (!window.FIREBASE_ENABLED || !window.firebaseAuth) return;
 
-  // Use a one-shot listener so it doesn't fire again on token refresh.
   const unsubscribe = window.firebaseAuth.onAuthStateChanged(async user => {
-    unsubscribe(); // detach immediately after first resolution
+    unsubscribe();
     if (!user) {
       window.location.href = 'auth.html';
       return;
     }
-    // User confirmed — update currentUser and pull cloud data
     currentUser = user;
     await loadFromFirestore(user.uid);
-    // Re-render with any data that was only in Firestore
     syncAdminUI();
     applySettings();
     updateExamChip();
