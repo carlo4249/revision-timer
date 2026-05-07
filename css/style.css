@@ -212,6 +212,15 @@ html,body{
   background-image:radial-gradient(circle at 25% 25%,rgba(16,152,247,.03) 0%,transparent 50%),
     radial-gradient(circle at 75% 75%,rgba(60,114,80,.03) 0%,transparent 50%);
 }
+/* NEW: additional subtle background pattern */
+.app-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 30% 70%, rgba(16,152,247,0.02) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(190,136,22,0.02) 0%, transparent 50%);
+  pointer-events: none;
+}
 
 /* ===== LOADER ===== */
 #app-loader{
@@ -266,12 +275,13 @@ html,body{
 }
 
 .nav-indicator{
-  position:absolute;height:40px;
-  background:var(--s0);border-radius:9px;top:3px;left:3px;
+  position:absolute;height:36px; /* NEW: reduced height */
+  background:var(--s0);border-radius:9px;top:5px;left:3px;
   z-index:1;
   width:calc(25% - 1.5px);
   transition:left .22s cubic-bezier(.22,.8,.3,1),width .22s cubic-bezier(.22,.8,.3,1);
-  box-shadow:var(--shadow-sm);pointer-events:none;
+  box-shadow:0 2px 12px rgba(16,152,247,0.15); /* NEW: glow */
+  pointer-events:none;
 }
 [data-theme="light"] .nav-indicator{
   background:#fff;
@@ -392,6 +402,10 @@ html,body{
 }
 .switch .checkbox:checked ~ .slider::before{transform:translateX(24px)}
 .switch .checkbox:checked ~ .slider{background-color:var(--acc)}
+/* NEW: focus ring for toggle switch */
+.switch .checkbox:focus-visible + .slider {
+  box-shadow: 0 0 0 3px rgba(16,152,247,0.25);
+}
 
 /* ===== BUTTONS ===== */
 .btn{display:flex;align-items:center;justify-content:center;border:none;border-radius:var(--r);font-family:inherit;cursor:pointer;font-weight:600;transition:all .18s}
@@ -478,6 +492,15 @@ html,body{
 .sp-dot{flex:1;height:3px;border-radius:2px;background:var(--s3)}
 .sp-dot.done{background:var(--brk)}
 
+/* NEW: schedule card arrow animation */
+.sc-action span:last-child {
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.grad-card:hover .sc-action span:last-child {
+  transform: translateX(4px);
+}
+
 /* ===== SR CARD ===== */
 .sr-home-card{
   background:linear-gradient(135deg,rgba(190,136,22,.1),rgba(190,136,22,.03));
@@ -497,6 +520,8 @@ html,body{
   background:var(--s1);border:1.5px solid var(--border);
   border-radius:var(--r-lg);padding:13px;cursor:pointer;
   transition:background .2s,border-color .2s,transform .15s;
+  position: relative; /* NEW */
+  overflow: hidden;    /* NEW */
 }
 .method-card:hover{background:var(--s2)}
 .method-card:active{transform:scale(.97)}
@@ -505,6 +530,28 @@ html,body{
   background:linear-gradient(145deg,rgba(16,152,247,.12),rgba(16,152,247,.04));
   box-shadow:0 0 0 1px rgba(16,152,247,.15) inset,0 4px 16px rgba(16,152,247,.1);
 }
+/* NEW: card hover arrow */
+.method-card::after {
+  content: "›";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%) translateX(0);
+  font-size: 1.4rem;
+  color: var(--muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+  line-height: 1;
+}
+.method-card:hover::after {
+  transform: translateY(-50%) translateX(4px);
+  color: var(--acc-t);
+}
+.method-card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--acc);
+  border-color: var(--acc);
+}
+
 .mc-icon{font-size:22px;margin-bottom:6px;display:block}
 .mc-name{font-size:13px;font-weight:700;margin-bottom:2px;transition:color .2s}
 .mc-tag{font-size:10px;color:var(--muted);line-height:1.45;margin-bottom:6px}
@@ -698,6 +745,103 @@ canvas.chart{width:100%;display:block}
 .tr-track{height:4px;background:var(--s0);border-radius:3px;overflow:hidden}
 .tr-fill{height:100%;border-radius:3px;background:var(--acc);transition:width .6s cubic-bezier(.22,.8,.3,1)}
 .tr-fill.met{background:var(--brk)}
+
+/* ===== NEW: SERIF TYPOGRAPHY ===== */
+.app-name,
+.lbl-bold,
+.scard-val,
+.stats-grid .scard-val {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+}
+
+/* ===== NEW: HERO BLOCK ===== */
+.hero-block {
+  text-align: center;
+  padding: 32px 8px 16px;
+  position: relative;
+  z-index: 1;
+}
+.hero-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(2.4rem, 8vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+.hero-word {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+.hero-word--accent {
+  color: var(--acc);
+  margin-left: -0.3rem;
+}
+.hero-line {
+  display: block;
+  height: 2px;
+  width: 60%;
+  margin: 6px auto;
+  background: linear-gradient(to right, transparent, var(--border), transparent);
+  border-radius: 2px;
+}
+.hero-line--top {
+  margin-bottom: 12px;
+}
+.hero-line--bottom {
+  margin-top: 12px;
+}
+.hero-sub {
+  font-size: 0.95rem;
+  color: var(--muted);
+  max-width: 280px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* ===== NEW: TIMER DECOR ===== */
+.timer-decor {
+  text-align: center;
+  margin-bottom: 4px;
+}
+.decor-axis {
+  width: 60px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* ===== NEW: FOOTER ===== */
+.app-footer {
+  text-align: center;
+  padding: 32px 20px 16px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.footer-decor svg {
+  width: 100px;
+  margin: 0 auto 10px;
+  display: block;
+}
+.footer-quote {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+/* ===== SUBJECT CHIPS (NEW MICRO-INTERACTIONS) ===== */
+.subj-chip-btn:active {
+  transform: scale(0.96);
+}
+.subj-chip-btn:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
+}
 
 /* ===== SPEC ===== */
 .spec-subj-scroll{overflow-x:auto;overflow-y:hidden;margin-bottom:12px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
