@@ -1,175 +1,152 @@
-// js/resources.js -- Solus resources page
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" id="tcm" content="#0e1010">
+<title>Solus - Resources</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style2.css">
+<link rel="stylesheet" href="css/fixes.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body>
 
-let resourcesBuilt = false;
-const TT_DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-const TT_SESSIONS = ['Session 1','Session 2','Session 3'];
-let userTimetable = null;
+<div class="desktop-card"></div>
+<div class="app-bg"><div class="pattern-bg"></div></div>
 
-function onAdminChange() { renderResources(); }
-function onDataCleared() { renderExamList(); }
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg></div>
+  <div class="toast-text"><div class="toast-title" id="toast-title">Done</div><div class="toast-sub" id="toast-sub"></div></div>
+  <button class="toast-close" onclick="hideToast()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></button>
+</div>
 
-function renderResources() {
-  renderExamList();
-  buildPublicResources();
-  const resAdmin = el('res-admin-view');
-  if (resAdmin) resAdmin.style.display = isAdmin ? 'block' : 'none';
-  if (!isAdmin) return;
-  if (!resourcesBuilt) { renderNotionQuickLinks(); renderHowToRevise(); renderResSchedule(); resourcesBuilt = true; }
-}
-
-function buildPublicResources() {
-  const pubWrap = el('res-public-view');
-  if (!pubWrap || pubWrap._built) return;
-  pubWrap._built = true;
-  pubWrap.innerHTML = `
-    <div class="lbl">Free revision sites</div>
-    <div class="site-cat-lbl" style="margin-top:0">Practice and papers</div>
-    <div class="site-grid">
-      <a class="site-card" href="https://www.physicsandmathstutor.com/" target="_blank"><div class="site-name">Physics and Maths Tutor</div><div class="site-desc">Past papers and mark schemes for all subjects</div><div class="site-tag">All subjects</div></a>
-      <a class="site-card" href="https://www.savemyexams.com/" target="_blank"><div class="site-name">Save My Exams</div><div class="site-desc">Topic questions and model answers</div></a>
-      <a class="site-card" href="https://corbettmaths.com/5-a-day/" target="_blank"><div class="site-name">Corbett 5-a-day</div><div class="site-desc">Daily maths practice by grade</div><div class="site-tag">Daily habit</div></a>
-      <a class="site-card" href="https://www.mathsgenie.co.uk/" target="_blank"><div class="site-name">Maths Genie</div><div class="site-desc">Graded topic questions with answers</div></a>
+<!-- Settings -->
+<div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings()"></div>
+<div class="card-clip-wrap">
+  <div class="settings-panel" id="settings-panel">
+    <div class="settings-panel-head">
+      <span class="settings-panel-title">Settings</span>
+      <button class="settings-close" onclick="closeSettings()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></button>
     </div>
-    <div class="site-cat-lbl">Learn and understand</div>
-    <div class="site-grid">
-      <a class="site-card" href="https://app.senecalearning.com/dashboard" target="_blank"><div class="site-name">Seneca</div><div class="site-desc">Adaptive learning for all GCSE subjects</div><div class="site-tag">Free</div></a>
-      <a class="site-card" href="https://www.bbc.co.uk/bitesize/levels/z98jmp3" target="_blank"><div class="site-name">BBC Bitesize GCSE</div><div class="site-desc">Topic summaries, quizzes, and videos</div><div class="site-tag">Free</div></a>
-      <a class="site-card" href="https://www.cognitoresources.org/" target="_blank"><div class="site-name">Cognito</div><div class="site-desc">Short science video explanations</div></a>
-      <a class="site-card" href="https://members.gcsepod.com/pupils/dashboard" target="_blank"><div class="site-name">GCSE Pod</div><div class="site-desc">Bite-size video podcasts per topic</div></a>
+    <div class="settings-section-lbl">Appearance</div>
+    <div class="settings-wrap">
+      <div class="theme-toggle-row">
+        <span class="theme-toggle-label">Dark mode</span>
+        <label class="theme-switch-sm">
+          <input type="checkbox" class="ts-chk theme-chk" onchange="toggleThemeFromSettings(this)">
+          <div class="ts-container"><div class="ts-clouds"></div><div class="ts-stars"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545Z" fill="currentColor"/></svg></div><div class="ts-circle"><div class="ts-sunmoon"><div class="ts-moon"><div class="ts-spot"></div><div class="ts-spot"></div><div class="ts-spot"></div></div></div></div></div>
+        </label>
+      </div>
     </div>
-    <div class="site-cat-lbl">Flashcards and recall</div>
-    <div class="site-grid">
-      <a class="site-card" href="https://quizlet.com/gb" target="_blank"><div class="site-name">Quizlet</div><div class="site-desc">Pre-made flashcard sets for every topic</div></a>
-      <a class="site-card" href="https://www.anki.app/decks" target="_blank"><div class="site-name">AnkiWeb</div><div class="site-desc">Spaced repetition flashcard system</div><div class="site-tag">Best for SR</div></a>
-      <a class="site-card" href="https://www.getrevising.co.uk/" target="_blank"><div class="site-name">Get Revising</div><div class="site-desc">Mindmaps, flashcards and revision timetables</div></a>
-      <a class="site-card" href="https://www.freescience.info/gcse.php" target="_blank"><div class="site-name">Free Science</div><div class="site-desc">Notes and worksheets for GCSE sciences</div></a>
+    <div class="settings-section-lbl">Account</div>
+    <div class="settings-wrap" id="settings-account-section"></div>
+    <div class="settings-section-lbl">Data</div>
+    <div class="danger-zone" style="margin:0 14px">
+      <div class="danger-header" onclick="toggleDanger(this)"><div class="danger-title">&#9888;&#xFE0F; Danger zone</div><span class="danger-arrow" style="transform:rotate(180deg)">&#9660;</span></div>
+      <div class="danger-body open"><div style="font-size:12px;color:var(--red);margin-bottom:10px;line-height:1.55">Permanently deletes all session history, spec ratings, and spaced repetition data.</div><button class="clear-btn" onclick="confirmClearData()">Clear all data</button></div>
     </div>
-    <div class="site-cat-lbl">Science</div>
-    <div class="site-grid">
-      <a class="site-card" href="https://www.youtube.com/@Freesciencelessons" target="_blank"><div class="site-name">Free Science Lessons</div><div class="site-desc">Full course YouTube videos</div></a>
-      <a class="site-card" href="https://www.youtube.com/@BioNinja" target="_blank"><div class="site-name">BioNinja</div><div class="site-desc">Biology diagrams and notes</div></a>
-      <a class="site-card" href="https://www.chemguide.co.uk/" target="_blank"><div class="site-name">ChemGuide</div><div class="site-desc">Chemistry explanations</div></a>
-      <a class="site-card" href="https://www.physbot.co.uk/" target="_blank"><div class="site-name">Physbot</div><div class="site-desc">Physics revision videos</div></a>
+    <div class="settings-section-lbl">Admin</div>
+    <div class="admin-section">
+      <div id="admin-unlock-section"><div style="font-size:12px;color:var(--muted);line-height:1.6">Restricted access.</div><div class="admin-unlock-form"><input type="password" class="tinput" id="admin-pw-input" placeholder="Password" autocomplete="off" onkeydown="if(event.key==='Enter')adminUnlock()"><button class="admin-unlock-btn" onclick="adminUnlock()">Unlock</button></div><div style="font-size:12px;color:var(--red);min-height:18px;margin-top:5px" id="admin-pw-error"></div></div>
+      <div id="admin-active-section" style="display:none"><div class="admin-active-row"><div><div style="font-size:13px;font-weight:700;color:var(--brk)">&#10003; Admin mode active</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Full access enabled</div></div><button class="admin-deactivate-btn" onclick="adminDeactivate()">Deactivate</button></div></div>
     </div>
-    <div class="site-cat-lbl">English and Humanities</div>
-    <div class="site-grid">
-      <a class="site-card" href="https://litcharts.com/" target="_blank"><div class="site-name">LitCharts</div><div class="site-desc">Literature guides and themes</div></a>
-      <a class="site-card" href="https://www.sparknotes.com/" target="_blank"><div class="site-name">SparkNotes</div><div class="site-desc">Text summaries and analysis</div></a>
-      <a class="site-card" href="https://www.internetgeography.net/" target="_blank"><div class="site-name">Internet Geography</div><div class="site-desc">GCSE Geography case studies</div></a>
-      <a class="site-card" href="https://www.tutor2u.net/" target="_blank"><div class="site-name">Tutor2u</div><div class="site-desc">Business, Geography, Psychology</div></a>
+    <div style="height:44px;flex-shrink:0"></div>
+  </div>
+</div>
+
+<!-- Confirm overlay -->
+<div class="overlay" id="confirm-ov" onclick="if(event.target===this)closeConfirm()">
+  <div class="sheet"><div class="sheet-handle"></div><div class="sheet-title" id="confirm-title">Are you sure?</div><div class="sheet-body" id="confirm-body"></div><div class="sheet-btns"><button class="btn btn-danger" id="confirm-ok" onclick="doConfirm()">Confirm</button><button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button></div></div>
+</div>
+
+<!-- Add Exam overlay -->
+<div class="overlay" id="add-exam-ov" onclick="if(event.target===this)closeAddExam()">
+  <div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Add exam</div><div class="sheet-body">Track a custom exam and see how many days are left.</div>
+    <div class="lbl" style="margin-top:0">Subject</div>
+    <input class="tinput" id="add-exam-subj" type="text" placeholder="e.g. Chemistry" style="margin-bottom:12px">
+    <div class="lbl">Paper / Component</div>
+    <input class="tinput" id="add-exam-paper" type="text" placeholder="e.g. Paper 1" style="margin-bottom:12px">
+    <div class="lbl">Date</div>
+    <input class="tinput" id="add-exam-date" type="date" style="margin-bottom:18px;color-scheme:dark">
+    <div class="sheet-btns"><button class="btn btn-primary" onclick="saveCustomExam()">Add exam</button><button class="btn btn-secondary" onclick="closeAddExam()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- ── RESOURCES SCREEN ── -->
+<div class="screen tab-screen active" id="resources-screen">
+  <div class="screen-head">
+    <div class="hdr">
+      <span class="app-name">Resources<span>.</span></span>
+      <button class="cog-btn" onclick="openSettings()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="22" height="22"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg></button>
     </div>
-    <div class="lbl" style="margin-top:20px">My revision timetable</div>
-    <div id="timetable-builder"></div>
-  `;
-  buildTimetableWidget();
-}
+  </div>
+  <div class="scroll-area" style="padding-top:4px">
+    <!-- Admin-only view -->
+    <div id="res-admin-view" style="display:none">
+      <div class="lbl">Your Notion</div>
+      <div id="notion-quicklinks"></div>
+      <div class="lbl">Revision sites</div>
+      <div class="site-cat-lbl" style="margin-top:0">Flashcards and recall</div>
+      <div class="site-grid">
+        <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-maths-resources" target="_blank"><div class="site-name">Quizlet: Maths</div><div class="site-desc">Formula recall, exam prompts</div></a>
+        <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-biology-resources" target="_blank"><div class="site-name">Quizlet: Sciences</div><div class="site-desc">Processes, keywords, diagrams</div></a>
+        <a class="site-card" href="https://quizlet.com/gb/content/edexcel-gcse-english-literature-resources" target="_blank"><div class="site-name">Quizlet: English</div><div class="site-desc">Literature, past paper Qs</div></a>
+        <a class="site-card" href="https://quizlet.com/gb/content/ocr-gcse-computer-science-resources" target="_blank"><div class="site-name">Quizlet: CS</div><div class="site-desc">OCR definitions, processes</div></a>
+      </div>
+      <div class="lbl">How to revise</div>
+      <div id="how-to-revise"></div>
+      <div class="lbl">Weekly schedule</div>
+      <div class="sched-table-wrap" id="res-sched-table"></div>
+    </div>
 
-function renderNotionQuickLinks() {
-  const wrap = el('notion-quicklinks'); if (!wrap) return;
-  wrap.innerHTML = NOTION_PAGES.map(p =>
-    `<a class="notion-quick-link" href="${escHtml(p.url)}" target="_blank" rel="noopener noreferrer">
-       <span class="notion-quick-icon">${p.icon}</span>
-       <div style="flex:1"><div class="notion-quick-title">${escHtml(p.title)}</div><div class="notion-quick-sub">${escHtml(p.sub)}</div></div>
-       <span style="color:var(--hint);font-size:14px;margin-left:auto;flex-shrink:0">&#8250;</span>
-     </a>`
-  ).join('');
-}
+    <!-- Public resources -->
+    <div id="res-public-view"></div>
 
-function renderExamList() {
-  const wrap = el('exam-list'); if (!wrap) return;
-  const today = new Date(); today.setHours(0,0,0,0);
-  let allExams = [];
-  if (isAdmin) allExams = [...EXAMS];
-  try { const custom=JSON.parse(localStorage.getItem('rv_custom_exams')||'[]'); allExams=[...allExams,...custom]; } catch(e){}
-  const upcoming = allExams
-    .map(e=>{const d=new Date(e.date);d.setHours(0,0,0,0);return{...e,days:Math.round((d-today)/86400000)};})
-    .filter(e=>e.days>=-1).sort((a,b)=>a.days-b.days).slice(0,12);
-  if (!upcoming.length){wrap.innerHTML='<div style="font-size:13px;color:var(--muted);padding:14px 0;text-align:center">No upcoming exams. Add one below.</div>';return;}
-  wrap.innerHTML = upcoming.map(e=>{
-    const [,eMM,eDD]=e.date?e.date.split('-'):['','',''];
-    const cls=e.days===0?'today':e.days<=3?'soon':'';
-    const label=e.days===0?'TODAY':e.days<0?'Yest':String(e.days);
-    const sub=e.days<=0?'':e.days===1?'day':'days';
-    return `<div class="exam-row ${cls}"><div><div class="exam-name">${escHtml(e.subj)}</div><div class="exam-paper">${escHtml(e.paper||'')}${eDD&&eMM?`, ${eDD}/${eMM}`:''}</div></div><div style="text-align:right"><div class="exam-days">${label}</div><div class="exam-days-lbl">${sub}</div></div></div>`;
-  }).join('');
-}
+    <div class="lbl" style="margin-top:0">Personalised Checklists</div>
+    <a class="notion-quick-link" href="checklists.html" style="text-decoration:none">
+      <span class="notion-quick-icon">&#9989;</span>
+      <div style="flex:1"><div class="notion-quick-title">RAG Checklists</div><div class="notion-quick-sub">Biology · Chemistry · Physics - admin locked</div></div>
+      <span style="color:var(--hint);font-size:14px;margin-left:auto;flex-shrink:0">&#8250;</span>
+    </a>
 
-function renderHowToRevise() {
-  const wrap = el('how-to-revise'); if (!wrap) return;
-  wrap.innerHTML = Object.entries(HOW_TO).map(([subj,tips])=>{
-    const s=SUBJECTS.find(x=>x.name===subj||x.name.startsWith(subj));
-    const examStr=s?`<span class="acc-exam">${escHtml(s.examDates)}</span>`:'';
-    return `<div class="subj-accordion"><div class="acc-header" onclick="toggleAcc(this)"><span class="acc-title">${escHtml(subj)}</span><div style="display:flex;align-items:center;gap:6px">${examStr}<span class="acc-arrow">&#9660;</span></div></div><div class="acc-body"><div style="height:8px"></div>${tips.map(t=>`<div class="acc-tip">${t}</div>`).join('')}</div></div>`;
-  }).join('');
-}
+    <div id="res-exam-section">
+      <div class="lbl">Upcoming exams</div>
+      <div class="exam-list" id="exam-list"></div>
+      <button class="add-exam-btn" onclick="openAddExam()">&#43; Add exam</button>
+    </div>
 
-function toggleAcc(h) {
-  const b=h.nextElementSibling, arrow=h.querySelector('.acc-arrow');
-  if (!b) return;
-  const open=b.classList.toggle('open');
-  if (arrow) arrow.style.transform=open?'rotate(180deg)':'';
-}
+    <div style="height:20px"></div>
+  </div>
+</div>
 
-function renderResSchedule() {
-  const wrap=el('res-sched-table'); if(!wrap) return;
-  const dow=new Date().getDay(), days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  let html=`<div class="sched-th-row"><div class="sched-th">Day</div><div class="sched-th">S1</div><div class="sched-th">S2</div><div class="sched-th">S3</div></div>`;
-  [0,1,2,3,4,5,6].forEach(d=>{
-    const td=TIMETABLE[d]; if(!td) return;
-    html+=`<div class="${d===dow?'sched-tr today-row':'sched-tr'}"><div class="sched-td day">${days[d]}</div><div class="sched-td">${escHtml(td.s1.subj)} <span style="color:var(--hint)">${td.s1.mins}m</span></div><div class="sched-td">${escHtml(td.s2.subj)} <span style="color:var(--hint)">${td.s2.mins}m</span></div><div class="sched-td">${escHtml(td.s3.subj)} <span style="color:var(--hint)">${td.s3.mins}m</span></div></div>`;
-  });
-  wrap.innerHTML=html;
-}
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav" id="bottom-nav">
+  <div class="nav-tabs">
+    <input type="radio" name="nav-tab" id="nr-home" class="nav-radio">
+    <label class="nav-tab-lbl" for="nr-home" onclick="navTo('home')"><span class="nav-icon">&#128218;</span><span class="nav-text">Home</span></label>
+    <input type="radio" name="nav-tab" id="nr-stats" class="nav-radio">
+    <label class="nav-tab-lbl" for="nr-stats" onclick="navTo('stats')"><span class="nav-icon">&#128202;</span><span class="nav-text">Stats</span></label>
+    <input type="radio" name="nav-tab" id="nr-spec" class="nav-radio">
+    <label class="nav-tab-lbl" for="nr-spec" onclick="navTo('spec')"><span class="nav-icon">&#127919;</span><span class="nav-text">Spec</span></label>
+    <input type="radio" name="nav-tab" id="nr-res" class="nav-radio" checked>
+    <label class="nav-tab-lbl active-tab" for="nr-res" onclick="navTo('resources')"><span class="nav-icon">&#128279;</span><span class="nav-text">Resources</span></label>
+    <input type="radio" name="nav-tab" id="nr-check" class="nav-radio">
+    <label class="nav-tab-lbl" for="nr-check" onclick="navTo('checklists')"><span class="nav-icon">&#9989;</span><span class="nav-text">Checklists</span></label>
+    <div class="nav-indicator"></div>
+  </div>
+</nav>
 
-// ── Add exam overlay ──────────────────────────────────────
-function openAddExam()  { const ov=el('add-exam-ov'); if(ov) ov.classList.add('open'); }
-function closeAddExam() { const ov=el('add-exam-ov'); if(ov) ov.classList.remove('open'); }
-function saveCustomExam() {
-  const subj=el('add-exam-subj')?el('add-exam-subj').value.trim():'';
-  const paper=el('add-exam-paper')?el('add-exam-paper').value.trim():'';
-  const date=el('add-exam-date')?el('add-exam-date').value:'';
-  if(!subj||!date){showToast('Missing fields','Enter subject and date',false);return;}
-  try{const stored=JSON.parse(localStorage.getItem('rv_custom_exams')||'[]');stored.push({subj,paper,date,custom:true});localStorage.setItem('rv_custom_exams',JSON.stringify(stored));}catch(e){}
-  closeAddExam(); renderExamList(); showToast('Exam added',subj);
-}
-
-// ── Timetable builder ─────────────────────────────────────
-function loadUserTimetable() {
-  try { userTimetable = JSON.parse(localStorage.getItem('rv_user_tt')||'null'); } catch(e){ userTimetable=null; }
-  if (!userTimetable) {
-    userTimetable = {};
-    TT_DAYS.forEach(d=>{ userTimetable[d]=TT_SESSIONS.map(()=>({subj:'',mins:60})); });
-  }
-}
-function saveUserTimetable() { try{localStorage.setItem('rv_user_tt',JSON.stringify(userTimetable));}catch(e){} }
-function buildTimetableWidget() {
-  const wrap=el('timetable-builder'); if(!wrap) return;
-  loadUserTimetable();
-  wrap.innerHTML=`<div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;background:var(--s0);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px">Build your own weekly revision timetable. Enter subjects and time, then save.</div><div id="tt-days-wrap"></div><button class="btn btn-primary" style="margin-top:12px" onclick="saveTimetableWidget()">Save timetable</button>`;
-  renderTTDays();
-}
-function renderTTDays() {
-  const wrap=el('tt-days-wrap'); if(!wrap) return;
-  wrap.innerHTML=TT_DAYS.map((day,di)=>{
-    const sessions=userTimetable[day]||[];
-    const sessionRows=TT_SESSIONS.map((_,si)=>{
-      const s=sessions[si]||{subj:'',mins:60};
-      return `<div class="tt-session-row"><div class="tt-session-lbl">S${si+1}</div><input class="tt-input" type="text" placeholder="Subject..." value="${escHtml(s.subj)}" oninput="updateTT('${escHtml(day)}',${si},'subj',this.value)"><input class="tt-input tt-mins-input" type="number" min="10" max="180" value="${s.mins||60}" oninput="updateTT('${escHtml(day)}',${si},'mins',parseInt(this.value)||60)"><span style="font-size:11px;color:var(--hint);flex-shrink:0">min</span></div>`;
-    }).join('');
-    const hasSessions=sessions.some(s=>s&&s.subj);
-    const summary=hasSessions?sessions.filter(s=>s&&s.subj).map(s=>s.subj).join(', '):'Add subjects';
-    return `<div class="tt-day-block"><div class="tt-day-head" onclick="toggleTTDay('tt-body-${di}',this)"><span class="tt-day-name">${day}</span><span class="tt-day-summary" id="tt-summary-${di}">${escHtml(summary)}</span></div><div class="tt-day-body" id="tt-body-${di}" style="display:none">${sessionRows}</div></div>`;
-  }).join('');
-}
-function toggleTTDay(bodyId){const body=el(bodyId);if(!body)return;body.style.display=body.style.display==='none'?'flex':'none';}
-function updateTT(day,sessionIdx,field,value){
-  if(!userTimetable[day])userTimetable[day]=TT_SESSIONS.map(()=>({subj:'',mins:60}));
-  if(!userTimetable[day][sessionIdx])userTimetable[day][sessionIdx]={subj:'',mins:60};
-  userTimetable[day][sessionIdx][field]=value;
-  const di=TT_DAYS.indexOf(day);if(di>=0){const summaryEl=el(`tt-summary-${di}`);if(summaryEl){const sessions=userTimetable[day];summaryEl.textContent=sessions.filter(s=>s&&s.subj).map(s=>s.subj).join(', ')||'Add subjects';}}
-}
-function saveTimetableWidget(){saveUserTimetable();showToast('Timetable saved','Your schedule has been saved');}
-
-commonPageInit('resources', function() {
-  renderResources();
-});
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/resources.js"></script>
+</body>
+</html>
