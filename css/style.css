@@ -53,7 +53,6 @@ html,body{
   }
   .screen{width:var(--card-w);max-width:var(--card-w);margin:0 auto}
 
-  /* ── Bulletproof centering: left:0;right:0;max-width;margin:auto ── */
   .bottom-nav{
     left:0;
     right:0;
@@ -62,7 +61,6 @@ html,body{
     border-left:1px solid var(--border);
     border-right:1px solid var(--border)
   }
-  /* FIX: was #home-screen — id is actually home-wrap */
   #home-wrap .screen-foot{
     left:0;
     right:0;
@@ -82,14 +80,12 @@ html,body{
   .overlay .sheet{max-width:700px}
   .sched-ios-sheet,.sr-sheet{max-width:var(--card-w);margin:0 auto}
 
-  /* card-clip-wrap: fixed, centered, same pattern */
   .card-clip-wrap{
     left:0;right:0;
     max-width:var(--card-w);
     margin:0 auto;
   }
 
-  /* toast: no transform hack needed when left:0/right:0/max-width */
   .toast{
     left:0;right:0;
     max-width:calc(var(--card-w) - 32px);
@@ -98,7 +94,6 @@ html,body{
   }
   .toast.show{transform:translateY(0)}
 
-  /* Settings panel: fixed width on desktop, never collapses */
   .settings-panel{
     width:320px;
     min-width:320px;
@@ -161,7 +156,6 @@ html,body{
   transition:background .2s,color .2s;
 }
 .settings-close:hover{background:var(--s3);color:var(--text)}
-/* FIX: top padding 18px → 12px — closes oversized gap below panel header */
 .settings-section-lbl{
   font-size:10px;font-weight:700;letter-spacing:.9px;
   text-transform:uppercase;color:var(--hint);
@@ -212,7 +206,6 @@ html,body{
   background-image:radial-gradient(circle at 25% 25%,rgba(16,152,247,.03) 0%,transparent 50%),
     radial-gradient(circle at 75% 75%,rgba(60,114,80,.03) 0%,transparent 50%);
 }
-/* NEW: additional subtle background pattern */
 .app-bg::after {
   content: "";
   position: absolute;
@@ -246,10 +239,8 @@ html,body{
 .scroll-area::-webkit-scrollbar-track{background:transparent}
 .scroll-area::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
 .tab-screen .scroll-area{padding-bottom:calc(var(--sab) + var(--nav) + 32px)}
-/* FIX: was #home-screen — actual id is home-wrap */
 #home-wrap .scroll-area{padding-bottom:calc(var(--sab) + var(--nav) + 96px)}
 .screen-foot{flex-shrink:0;padding:10px 20px calc(var(--sab) + 10px)}
-/* FIX: was #home-screen — actual id is home-wrap */
 #home-wrap .screen-foot{
   position:fixed;bottom:0;left:0;right:0;
   padding:20px 20px calc(var(--sab) + var(--nav) + 14px);
@@ -274,13 +265,14 @@ html,body{
   width:100%;
 }
 
+/* 5-tab nav indicator: width is ~20% minus gap */
 .nav-indicator{
-  position:absolute;height:36px; /* NEW: reduced height */
+  position:absolute;height:36px;
   background:var(--s0);border-radius:9px;top:5px;left:3px;
   z-index:1;
-  width:calc(25% - 1.5px);
+  width:calc(20% - 2px);
   transition:left .22s cubic-bezier(.22,.8,.3,1),width .22s cubic-bezier(.22,.8,.3,1);
-  box-shadow:0 2px 12px rgba(16,152,247,0.15); /* NEW: glow */
+  box-shadow:0 2px 12px rgba(16,152,247,0.15);
   pointer-events:none;
 }
 [data-theme="light"] .nav-indicator{
@@ -298,8 +290,8 @@ html,body{
   min-width:0;
 }
 .nav-tab-lbl:active{opacity:.7}
-.nav-icon{font-size:17px;line-height:1;transition:transform .2s}
-.nav-text{font-size:9.5px;font-weight:700;letter-spacing:.2px;color:var(--muted);transition:color .2s}
+.nav-icon{font-size:15px;line-height:1;transition:transform .2s}
+.nav-text{font-size:8.5px;font-weight:700;letter-spacing:.2px;color:var(--muted);transition:color .2s}
 .nav-tab-lbl.active-tab .nav-text{color:var(--acc)}
 .nav-tab-lbl.active-tab .nav-icon{transform:scale(1.08)}
 
@@ -402,7 +394,6 @@ html,body{
 }
 .switch .checkbox:checked ~ .slider::before{transform:translateX(24px)}
 .switch .checkbox:checked ~ .slider{background-color:var(--acc)}
-/* NEW: focus ring for toggle switch */
 .switch .checkbox:focus-visible + .slider {
   box-shadow: 0 0 0 3px rgba(16,152,247,0.25);
 }
@@ -492,7 +483,7 @@ html,body{
 .sp-dot{flex:1;height:3px;border-radius:2px;background:var(--s3)}
 .sp-dot.done{background:var(--brk)}
 
-/* NEW: schedule card arrow animation */
+/* Schedule card arrow animation */
 .sc-action span:last-child {
   transition: transform 0.2s ease;
   display: inline-block;
@@ -520,8 +511,8 @@ html,body{
   background:var(--s1);border:1.5px solid var(--border);
   border-radius:var(--r-lg);padding:13px;cursor:pointer;
   transition:background .2s,border-color .2s,transform .15s;
-  position: relative; /* NEW */
-  overflow: hidden;    /* NEW */
+  position: relative;
+  overflow: hidden;
 }
 .method-card:hover{background:var(--s2)}
 .method-card:active{transform:scale(.97)}
@@ -530,7 +521,7 @@ html,body{
   background:linear-gradient(145deg,rgba(16,152,247,.12),rgba(16,152,247,.04));
   box-shadow:0 0 0 1px rgba(16,152,247,.15) inset,0 4px 16px rgba(16,152,247,.1);
 }
-/* NEW: card hover arrow */
+/* Card hover arrow */
 .method-card::after {
   content: "›";
   position: absolute;
@@ -621,6 +612,17 @@ circle.prog{fill:none;stroke-linecap:round;stroke-width:9;transition:stroke-dash
 .btn-c.bc-end{background:var(--red-l);color:var(--red);border-color:rgba(204,64,56,.18)}
 .btn-c.bc-end:hover{background:rgba(204,64,56,.18)}
 .btn-c.bc-skip{color:var(--muted)}
+
+/* ===== TIMER DECOR ===== */
+.timer-decor {
+  text-align: center;
+  margin-bottom: 4px;
+}
+.decor-axis {
+  width: 60px;
+  margin: 0 auto;
+  display: block;
+}
 
 /* ===== BREAK SCREEN ===== */
 .brk-top{display:flex;align-items:center;justify-content:space-between;padding:2px 0}
@@ -746,75 +748,7 @@ canvas.chart{width:100%;display:block}
 .tr-fill{height:100%;border-radius:3px;background:var(--acc);transition:width .6s cubic-bezier(.22,.8,.3,1)}
 .tr-fill.met{background:var(--brk)}
 
-/* ===== NEW: SERIF TYPOGRAPHY ===== */
-.app-name,
-.lbl-bold,
-.scard-val,
-.stats-grid .scard-val {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-weight: 400;
-}
-
-/* ===== NEW: HERO BLOCK ===== */
-.hero-block {
-  text-align: center;
-  padding: 32px 8px 16px;
-  position: relative;
-  z-index: 1;
-}
-.hero-title {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: clamp(2.4rem, 8vw, 3.8rem);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  margin: 0 0 8px;
-}
-.hero-word {
-  display: inline-block;
-  position: relative;
-  z-index: 1;
-}
-.hero-word--accent {
-  color: var(--acc);
-  margin-left: -0.3rem;
-}
-.hero-line {
-  display: block;
-  height: 2px;
-  width: 60%;
-  margin: 6px auto;
-  background: linear-gradient(to right, transparent, var(--border), transparent);
-  border-radius: 2px;
-}
-.hero-line--top {
-  margin-bottom: 12px;
-}
-.hero-line--bottom {
-  margin-top: 12px;
-}
-.hero-sub {
-  font-size: 0.95rem;
-  color: var(--muted);
-  max-width: 280px;
-  margin: 0 auto 20px;
-  line-height: 1.6;
-  font-weight: 500;
-}
-
-/* ===== NEW: TIMER DECOR ===== */
-.timer-decor {
-  text-align: center;
-  margin-bottom: 4px;
-}
-.decor-axis {
-  width: 60px;
-  margin: 0 auto;
-  display: block;
-}
-
-/* ===== NEW: FOOTER ===== */
+/* ===== FOOTER ===== */
 .app-footer {
   text-align: center;
   padding: 32px 20px 16px;
@@ -827,14 +761,16 @@ canvas.chart{width:100%;display:block}
   display: block;
 }
 .footer-quote {
-  font-family: 'Instrument Serif', serif;
-  font-size: 1.2rem;
-  line-height: 1.4;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
   max-width: 260px;
   margin: 0 auto;
+  font-style: italic;
+  color: var(--hint);
 }
 
-/* ===== SUBJECT CHIPS (NEW MICRO-INTERACTIONS) ===== */
+/* ===== SUBJECT CHIPS MICRO-INTERACTIONS ===== */
 .subj-chip-btn:active {
   transform: scale(0.96);
 }
