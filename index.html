@@ -14,6 +14,47 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style2.css">
 <link rel="stylesheet" href="css/fixes.css">
+<style>
+/* ── Continue session button ── */
+.continue-session-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(16,152,247,.12), rgba(16,152,247,.04));
+  border: 1.5px solid rgba(16,152,247,.22);
+  border-radius: var(--r-lg);
+  padding: 12px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: opacity .15s, background .15s;
+}
+.continue-session-btn:hover { opacity: .88; }
+.continue-session-btn:active { transform: scale(.98); }
+
+/* ── Two-phase log ── */
+.log-phase2 { display: none; }
+.log-phase2.open { display: block; }
+.log-expand-row {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 4px;
+}
+#log-expand-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 18px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+#log-expand-btn:hover { background: var(--s2); color: var(--text); }
+</style>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -130,6 +171,10 @@
     <div class="session-progress-bar"><div id="session-progress-fill" class="session-progress-fill"></div></div>
   </div>
   <div class="scroll-area" style="padding-top:10px">
+
+    <!-- Continue last session (recency-driven, always visible if exists) -->
+    <div id="continue-btn-wrap" style="display:none;margin-bottom:10px"></div>
+
     <div class="quickstart" id="quickstart" onclick="quickStart()" style="display:none">
       <div><div class="qs-label">Up next</div><div class="qs-session" id="qs-text"></div></div>
       <button class="qs-btn" onclick="event.stopPropagation();quickStart()">Go &#8250;</button>
@@ -148,9 +193,12 @@
         </div>
       </div>
     </div>
+
     <div class="lbl-bold">Subject</div>
-    <input class="tinput" id="subj" type="text" placeholder="e.g. Chemistry, Maths..." autocomplete="off" spellcheck="false">
-    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px" id="subj-chips"></div>
+    <!-- Chips appear FIRST — faster for returning users choosing from known subjects -->
+    <div style="margin-bottom:8px;display:flex;flex-wrap:wrap;gap:5px" id="subj-chips"></div>
+    <input class="tinput" id="subj" type="text" placeholder="or type a custom subject…" autocomplete="off" spellcheck="false">
+
     <div class="lbl-bold" style="margin-top:22px">Session method</div>
     <div class="method-grid">
       <div class="method-card" data-m="blurt" onclick="selMethod(this)"><span class="mc-icon">&#9999;&#65039;</span><div class="mc-name">Blurting</div><div class="mc-tag">Write from memory, check gaps</div><span class="mc-time">25 min</span></div>
@@ -237,11 +285,14 @@
   <div class="screen-foot full-screen"><div class="brk-ctrls"><button class="btn-c bc-pause" id="brk-pause" onclick="togglePause()">Pause</button><button class="btn-c bc-skip" onclick="confirmSkip()">Done early</button></div></div>
 </div>
 
-<!-- ── LOG SCREEN ── -->
+<!-- ── LOG SCREEN (two-phase) ── -->
 <div class="screen full-screen" id="log-screen">
   <div class="screen-head"><div style="font-size:20px;font-weight:800;letter-spacing:-.6px;padding:6px 0 14px" id="log-header">Session complete</div></div>
   <div class="scroll-area">
-    <div class="log-intro"><p><strong>Log what tripped you up.</strong> Categorise by error type - each has a different fix.</p></div>
+
+    <!-- ══ PHASE 1 — always visible, ~15 seconds ══ -->
+    <div class="log-intro"><p><strong>Log what tripped you up.</strong> Takes 15 seconds. Expand for more detail.</p></div>
+
     <div class="lbl">Energy this session</div>
     <div class="energy-row">
       <div class="e-btn" data-e="1" onclick="selEnergy(this)">&#128564;</div>
@@ -250,29 +301,45 @@
       <div class="e-btn" data-e="4" onclick="selEnergy(this)">&#128522;</div>
       <div class="e-btn" data-e="5" onclick="selEnergy(this)">&#128293;</div>
     </div>
-    <div class="lbl">Subject</div>
-    <input class="tinput" id="log-subj" type="text" placeholder="Subject">
-    <div class="lbl">Topic</div>
-    <input class="tinput" id="log-topic" type="text" placeholder="e.g. circle theorems, Le Chatelier's principle">
-    <div class="lbl">Marks scored (optional)</div>
-    <div class="marks-row"><input class="marks-in" id="log-got" type="number" min="0" max="99" placeholder="Got"><span class="marks-sep">/</span><input class="marks-in" id="log-total" type="number" min="1" max="99" placeholder="Out of"><span class="marks-lbl" style="margin-left:6px">marks</span></div>
-    <div class="lbl">Where did you lose marks?</div>
+
+    <div class="lbl">What tripped you up?</div>
+    <textarea class="tarea" id="log-quick-notes" placeholder="One sentence: what went wrong or what you couldn't recall?" style="min-height:60px"></textarea>
+
+    <div class="lbl">Error type</div>
     <div class="mark-cat-grid">
       <div class="mark-cat-btn" onclick="selMarkCat(this,'app')">&#128202;<br>Application<br><span style="font-size:9px;opacity:.7">Fix: exam Qs</span></div>
       <div class="mark-cat-btn" onclick="selMarkCat(this,'know')">&#129504;<br>Knowledge<br><span style="font-size:9px;opacity:.7">Fix: flashcards</span></div>
       <div class="mark-cat-btn" onclick="selMarkCat(this,'term')">&#128214;<br>Terminology<br><span style="font-size:9px;opacity:.7">Fix: mark schemes</span></div>
     </div>
     <div class="mark-guidance" id="mark-guidance"></div>
-    <div class="lbl">What went wrong</div>
-    <textarea class="tarea" id="log-wrong" placeholder="What exactly caused the mistake?"></textarea>
-    <div class="lbl">Correct method or answer</div>
-    <textarea class="tarea" id="log-correct" placeholder="The right approach or answer"></textarea>
-    <div class="lbl">How to avoid next time</div>
-    <textarea class="tarea" id="log-avoid" placeholder="Concrete action for next session"></textarea>
-    <div class="lbl">Exam question (optional)</div>
-    <input class="tinput" id="log-question" type="text" placeholder="Exact question or task">
-    <div class="spaced-row"><div><div style="font-size:13px;font-weight:600">Add to spaced repetition</div><div style="font-size:11px;color:var(--hint);margin-top:2px">Intervals: 14d &middot; 28d &middot; 60d max</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-spaced"><div class="slider"></div></label></div>
-    <button class="copy-btn" id="copy-btn" onclick="copyForNotion()"><span>Copy for Notion</span><span style="font-size:15px">&#128203;</span></button>
+
+    <!-- Copy button stays in Phase 1 — highest value action -->
+    <button class="copy-btn" id="copy-btn" onclick="copyForNotion()" style="margin-top:14px"><span>Copy for Notion</span><span style="font-size:15px">&#128203;</span></button>
+
+    <!-- Expand to Phase 2 -->
+    <div class="log-expand-row">
+      <button id="log-expand-btn" onclick="toggleLogPhase2()">Add detail ›</button>
+    </div>
+
+    <!-- ══ PHASE 2 — optional, collapsed by default ══ -->
+    <div class="log-phase2" id="log-phase2">
+      <div class="lbl" style="margin-top:4px">Subject</div>
+      <input class="tinput" id="log-subj" type="text" placeholder="Subject">
+      <div class="lbl">Topic</div>
+      <input class="tinput" id="log-topic" type="text" placeholder="e.g. circle theorems, Le Chatelier's principle">
+      <div class="lbl">Marks scored (optional)</div>
+      <div class="marks-row"><input class="marks-in" id="log-got" type="number" min="0" max="99" placeholder="Got"><span class="marks-sep">/</span><input class="marks-in" id="log-total" type="number" min="1" max="99" placeholder="Out of"><span class="marks-lbl" style="margin-left:6px">marks</span></div>
+      <div class="lbl">What went wrong</div>
+      <textarea class="tarea" id="log-wrong" placeholder="What exactly caused the mistake?"></textarea>
+      <div class="lbl">Correct method or answer</div>
+      <textarea class="tarea" id="log-correct" placeholder="The right approach or answer"></textarea>
+      <div class="lbl">How to avoid next time</div>
+      <textarea class="tarea" id="log-avoid" placeholder="Concrete action for next session"></textarea>
+      <div class="lbl">Exam question (optional)</div>
+      <input class="tinput" id="log-question" type="text" placeholder="Exact question or task">
+      <div class="spaced-row"><div><div style="font-size:13px;font-weight:600">Add to spaced repetition</div><div style="font-size:11px;color:var(--hint);margin-top:2px">Intervals: 14d &middot; 28d &middot; 60d max</div></div><label class="switch"><input type="checkbox" class="checkbox" id="tgl-spaced"><div class="slider"></div></label></div>
+    </div>
+
     <div style="height:10px"></div>
   </div>
   <div class="screen-foot full-screen">
