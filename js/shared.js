@@ -60,14 +60,23 @@ function toggleThemeFromSettings(checkbox) {
 }
 
 // ── Admin ────────────────────────────────────────────────
+// Password is never stored in plaintext. The value below is the SHA-256 hash of the admin password.
+// To change the password: sha256sum <<< 'newpassword' and paste the hex here.
 let isAdmin = false;
 try { isAdmin = sessionStorage.getItem('sv_admin') === '1'; } catch(e) {}
-const ADMIN_PASSWORD = 'Xaniel32!';
 
-function adminUnlock() {
+const ADMIN_HASH = '966a29606537372650b1893da50faac29fda051fa655ded2f68a2eeb460d73c4';
+
+async function _sha256hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function adminUnlock() {
   const pw = el('admin-pw-input'), err = el('admin-pw-error');
   if (!pw) return;
-  if (pw.value === ADMIN_PASSWORD) {
+  const inputHash = await _sha256hex(pw.value);
+  if (inputHash === ADMIN_HASH) {
     isAdmin = true;
     try { sessionStorage.setItem('sv_admin', '1'); } catch(e) {}
     pw.value = '';
@@ -263,26 +272,7 @@ function injectManifest() {
 }
 
 // ── Common page init ─────────────────────────────────────
-//
-// FIX: Tab-switching delay.
-//
-// Previous approach: waited for onAuthStateChanged to fire before loading
-// localStorage or calling pageInitFn. Firebase auth resolution takes
-// 200-800 ms, causing a visible blank-page delay on every tab switch.
-//
-// New approach:
-//   1. Apply theme and load localStorage immediately (synchronous, ~1 ms).
-//   2. Call pageInitFn immediately so the page renders without waiting for
-//      Firebase.
-//   3. If Firebase is enabled, register onAuthStateChanged. When it fires:
-//      a. If no user -> redirect to auth.html.
-//      b. If user -> set currentUser, silently sync Firestore in the
-//         background, then call pageInitFn again so data-dependent UI
-//         updates with any cloud-only data. The second call is cheap
-//         because each page guards against redundant rebuilds.
-//
 async function commonPageInit(pageName, pageInitFn) {
-  // Step 1: render immediately from localStorage
   applyTheme();
   injectManifest();
   loadFromLocalStorage();
@@ -293,7 +283,6 @@ async function commonPageInit(pageName, pageInitFn) {
   document.addEventListener('touchstart', () => unlockAudio(), { once: true, passive: true });
   document.addEventListener('click',      () => unlockAudio(), { once: true });
 
-  // Step 2: paint the page right now
   if (typeof pageInitFn === 'function') pageInitFn();
 
   requestAnimationFrame(() => {
@@ -301,7 +290,6 @@ async function commonPageInit(pageName, pageInitFn) {
     window.addEventListener('resize', () => requestAnimationFrame(() => updateNavIndicator(pageName)));
   });
 
-  // Step 3: Firebase auth check in background
   if (!window.FIREBASE_ENABLED || !window.firebaseAuth) return;
 
   const unsubscribe = window.firebaseAuth.onAuthStateChanged(async user => {
