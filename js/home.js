@@ -50,6 +50,78 @@ function showScreen(id) {
   if (nav) nav.classList.toggle('hidden', id !== 'home-wrap');
 }
 
+// ── Session memory ────────────────────────────────────────
+const LS_LAST_SESSION = 'rv_last_session';
+
+function saveLastSession(subject, method) {
+  try {
+    localStorage.setItem(LS_LAST_SESSION, JSON.stringify({ subject, method }));
+  } catch(e) {}
+}
+
+function loadLastSession() {
+  try {
+    const raw = localStorage.getItem(LS_LAST_SESSION);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) { return null; }
+}
+
+function buildContinueBtn() {
+  const wrap = el('continue-btn-wrap');
+  if (!wrap) return;
+  const last = loadLastSession();
+  if (!last || !last.subject || !last.method) {
+    wrap.style.display = 'none';
+    return;
+  }
+  const METHOD_NAMES = {blurt:'Blurting',paper:'Past Paper',flash:'Flashcards',teach:'Teach It',practise:'Practice Qs',custom:'Custom'};
+  const methodLabel = METHOD_NAMES[last.method] || last.method;
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <button class="continue-session-btn" onclick="continueLastSession()">
+      <div>
+        <div class="qs-label">Continue last session</div>
+        <div class="qs-session">${escHtml(last.subject)} &middot; ${escHtml(methodLabel)}</div>
+      </div>
+      <div class="qs-btn">Go &#8250;</div>
+    </button>`;
+}
+
+function continueLastSession() {
+  const last = loadLastSession();
+  if (!last) return;
+  // Pre-fill subject and select method, then start
+  const subjEl = el('subj');
+  if (subjEl) subjEl.value = last.subject;
+  // Select the method card
+  document.querySelectorAll('.method-card').forEach(c => c.classList.remove('sel'));
+  const card = document.querySelector(`.method-card[data-m="${last.method}"]`);
+  if (card) card.classList.add('sel');
+  selM = last.method;
+  updateStartBtn();
+  const cr = el('custom-row');
+  if (cr) cr.style.display = selM === 'custom' ? 'grid' : 'none';
+  // Start immediately
+  _doStartSession(last.subject);
+}
+
+function applyLastSessionToForm() {
+  const last = loadLastSession();
+  if (!last) return;
+  const subjEl = el('subj');
+  if (subjEl && !subjEl.value) subjEl.value = last.subject;
+  // Select method card
+  const card = document.querySelector(`.method-card[data-m="${last.method}"]`);
+  if (card) {
+    document.querySelectorAll('.method-card').forEach(c => c.classList.remove('sel'));
+    card.classList.add('sel');
+    selM = last.method;
+    updateStartBtn();
+    const cr = el('custom-row');
+    if (cr) cr.style.display = selM === 'custom' ? 'grid' : 'none';
+  }
+}
+
 // ── Schedule card ─────────────────────────────────────────
 function checkTodayDone() {
   const t = new Date().toDateString();
@@ -178,6 +250,7 @@ function quickStart() {
     S.subject=isAdmin?slots[next]:'General'; S.type=selM; S.scheduleMode=true;
     const m=METHODS[selM==='custom'?'paper':selM]; if(!m) return;
     S.phases=JSON.parse(JSON.stringify(m.phases)).map(p=>({...p,sessionLabel:S.subject,method:selM==='custom'?'paper':selM}));
+    saveLastSession(S.subject, selM);
     beginSession();
   });
 }
@@ -209,6 +282,7 @@ function startSession() {
 }
 function _doStartSession(subject) {
   S.subject=subject; S.type=selM; S.scheduleMode=false;
+  saveLastSession(subject, selM);
   if (selM==='custom') {
     const fm=Math.max(5,Math.min(180,parseInt(el('cust-focus')?.value||'45')||45));
     const bm=Math.max(0,Math.min(60,parseInt(el('cust-break')?.value||'0')||0));
@@ -307,7 +381,7 @@ function confirmEnd() {
 function returnToHome() {
   clearInterval(S.ticker);S.ticker=null;stopReminders();stopBreathe();dismissCheckin();releaseLock2();
   showScreen('home-wrap');
-  buildScheduleCard();buildSRCard();
+  buildScheduleCard();buildSRCard();buildContinueBtn();
 }
 
 // ── Breathe ───────────────────────────────────────────────
@@ -366,20 +440,32 @@ function dismissCheckin(){
   scheduleCheckin(S.timeLeft);
 }
 
-// ── Log screen ────────────────────────────────────────────
+// ── Log screen (two-phase) ────────────────────────────────
 function showLogScreen(ph) {
   showScreen('log-screen');
   const hdr=el('log-header');if(hdr)hdr.textContent=ph.sessionLabel?`${ph.sessionLabel} done`:'Session complete';
   const logSubjEl=el('log-subj');if(logSubjEl)logSubjEl.value=(S.subject&&S.subject!=='General')?S.subject:'';
-  ['log-topic','log-wrong','log-correct','log-avoid','log-question'].forEach(id=>{const e=el(id);if(e)e.value='';});
+  // Clear all fields
+  ['log-topic','log-wrong','log-correct','log-avoid','log-question','log-quick-notes'].forEach(id=>{const e=el(id);if(e)e.value='';});
   ['log-got','log-total'].forEach(id=>{const e=el(id);if(e)e.value='';});
   document.querySelectorAll('.e-btn,.mark-cat-btn').forEach(b=>b.classList.remove('sel','sel-app','sel-know','sel-term'));
   const spaced=el('tgl-spaced');if(spaced)spaced.checked=false;
   const mg=el('mark-guidance');if(mg)mg.classList.remove('vis');
   const cb=el('copy-btn');if(cb){cb.classList.remove('copied');cb.innerHTML='<span>Copy for Notion</span><span style="font-size:15px">&#128203;</span>';}
   markCatSel='';S.energy=0;
+  // Collapse phase 2
+  const p2=el('log-phase2');if(p2)p2.classList.remove('open');
+  const p2btn=el('log-expand-btn');if(p2btn)p2btn.textContent='Add detail ›';
   tone('done');notify('Session done','Log your errors.',true);releaseLock2();
 }
+
+function toggleLogPhase2() {
+  const p2=el('log-phase2'), btn=el('log-expand-btn');
+  if(!p2) return;
+  const open=p2.classList.toggle('open');
+  if(btn) btn.textContent = open ? 'Less detail ‹' : 'Add detail ›';
+}
+
 function selEnergy(btn){document.querySelectorAll('.e-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');S.energy=parseInt(btn.dataset.e)||0;}
 function selMarkCat(btn,cat){
   document.querySelectorAll('.mark-cat-btn').forEach(b=>b.classList.remove('sel-app','sel-know','sel-term'));
@@ -393,7 +479,9 @@ function copyForNotion(){
   const got=(el('log-got')&&el('log-got').value.trim())||'', tot=(el('log-total')&&el('log-total').value.trim())||'';
   const topic=(el('log-topic')&&el('log-topic').value.trim())||'';
   const question=(el('log-question')&&el('log-question').value.trim())||'';
-  const wrong=(el('log-wrong')&&el('log-wrong').value.trim())||'';
+  // Use quick notes if detailed fields are empty
+  const quickNotes=(el('log-quick-notes')&&el('log-quick-notes').value.trim())||'';
+  const wrong=(el('log-wrong')&&el('log-wrong').value.trim())||quickNotes;
   const correct=(el('log-correct')&&el('log-correct').value.trim())||'';
   const avoid=(el('log-avoid')&&el('log-avoid').value.trim())||'';
   const catMap={app:'Application',know:'Knowledge',term:'Terminology'};
@@ -405,7 +493,12 @@ function copyForNotion(){
 function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);}
 function doneLog(skip){
   const logSubj=el('log-subj');if(logSubj&&logSubj.value.trim())S.subject=normalizeSubj(logSubj.value.trim());
-  if(!skip){const topic=el('log-topic'),spaced=el('tgl-spaced');if(topic&&topic.value.trim()&&spaced&&spaced.checked)addToSR(topic.value.trim(),S.subject);}
+  if(!skip){
+    // SR uses topic from phase 2 if filled, else quick notes as fallback key
+    const topic=el('log-topic'), spaced=el('tgl-spaced');
+    const topicVal=topic&&topic.value.trim();
+    if(topicVal&&spaced&&spaced.checked)addToSR(topicVal,S.subject);
+  }
   recordSession();stopBreathe();releaseLock2();
   returnToHome();
 }
@@ -486,8 +579,8 @@ document.addEventListener('keydown', e => {
 });
 
 // ── Admin change hook ─────────────────────────────────────
-function onAdminChange() { buildScheduleCard(); buildSubjChips(); updateExamChip(); }
-function onDataCleared() { buildScheduleCard(); buildSRCard(); updateProgressBar(); }
+function onAdminChange() { buildScheduleCard(); buildSubjChips(); updateExamChip(); buildContinueBtn(); }
+function onDataCleared() { buildScheduleCard(); buildSRCard(); updateProgressBar(); buildContinueBtn(); }
 
 // ── Init ──────────────────────────────────────────────────
 commonPageInit('home', function() {
@@ -495,11 +588,16 @@ commonPageInit('home', function() {
   buildScheduleCard();
   buildSubjChips();
   buildSRCard();
+  buildContinueBtn();
   updateStartBtn();
+  // Apply last session to pre-populate form (but don't override if user already typed)
+  applyLastSessionToForm();
+  // Default method selection fallback (if no last session)
+  if (!document.querySelector('.method-card.sel')) {
+    const defaultCard = document.querySelector('.method-card[data-m="paper"]');
+    if (defaultCard) defaultCard.classList.add('sel');
+  }
   updateProgressBar();
-  // Default method selection
-  const defaultCard = document.querySelector('.method-card[data-m="paper"]');
-  if (defaultCard) defaultCard.classList.add('sel');
   showScreen('home-wrap');
   // Desktop scroll
   document.querySelectorAll('.screen, #home-wrap').forEach(screen => {
