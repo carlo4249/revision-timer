@@ -153,9 +153,18 @@
 </div>
 
 <script>
-// ── Data ──────────────────────────────────────────────────
-const ADMIN_PW = 'Xaniel32!';
-const LS_KEY   = 'rv_plc_conf';
+// ── Password hashing ───────────────────────────────────────
+// The value below is SHA-256(admin_password). The plaintext password is never
+// stored anywhere in the codebase. To change the password:
+//   echo -n 'newpassword' | sha256sum
+// and paste the hex here.
+const ADMIN_HASH = '966a29606537372650b1893da50faac29fda051fa655ded2f68a2eeb460d73c4';
+const LS_KEY     = 'rv_plc_conf';
+
+async function _sha256hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
 const CHECKLISTS = {
   Biology: {
@@ -395,169 +404,41 @@ const CHECKLISTS = {
         'T1: Recall and use multiples and sub-multiples of units including G, M, k, c, m, u and n',
         'T1: Be able to convert between different units, including hours to seconds',
         'T1: Use significant figures and standard form where appropriate',
-        'T2: Describe what scalar and vector quantities are and explain the differences',
-        'T2: Recall vector and scalar quantities including displacement/distance, velocity/speed, acceleration, force, weight/mass, momentum and energy',
-        'T2: Define what velocity is',
         'T2: Recall and use: speed (m/s) = distance (m) divided by time (s)',
-        'T2: Recall and use: distance travelled (m) = average speed (m/s) x time (s)',
         'T2: Analyse distance/time graphs including determination of speed from the gradient',
         'T2: Recall and use the equation: a = (v minus u) divided by t',
-        'T2: Use the equation: v squared minus u squared = 2 x a x x',
-        'T2: Analyse velocity/time graphs: compare acceleration from gradients qualitatively',
-        'T2: Analyse velocity/time graphs: calculate the acceleration from the gradient (uniform acceleration only)',
-        'T2: Analyse velocity/time graphs: determine distance travelled using area (uniform acceleration only)',
-        'T2: Describe laboratory methods for determining speeds of objects such as the use of light gates',
-        'T2: Recall typical everyday speeds for wind, sound, walking, running, cycling and transport',
-        'T2: Recall Newton\'s First Law where the resultant force is zero',
-        'T2: Recall Newton\'s First Law where the resultant force is not zero',
+        'T2: Analyse velocity/time graphs: calculate acceleration from gradient; find distance from area',
+        'T2: Recall Newton\'s First, Second, and Third Laws and apply them correctly',
         'T2: Recall and use Newton\'s Second Law: F = m x a',
         'T2: Define weight; recall and use W = m x g',
-        'T2: Describe how weight is measured',
-        'T2: Describe the relationship between weight and gravitational field strength',
-        'T2: Core Practical: Investigate the relationship between force, mass and acceleration',
-        'T2 (HT): Explain that an object in circular orbit at constant speed has changing velocity',
-        'T2 (HT): Explain that for circular motion there must be a centripetal force towards the centre',
-        'T2 (HT): Explain that inertial mass measures how difficult it is to change an object\'s velocity',
-        'T2: Recall and apply Newton\'s Third Law to equilibrium situations',
-        'T2 (HT): Apply Newton\'s Third Law to collisions and relate to conservation of momentum',
-        'T2 (HT): Define momentum; recall and use p = m x v',
-        'T2 (HT): Describe examples of momentum in collisions',
-        'T2 (HT): Use Newton\'s Second Law as: F = (mv minus mu) divided by t',
-        'T2: Explain methods of measuring human reaction times and recall typical results',
+        'T2: Define momentum; recall and use p = m x v (HT)',
         'T2: Recall that stopping distance = thinking distance + braking distance',
-        'T2: Explain that stopping distance is affected by a range of factors; name them',
-        'T2: Describe the factors that could affect a driver\'s reaction time',
-        'T2: Explain the dangers caused by large decelerations',
-        'T2 (HT): Estimate forces involved in typical road situations due to decelerations',
-        'T2: Estimate how stopping distance varies over a range of typical speeds',
-        'T2: Carry out calculations on work done to show braking distance depends on initial velocity squared',
+        'T2: Core Practical: Investigate the relationship between force, mass and acceleration',
         'T3: Recall and use GPE = m x g x h',
         'T3: Recall and use KE = 0.5 x m x v squared',
-        'T3: Draw and interpret diagrams to represent energy transfers',
-        'T3: Explain what is meant by conservation of energy',
-        'T3: Analyse energy changes for an object projected upwards or up a slope',
-        'T3: Analyse energy changes for a moving object hitting an obstacle',
-        'T3: Analyse energy changes for an object being accelerated by a constant force',
-        'T3: Analyse energy changes for a vehicle slowing down',
-        'T3: Analyse energy changes for bringing water to boil in an electric kettle',
-        'T3: Explain that in a closed system there is no net change to total energy',
-        'T3: Explain that mechanical processes become wasteful when they cause a temperature rise',
-        'T3: Explain how energy is dissipated and stored in less useful ways',
-        'T3: Explain ways of reducing unwanted energy transfer including lubrication and thermal insulation',
-        'T3: Describe how wall thickness and thermal conductivity affect a building\'s rate of cooling',
-        'T3: Recall and use: efficiency = useful energy transferred divided by total energy supplied',
-        'T3 (HT): Explain how efficiency can be increased',
-        'T3: Describe the main energy sources and compare renewable and non-renewable uses',
-        'T3: Explain patterns and trends in the use of energy resources'
+        'T3: Explain conservation of energy; describe how energy is dissipated',
+        'T3: Recall and use: efficiency = useful energy / total energy supplied',
+        'T3: Describe the main energy sources; compare renewable and non-renewable uses'
       ],
       'Topics 4 to 7': [
-        'T4: Recall that waves transfer energy and information without transferring matter',
-        'T4: Describe evidence that with water and sound waves it is the wave, not the medium, that travels',
-        'T4: Define and use the terms frequency and wavelength as applied to waves',
-        'T4: Use the terms amplitude, period, wave velocity and wavefront',
-        'T4: Describe the difference between longitudinal and transverse waves with examples',
-        'T4: Recall and use v = f x lambda and v = x/t',
-        'T4: Describe how to measure the velocity of sound in air and ripples on water surfaces',
-        'T4 (HT): Calculate depth or distance from time and wave velocity',
-        'T4: Describe the effects of reflection, refraction, transmission and absorption of waves',
-        'T4: Explain how waves will be refracted at a boundary in terms of change of direction',
-        'T4 (HT): Explain how waves are refracted at a boundary in terms of change of speed',
-        'T4 (HT): Recall that different substances may absorb, transmit, refract or reflect waves differently with wavelength',
-        'T4 (HT): Describe the processes which convert wave disturbances between sound waves and vibrations in solids',
-        'T4 (HT): Explain why wave disturbance conversion only works over a limited frequency range',
-        'T4 (HT): Use wave disturbance conversion to explain how the human ear works',
-        'T4 (HT): Recall the frequency of ultrasound and state its units',
-        'T4 (HT): Explain uses of ultrasound and infrasound',
-        'T4: Describe how changes in velocity, frequency and wavelength in transmission of sound are inter-related',
-        'T4: Core Practical: Investigate the suitability of equipment to measure speed, frequency and wavelength of a wave',
-        'T5: Explain with ray diagrams reflection, refraction and total internal reflection, including law of reflection and critical angle',
-        'T5: Explain the difference between specular and diffuse reflection',
-        'T5: Explain how colour of light is related to differential absorption and transmission through filters',
-        'T5: Relate the power of a lens to its focal length and shape',
-        'T5: Use ray diagrams to show the refraction of light by converging and diverging lenses',
-        'T5: Explain the effects of different types of lens in producing real and virtual images',
-        'T5: Recall that all EM waves are transverse and travel at the same speed in a vacuum',
-        'T5: Explain that all EM waves transfer energy from source to observer',
-        'T5: Investigate refraction in rectangular glass blocks in terms of EM wave interaction with matter',
-        'T5: Recall the main groupings of the continuous EM spectrum',
-        'T5: Describe the EM spectrum',
-        'T5: Recall that our eyes can only detect a limited range of EM frequencies',
-        'T5 (HT): Recall that different substances may absorb, transmit, refract or reflect EM waves differently with wavelength',
-        'T5: Explain the effects of differences in velocities of EM waves in different substances',
-        'T5: Explain that all bodies emit radiation; intensity and wavelength depend on temperature',
-        'T5 (HT): Explain that for a body at constant temperature it must radiate the same power it absorbs',
-        'T5 (HT): Explain what happens if average power radiated is less or more than power absorbed',
-        'T5 (HT): Explain how Earth\'s temperature is affected by the balance between incoming and outgoing radiation',
-        'T5: Core Practical: Investigate how surface affects the amount of thermal energy radiated or absorbed',
-        'T5: Recall that the danger of an EM wave increases with increasing frequency',
-        'T5: Describe the harmful effects of excessive exposure to EM radiation',
-        'T5: Describe some uses of EM radiation',
-        'T5 (HT): Recall that radio waves can be produced by, or induce, oscillations in electrical circuits',
-        'T5: Recall that changes in atoms and nuclei can generate and be caused by radiation across a wide frequency range',
-        'T6a: Describe the structure of the atom',
-        'T6a: Recall the typical size (order of magnitude) of atoms and small molecules',
-        'T6a: Describe the structure of nuclei of isotopes',
-        'T6a: Define the term isotope',
-        'T6a: Recall the relative masses and charges of protons, neutrons, electrons and positrons',
-        'T6a: Recall that in an atom the number of protons equals the number of electrons (neutral)',
-        'T6a: Recall that electrons orbit the nucleus at different set distances',
-        'T6a: Explain that electrons change orbit when there is absorption or emission of EM radiation',
-        'T6a: Explain how atoms may form positive ions',
-        'T6a: Recall that alpha, beta minus, beta plus, gamma and neutron radiation are emitted from unstable nuclei randomly',
-        'T6a: Recall that alpha, beta minus, beta plus and gamma rays are ionising radiation',
-        'T6a: Explain what is meant by background radiation',
-        'T6a: Describe the origins of background radiation from Earth and space',
-        'T6a: Describe methods for measuring and detecting radioactivity: photographic film and GM tube',
-        'T6a: Recall what alpha, beta and gamma radiation are made of',
-        'T6a: Compare alpha, beta and gamma radiations in terms of their abilities to penetrate and ionise',
-        'T6a: Describe how and why the atomic model has changed over time including scattering experiments',
-        'T6a: Describe the process of beta minus and beta plus decay',
-        'T6a: Explain the effects on atomic and mass numbers of radioactive decays',
-        'T6a: Recall that nuclei that have undergone decay often rearrange with a loss of energy as gamma radiation',
-        'T6b: Use given data to balance nuclear equations in terms of mass and charge',
-        'T6b: Describe how the activity of a radioactive source decreases over time',
-        'T6b: Recall that the unit of activity of a radioactive isotope is the Becquerel (Bq)',
-        'T6b: Explain what the half-life of a radioactive isotope is',
-        'T6b: Explain that individual decay cannot be predicted but half-life enables prediction of large numbers',
-        'T6b: Use the concept of half-life in simple calculations including graphical representations',
-        'T6b: Describe uses of radioactivity in the home, industry and medicine',
-        'T6b: Describe the dangers of ionising radiation in terms of tissue damage, mutations and precautions needed',
-        'T6b: Explain how the dangers of ionising radiation depend on half-life',
-        'T6b: Explain precautions taken to ensure the safety of people exposed to radiation',
-        'T6b: Describe the differences between contamination and irradiation and compare their hazards',
-        'T6b (Phy only): Compare and contrast treatment of tumours using radiation internally or externally',
-        'T6b (Phy only): Explain uses of radioactive substances in medical diagnosis including PET scanners and tracers',
-        'T6b (Phy only): Explain why isotopes used in PET scanners must be produced nearby',
-        'T6b (Phy only): Evaluate the advantages and disadvantages of nuclear power for generating electricity',
-        'T6b (Phy only): Recall that fission, fusion and radioactive decay can be sources of energy',
-        'T6b (Phy only): Explain the fission of U-235',
-        'T6b (Phy only): Explain the principle of a controlled nuclear chain reaction',
-        'T6b (Phy only): Explain how the chain reaction is controlled in a nuclear reactor using moderators and control rods',
-        'T6b (Phy only): Describe how thermal energy from the chain reaction is used to generate electricity',
-        'T6b (Phy only): Recall that the products of nuclear fission are radioactive',
-        'T6b (Phy only): Describe nuclear fusion',
-        'T6b (Phy only): Explain the difference between nuclear fusion and nuclear fission',
-        'T6b (Phy only): Explain why nuclear fusion does not happen at low temperatures and pressures',
-        'T6b (Phy only): Relate the conditions for fusion to the difficulty of making a practical power station',
-        'T7 (Phy only): Explain how weight and g differ between the Earth and other bodies in space',
-        'T7 (Phy only): Recall what our solar system consists of',
-        'T7 (Phy only): Recall the names and order of the eight planets from the Sun',
-        'T7 (Phy only): Describe how ideas about the structure of the Solar System have changed over time',
-        'T7 (Phy only): Describe the orbits of moons, planets, comets and artificial satellites',
-        'T7 (Phy only): Explain how gravity can lead to changing velocity but unchanged speed in circular orbits',
-        'T7 (Phy only): Explain how, for a stable orbit, radius must change if orbital speed changes',
-        'T7 (Phy only): Compare the Steady State and Big Bang theories',
-        'T7 (Phy only): Describe evidence supporting the Big Bang theory: red-shift and CMB radiation',
-        'T7 (Phy only): Recall that there is more evidence supporting the Big Bang theory than the Steady State theory',
-        'T7 (Phy only): Describe that a moving wave source causes a change in observed frequency and wavelength',
-        'T7 (Phy only): Describe the red-shift in light received from galaxies at different distances',
-        'T7 (Phy only): Explain why red-shift provides evidence for the Universe expanding',
-        'T7 (Phy only): Explain how both Big Bang and Steady State theories account for red-shift',
-        'T7 (Phy only): Explain how the discovery of CMB radiation led to the Big Bang becoming the accepted model',
-        'T7 (Phy only): Describe the evolution of stars of similar mass to the Sun',
-        'T7 (Phy only): Explain how the balance between thermal expansion and gravity affects the life cycle of stars',
-        'T7 (Phy only): Describe the evolution of stars with a mass larger than the Sun',
-        'T7 (Phy only): Describe how methods of observing the Universe have changed and why some telescopes are outside the atmosphere'
+        'T4: Recall that waves transfer energy without transferring matter',
+        'T4: Recall and use v = f x lambda',
+        'T4: Describe longitudinal and transverse waves with examples',
+        'T4: Describe reflection, refraction, transmission and absorption of waves',
+        'T5: Explain reflection, refraction, and total internal reflection with ray diagrams',
+        'T5: Recall the EM spectrum from radio waves to gamma rays; know uses and hazards',
+        'T5: Recall that all EM waves travel at 3 x 10^8 m/s in a vacuum',
+        'T5: Core Practical: Investigate how surface affects thermal radiation absorbed or emitted',
+        'T6a: Describe the structure of the atom; define isotope',
+        'T6a: Compare alpha, beta, and gamma radiation in terms of penetration and ionisation',
+        'T6a: Explain what background radiation is and describe its sources',
+        'T6b: Explain what half-life is; use it in simple calculations including from graphs',
+        'T6b: Describe uses of radioactivity in medicine and industry',
+        'T6b: Explain fission of U-235 and the principle of a controlled nuclear chain reaction (Phy only)',
+        'T6b: Describe nuclear fusion and explain why conditions are difficult to achieve (Phy only)',
+        'T7: Recall the order of the eight planets from the Sun (Phy only)',
+        'T7: Describe evidence for the Big Bang: red-shift and CMB radiation (Phy only)',
+        'T7: Describe the life cycle of stars of different masses (Phy only)'
       ]
     }
   }
@@ -579,11 +460,15 @@ function applyTheme() {
 }
 
 // ── Lock ──────────────────────────────────────────────────
-function tryUnlock() {
-  const pw = document.getElementById('lock-pw');
+async function tryUnlock() {
+  const pw  = document.getElementById('lock-pw');
   const err = document.getElementById('lock-err');
   if (!pw) return;
-  if (pw.value === ADMIN_PW) {
+  const btn = document.querySelector('.lock-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+  const inputHash = await _sha256hex(pw.value);
+  if (btn) { btn.disabled = false; btn.textContent = 'Unlock'; }
+  if (inputHash === ADMIN_HASH) {
     try { sessionStorage.setItem('sv_admin', '1'); } catch(e) {}
     pw.value = '';
     showApp();
@@ -636,13 +521,11 @@ function render() {
   const data   = CHECKLISTS[curSubj];
   const papers = Object.keys(data.papers);
 
-  // Paper tabs
   const pt = document.getElementById('paper-tabs');
   if (pt) pt.innerHTML = papers.map(p =>
     `<button class="paper-tab${p === curPaper ? ' act' : ''}" onclick="switchPaper(this,'${esc(p)}')">${p}</button>`
   ).join('');
 
-  // Board badge
   const bb = document.getElementById('board-badge');
   if (bb) bb.innerHTML = `<div class="exam-board-badge">${esc(data.examBoard)}</div>`;
 
@@ -650,7 +533,6 @@ function render() {
   const confKey  = `${curSubj}::${curPaper}`;
   const itemConf = conf[confKey] || {};
 
-  // Counts
   let red = 0, amb = 0, grn = 0, none = 0;
   items.forEach((_, i) => {
     const c = itemConf[i] || '';
@@ -670,7 +552,6 @@ function render() {
   document.getElementById('seg-amb').style.width = pct(amb);
   document.getElementById('seg-grn').style.width = pct(grn);
 
-  // Items
   const list = document.getElementById('cl-list');
   if (!list) return;
   list.innerHTML = items.map((txt, i) => {
@@ -745,9 +626,9 @@ function doConfirm()    { const cb = confirmCb; closeConfirm(); if (cb) cb(); }
 
 // ── Init ──────────────────────────────────────────────────
 applyTheme();
-let admin = false;
-try { admin = sessionStorage.getItem('sv_admin') === '1'; } catch(e) {}
-if (admin) { showApp(); }
+let adminViaSession = false;
+try { adminViaSession = sessionStorage.getItem('sv_admin') === '1'; } catch(e) {}
+if (adminViaSession) { showApp(); }
 </script>
 </body>
 </html>
