@@ -11,7 +11,116 @@ const NAV_HREFS = {
 };
 
 function navTo(name) {
+  // Checklists requires admin. If not unlocked, show an inline password sheet
+  // instead of navigating to the separate page's own lock screen.
+  if (name === 'checklists' && !isAdmin) {
+    _showChecklistGate();
+    return;
+  }
   window.location.href = NAV_HREFS[name] || 'index.html';
+}
+
+// ── Checklist gate overlay ───────────────────────────────
+// Shown when the Checklists tab is tapped without admin access.
+// Dynamically injected so it doesn't need to exist in every page's HTML.
+function _showChecklistGate() {
+  const existing = document.getElementById('_cl-gate');
+  if (existing) { existing.remove(); }
+
+  const ov = document.createElement('div');
+  ov.id = '_cl-gate';
+  ov.style.cssText = [
+    'position:fixed;inset:0;z-index:280',
+    'display:flex;align-items:flex-end',
+    'background:rgba(0,0,0,.65)',
+    'backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)'
+  ].join(';');
+
+  ov.innerHTML = `
+    <div style="
+      background:var(--s1);
+      border-radius:22px 22px 0 0;
+      padding:20px 20px calc(max(env(safe-area-inset-bottom,0px),16px) + 64px);
+      width:100%;
+      border-top:1px solid var(--border);
+      box-shadow:0 -8px 40px rgba(0,0,0,.3);
+    ">
+      <div style="width:36px;height:4px;background:var(--s3);border-radius:2px;margin:0 auto 20px"></div>
+      <div style="font-size:18px;font-weight:800;letter-spacing:-.5px;margin-bottom:5px">Checklists</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:18px">Admin access required to view your RAG checklists.</div>
+      <input
+        type="password"
+        id="_cl-gate-pw"
+        placeholder="Password"
+        autocomplete="off"
+        style="
+          width:100%;height:48px;padding:12px 14px;
+          border-radius:var(--r);border:1.5px solid var(--border);
+          outline:none;background:var(--s0);color:var(--text);
+          font-family:inherit;font-size:16px;margin-bottom:10px;
+          transition:border-color .2s;
+          -webkit-appearance:none;
+        "
+        onkeydown="if(event.key==='Enter')_checklistGateSubmit()"
+        oninput="document.getElementById('_cl-gate-err').textContent=''"
+      >
+      <div id="_cl-gate-err" style="font-size:13px;color:var(--red);min-height:18px;margin-bottom:10px"></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button
+          id="_cl-gate-btn"
+          onclick="_checklistGateSubmit()"
+          style="
+            width:100%;padding:15px;
+            background:linear-gradient(135deg,var(--acc),#0a7ad4);
+            color:#fff;border:none;border-radius:var(--r-lg);
+            font-family:inherit;font-size:15px;font-weight:700;
+            cursor:pointer;transition:opacity .15s;
+          "
+        >Unlock</button>
+        <button
+          onclick="document.getElementById('_cl-gate').remove()"
+          style="
+            width:100%;padding:10px;border:none;background:none;
+            font-family:inherit;font-size:14px;color:var(--hint);cursor:pointer;
+          "
+        >Cancel</button>
+      </div>
+    </div>`;
+
+  ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+  document.body.appendChild(ov);
+  // Focus the input after the sheet animates in
+  setTimeout(() => {
+    const pw = document.getElementById('_cl-gate-pw');
+    if (pw) pw.focus();
+  }, 80);
+}
+
+async function _checklistGateSubmit() {
+  const pw  = document.getElementById('_cl-gate-pw');
+  const err = document.getElementById('_cl-gate-err');
+  const btn = document.getElementById('_cl-gate-btn');
+  if (!pw) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'Checking\u2026'; }
+  const inputHash = await _sha256hex(pw.value);
+  if (btn) { btn.disabled = false; btn.textContent = 'Unlock'; }
+  if (inputHash === ADMIN_HASH) {
+    isAdmin = true;
+    try { sessionStorage.setItem('sv_admin', '1'); } catch(e) {}
+    syncAdminUI();
+    if (typeof onAdminChange === 'function') onAdminChange();
+    document.getElementById('_cl-gate')?.remove();
+    // sv_admin is now set; checklists.html will skip its own lock screen
+    window.location.href = NAV_HREFS.checklists;
+  } else {
+    if (err) {
+      err.textContent = 'Incorrect password';
+      pw.value = '';
+      pw.style.animation = 'none';
+      requestAnimationFrame(() => { pw.style.animation = 'shake .3s ease'; });
+      setTimeout(() => { if (err) err.textContent = ''; }, 2500);
+    }
+  }
 }
 
 function updateNavIndicator(name) {
